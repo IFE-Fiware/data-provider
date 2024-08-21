@@ -1,0 +1,22 @@
+users-roles:
+  image:
+    tag: "0.0.1"
+
+onboarding:
+  image:
+    tag: "0.0.1"
+  enabled: false
+
+simpl-cloud-gateway:
+  image:
+    tag: "0.0.1"
+  authorityUrl: https://participant.be.int.simpl-europe.eu
+
+global:
+  profile: participant
+  hostBe: participant.be.int.simpl-europe.eu
+  hostFe: participant.fe.int.simpl-europe.eu
+  cors:
+    allowOrigin: https://participant.be.int.simpl-europe.eu,https://participant.fe.int.simpl-europe.eu,http://localhost:4202,http://localhost:3000
+  ingress:
+    issuer: issuer-ingress-test
