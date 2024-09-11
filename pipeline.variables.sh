@@ -1,1 +1,1 @@
-echo "hello!"
+PROJECT_VERSION_NUMBER="0.1.0"
