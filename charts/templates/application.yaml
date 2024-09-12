@@ -1,0 +1,61 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.argocd.appname }}
+  namespace: {{ .Values.argocd.namespace }}
+spec:
+  project: default
+  destination:
+    server: {{ .Values.cluster.address }}
+    namespace: {{ .Values.cluster.namespace }}
+  sources:
+  - repoURL: {{ .Values.values.repo_URL }}
+    targetRevision: {{ .Values.values.branch }}
+    ref: values
+  - repoURL: {{ .Values.postgresql.repo_URL }}
+    path: {{ .Values.postgresql.folder }}
+    targetRevision: {{ .Values.postgresql.branch }}
+    helm:
+      valueFiles:
+        {{- range .Values.postgresql.valueFiles }}
+        - $values/app-values/Postgresql/{{ . }}
+        {{- end }}
+      values: |
+        fullnameOverride: {{ .Values.postgresql.fullnameOverride }}
+  - repoURL: {{ .Values.keycloak.repo_URL }}
+    path: {{ .Values.keycloak.folder }}
+    targetRevision: {{ .Values.keycloak.branch }}
+    helm:
+      valueFiles:
+        {{- range .Values.keycloak.valueFiles }}
+        - $values/app-values/Keycloak/{{ . }}
+        {{- end }}
+      values: |
+        fullnameOverride: {{ .Values.keycloak.fullnameOverride }}
+  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.simpl_cloud_gateway.projectID }}/packages/helm/stable"
+    path: ''
+    targetRevision: {{ .Values.simpl_cloud_gateway.targetRevision }}
+    chart: {{ .Values.simpl_cloud_gateway.chart_name }}
+    helm:
+      valueFiles:
+        {{- range .Values.simpl_cloud_gateway.valueFiles }}
+        - $values/app-values/Simpl-Cloud-Gateway/{{ . }}
+        {{- end }}
+  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.onboarding.projectID }}/packages/helm/stable"
+    path: ''
+    targetRevision: {{ .Values.onboarding.targetRevision }}
+    chart: {{ .Values.onboarding.chart_name }}
+    helm:
+      valueFiles:
+        {{- range .Values.onboarding.valueFiles }}
+        - $values/app-values/Onboarding/{{ . }}
+        {{- end }}
+  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.usersroles.projectID }}/packages/helm/stable"
+    path: ''
+    targetRevision: {{ .Values.usersroles.targetRevision }}
+    chart: {{ .Values.usersroles.chart_name }}
+    helm:
+      valueFiles:
+        {{- range .Values.usersroles.valueFiles }}
+        - $values/app-values/Users-Roles/{{ . }}
+        {{- end }}

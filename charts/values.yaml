@@ -1,0 +1,51 @@
+argocd:
+  appname: dataprovider03-iaa
+  namespace: argocd
+
+cluster:
+  address: https://kubernetes.default.svc
+  namespace: dataprovider03-iaa
+
+values:
+  repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git
+  branch: feature/master-helm-chart
+
+postgresql:
+  repo_URL: https://code.europa.eu/simpl/simpl-open/development/iaa/charts.git
+  branch: feature/integration-refactor
+  folder: postgresql
+  fullnameOverride: postgresql
+  valueFiles:
+    - values.yaml
+    - values-participant.yaml
+
+keycloak:
+  repo_URL: https://code.europa.eu/simpl/simpl-open/development/iaa/charts.git
+  branch: feature/integration-refactor
+  folder: keycloak
+  fullnameOverride: keycloak
+  valueFiles:
+    - values.yaml
+    - values-participant.yaml
+
+simpl_cloud_gateway:
+  projectID: "772"
+  targetRevision: 0.0.4
+  chart_name: simpl-cloud-gateway
+  valueFiles:
+    - values.yaml
+    - values-participant.yaml
+
+onboarding:
+  projectID: "770"
+  targetRevision: 0.0.4-SNAPSHOT.193.7374154c
+  chart_name: onboarding
+  valueFiles:
+    - values.yaml
+
+usersroles:
+  projectID: "771"
+  targetRevision: 0.0.4
+  chart_name: users-roles
+  valueFiles:
+    - values.yaml
