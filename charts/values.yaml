@@ -1,10 +1,12 @@
 argocd:
-  appname: dataprovider03-iaa
+  appname: ${NAMESPACE}
   namespace: argocd
 
 cluster:
   address: https://kubernetes.default.svc
-  namespace: dataprovider03-iaa
+  namespace: ${NAMESPACE}
+
+namespaceTag: ${NAMESPACE_TAG}
 
 values:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git
@@ -14,7 +16,7 @@ postgresql:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/iaa/charts.git
   branch: feature/integration-refactor
   folder: postgresql
-  fullnameOverride: postgresql
+  nameOverride: postgresql
   valueFiles:
     - values.yaml
     - values-participant.yaml
@@ -23,29 +25,45 @@ keycloak:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/iaa/charts.git
   branch: feature/integration-refactor
   folder: keycloak
-  fullnameOverride: keycloak
+  nameOverride: keycloak
   valueFiles:
     - values.yaml
     - values-participant.yaml
 
-simpl_cloud_gateway:
-  projectID: "772"
-  targetRevision: 0.0.4
-  chart_name: simpl-cloud-gateway
+sdtooling:
+  repo_URL: https://code.europa.eu/simpl/simpl-open/development/data1/charts.git
+  branch: feature/add-domain-tag
+  folder: .
+  nameOverride: sd
+  valueFiles:
+    - values.yaml
+    
+signer:
+  repo_URL: https://code.europa.eu/simpl/simpl-open/development/gaia-x-edc/poc-gaia-edc.git
+  branch: develop
+  folder: deployment/signer/helm
+  serviceAccountName: signer-svc-account-iaa
+  valueFiles:
+    - values.yaml
+
+microservices:
+  repo_URL: https://code.europa.eu/simpl/simpl-open/development/iaa/charts.git
+  branch: feature/add-domain-tag
+  folder: microservices
+  valueFiles:
+    - values.yaml
+
+simpl_fe:
+  repo_URL: https://code.europa.eu/simpl/simpl-open/development/iaa/charts.git
+  branch: feature/add-domain-tag
+  folder: simpl-fe
   valueFiles:
     - values.yaml
     - values-participant.yaml
 
-onboarding:
-  projectID: "770"
-  targetRevision: 0.0.4-SNAPSHOT.193.7374154c
-  chart_name: onboarding
-  valueFiles:
-    - values.yaml
-
-usersroles:
-  projectID: "771"
-  targetRevision: 0.0.4
-  chart_name: users-roles
+poc_ui:
+  repo_URL: https://code.europa.eu/simpl/simpl-open/development/gaia-x-edc/poc-gaia-x-edc-ui.git
+  branch: feature/integration-deploy
+  folder: charts
   valueFiles:
     - values.yaml
