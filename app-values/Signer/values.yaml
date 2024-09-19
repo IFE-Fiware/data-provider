@@ -1,0 +1,16 @@
+SERVICE_PORT: 8084
+CONTAINER_PORT: 8084
+DEPLOYMENT_IMAGE_PULL_POLICY: Always
+REPOSITORY: "code.europa.eu:4567/simpl/simpl-open/development/gaia-x-edc/poc-gaia-edc/simpl-backend"
+TAG: "latest"
+
+secretEngine: dev-int
+secretConfigPath: "{{ .Values.secretEngine }}/{{ .Release.Namespace }}-infra-adapter-simpl-backend"
+
+ingress:
+  host: adapter-infra.dev.simpl-europe.eu
+  tls:
+    secretName: adapter-infra-simpl-backend-tls
+
+deployment:
+  label: infra-deployment

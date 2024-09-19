@@ -1,0 +1,127 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.argocd.appname }}
+  namespace: {{ .Values.argocd.namespace }}
+spec:
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - ApplyOutOfSyncOnly=true
+      - CreateNamespace=true
+  project: default
+  destination:
+    server: {{ .Values.cluster.address }}
+    namespace: {{ .Values.cluster.namespace }}
+  sources:
+  - repoURL: {{ .Values.values.repo_URL }}
+    targetRevision: {{ .Values.values.branch }}
+    ref: values
+  - repoURL: {{ .Values.postgresql.repo_URL }}
+    path: {{ .Values.postgresql.folder }}
+    targetRevision: {{ .Values.postgresql.branch }}
+    helm:
+      valueFiles:
+        {{- range .Values.postgresql.valueFiles }}
+        - $values/app-values/Postgresql/{{ . }}
+        {{- end }}
+      values: |
+        fullnameOverride: {{ .Values.postgresql.nameOverride }}
+  - repoURL: {{ .Values.keycloak.repo_URL }}
+    path: {{ .Values.keycloak.folder }}
+    targetRevision: {{ .Values.keycloak.branch }}
+    helm:
+      valueFiles:
+        {{- range .Values.keycloak.valueFiles }}
+        - $values/app-values/Keycloak/{{ . }}
+        {{- end }}
+      values: |
+        fullnameOverride: {{ .Values.keycloak.nameOverride }}
+        apiUrl: "https://participant.be.{{ .Values.namespaceTag }}.int.simpl-europe.eu"
+  - repoURL: {{ .Values.sdtooling.repo_URL }}
+    path: {{ .Values.sdtooling.folder }}
+    targetRevision: {{ .Values.sdtooling.branch }}
+    helm:
+      valueFiles:
+        {{- range .Values.sdtooling.valueFiles }}
+        - $values/app-values/SDTooling/{{ . }}
+        {{- end }}
+      values: |
+        namespaceTag: {{ .Values.namespaceTag }}
+      releaseName: {{ .Values.sdtooling.nameOverride }}
+  - repoURL: {{ .Values.signer.repo_URL }}
+    path: {{ .Values.signer.folder }}
+    targetRevision: {{ .Values.signer.branch }}
+    helm:
+      valueFiles:
+        {{- range .Values.signer.valueFiles }}
+        - $values/app-values/Signer/{{ . }}
+        {{- end }}
+      values: |
+        serviceAccount:
+          name: "{{ .Values.signer.serviceAccountName }}"
+        namespaceTag: {{ .Values.namespaceTag }}
+        ingress:
+          frontendDomain: "signer.{{ .Values.namespaceTag }}.int.simpl-europe.eu"
+  - repoURL: {{ .Values.microservices.repo_URL }}
+    path: {{ .Values.microservices.folder }}
+    targetRevision: {{ .Values.microservices.branch }}
+    helm:
+      valueFiles:
+        {{- range .Values.microservices.valueFiles }}
+        - $values/app-values/Microservices/{{ . }}
+        {{- end }}
+      values: |
+        simpl-cloud-gateway:
+          authorityUrl: https://participant.be.{{ .Values.namespaceTag }}.int.simpl-europe.eu
+        global:
+          namespaceTag: {{ .Values.namespaceTag }}
+  - repoURL: {{ .Values.simpl_fe.repo_URL }}
+    path: {{ .Values.simpl_fe.folder }}
+    targetRevision: {{ .Values.simpl_fe.branch }}
+    helm:
+      valueFiles:
+        {{- range .Values.simpl_fe.valueFiles }}
+        - $values/app-values/Simpl-fe/{{ . }}
+        {{- end }}
+      values: |
+        hostBe: participant.be.{{ .Values.namespaceTag }}.int.simpl-europe.eu
+        hostFe: participant.fe.{{ .Values.namespaceTag }}.int.simpl-europe.eu
+        cors:
+          allowOrigin: https://participant.fe.{{ .Values.namespaceTag }}.int.simpl-europe.eu,http://localhost:4202,http://localhost:4203,http://localhost:3000
+        env:
+        - name: APPLICATION
+          value: participant-utility
+        - name: API_URL
+          value: "https://participant.be.{{ .Values.namespaceTag }}.int.simpl-europe.eu"
+        - name: KEYCLOAK_URL
+          value: "https://participant.be.{{ .Values.namespaceTag }}.int.simpl-europe.eu/auth"
+        - name: KEYCLOAK_REALM
+          value: "participant"
+        - name: KEYCLOAK_CLIENT_ID
+          value: "frontend-cli"
+  - repoURL: {{ .Values.poc_ui.repo_URL }}
+    path: {{ .Values.poc_ui.folder }}
+    targetRevision: {{ .Values.poc_ui.branch }}
+    helm:
+      valueFiles:
+        {{- range .Values.poc_ui.valueFiles }}
+        - $values/app-values/POC-UI/{{ . }}
+        {{- end }}
+      values: |
+        ingress:
+          hosts:
+            - host: poc-ui.{{ .Values.namespaceTag }}.int.simpl-europe.eu
+              paths:
+              - path: /
+                pathType: ImplementationSpecific
+          tls:
+            - secretName: poc-ui-tld-secret
+              hosts:
+                - poc-ui.{{ .Values.namespaceTag }}.int.simpl-europe.eu
+        env:
+          AUTH_KEYCLOAK_ID: "federated-catalogue"
+          AUTH_KEYCLOAK_ISSUER: "https://authority.be.{{ .Values.namespaceTag }}.int.simpl-europe.eu/auth/realms/authority/"
+          AUTH_KEYCLOAK_SECRET: ""
+          PUBLIC_FC_URL: "https://fc-server.{{ .Values.namespaceTag }}.int.simpl-europe.eu"
+          PUBLIC_ADAPTER_URL: "https://adapter.{{ .Values.namespaceTag }}.int.simpl-europe.eu"
