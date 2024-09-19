@@ -82,7 +82,7 @@ signer:
 ingress:
   enabled: true
   annotations:
-    cert-manager.io/cluster-issuer: "dev-int"
+    cert-manager.io/cluster-issuer: "dev-prod"
     acme.cert-manager.io/http01-edit-in-place: "true"
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/rewrite-target: /$2
