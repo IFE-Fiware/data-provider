@@ -1,10 +1,10 @@
 argocd:
-  appname: ${NAMESPACE}
+  appname: dataprovider01-iaa
   namespace: argocd
 
 cluster:
   address: https://kubernetes.default.svc
-  namespace: ${NAMESPACE}
+  namespace: dataprovider01-iaa
 
 namespaceTag: ${NAMESPACETAG}
 domainSuffix: ${DOMAINSUFFIX}
