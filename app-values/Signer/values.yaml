@@ -20,7 +20,7 @@ image:
   # -- Image pull secret when internal image is used
   #pullSecrets: deployment-key-light
 
-secretEngine: dev
+secretEngine: dev-int
 secretConfigPath: dev/gaiax-edc-dev-signer-signer
 
 hashicorp:
