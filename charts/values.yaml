@@ -1,16 +1,16 @@
 argocd:
-  appname: ${NAMESPACE}
+  appname: dataprovider01-iaa
   namespace: argocd
 
 cluster:
   address: https://kubernetes.default.svc
-  namespace: ${NAMESPACE}
+  namespace: dataprovider01-iaa
 
-namespaceTag: ${NAMESPACE_TAG}
+namespaceTag: dataprovider01
 
 values:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git
-  branch: feature/master-helm-chart
+  branch: develop
 
 postgresql:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/iaa/charts.git

@@ -8,7 +8,7 @@ secretEngine: dev-int
 secretConfigPath: "{{ .Values.secretEngine }}/{{ .Release.Namespace }}-infra-adapter-simpl-backend"
 
 ingress:
-  host: adapter-infra.dev.simpl-europe.eu
+  host: adapter-infra.dataprovider01.int.simpl-europe.eu
   tls:
     secretName: adapter-infra-simpl-backend-tls
 
