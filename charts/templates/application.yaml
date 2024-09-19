@@ -49,21 +49,21 @@ spec:
       values: |
         namespaceTag: {{ .Values.namespaceTag }}
       releaseName: {{ .Values.sdtooling.nameOverride }}
-#  - repoURL: {{ .Values.signer.repo_URL }}
-#    path: {{ .Values.signer.folder }}
-#    targetRevision: {{ .Values.signer.branch }}
-#    helm:
-#      valueFiles:
-#        {{- range .Values.signer.valueFiles }}
- #       - $values/app-values/Signer/{{ . }}
- #       {{- end }}
- #     values: |
- #       serviceAccount:
- #         name: "{{ .Values.signer.serviceAccountName }}"
- #       namespaceTag: {{ .Values.namespaceTag }}
- #       ingress:
-  #        frontendDomain: "signer.{{ .Values.namespaceTag }}.int.simpl-europe.eu"
-  #      secretEngine: dev-int
+  - repoURL: {{ .Values.signer.repo_URL }}
+    path: {{ .Values.signer.folder }}
+    targetRevision: {{ .Values.signer.branch }}
+    helm:
+      valueFiles:
+        {{- range .Values.signer.valueFiles }}
+        - $values/app-values/Signer/{{ . }}
+        {{- end }}
+      values: |
+        serviceAccount:
+          name: "{{ .Values.signer.serviceAccountName }}"
+        namespaceTag: {{ .Values.namespaceTag }}
+        ingress:
+          frontendDomain: "signer.{{ .Values.namespaceTag }}.int.simpl-europe.eu"
+        secretEngine: dev-int
   - repoURL: {{ .Values.microservices.repo_URL }}
     path: {{ .Values.microservices.folder }}
     targetRevision: {{ .Values.microservices.branch }}
