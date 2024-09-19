@@ -21,7 +21,7 @@ image:
   #pullSecrets: deployment-key-light
 
 secretEngine: dev-int
-secretConfigPath: dev/gaiax-edc-dev-signer-signer
+secretConfigPath: dev-int/dataprovider01-iaa-signer
 
 hashicorp:
   role: "gaiax-edc_role"
