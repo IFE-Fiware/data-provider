@@ -111,8 +111,8 @@ spec:
     chart: {{ .Values.simpl_cloud_gateway.chart_name }}
     helm:
       valueFiles:
-        {{- range .Values.sdtooling.valueFiles }}
-        - $values/app-values/SDTooling/{{ . }}
+        {{- range .Values.simpl_cloud_gateway.valueFiles }}
+        - $values/app-values/Simpl-Cloud-Gateway/{{ . }}
         {{- end }}
       values: |
         microservices:
