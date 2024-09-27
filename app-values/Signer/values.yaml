@@ -5,12 +5,15 @@ REPOSITORY: "code.europa.eu:4567/simpl/simpl-open/development/gaia-x-edc/poc-gai
 TAG: "latest"
 
 secretEngine: dev-int
-secretConfigPath: "{{ .Values.secretEngine }}/{{ .Release.Namespace }}-infra-adapter-simpl-backend"
+secretConfigPath: "dev-int/{{ .Release.Namespace }}-infra-adapter-simpl-backend"
 
 ingress:
-  host: adapter-infra.dev.simpl-europe.eu
+  host: adapter-infra.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
   tls:
     secretName: adapter-infra-simpl-backend-tls
+  annotations:
+    cert-manager.io/cluster-issuer: "dev-prod"
+    acme.cert-manager.io/http01-edit-in-place: "false"
 
 deployment:
   label: infra-deployment

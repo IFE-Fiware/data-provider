@@ -4,6 +4,5 @@ primary:
       init.sql: |
         CREATE USER keycloak WITH PASSWORD 'keycloak' CREATEDB;
         CREATE DATABASE keycloak OWNER keycloak;
-        CREATE USER users WITH PASSWORD 'users' CREATEDB;
-        CREATE DATABASE users OWNER users;
-        CREATE DATABASE "credential-db" OWNER users;
+        CREATE USER usersroles WITH PASSWORD 'usersroles' CREATEDB;
+        CREATE DATABASE usersroles OWNER usersroles;

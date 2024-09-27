@@ -1,11 +1,17 @@
+server-port: &server-port 9000
 replicaCount: 1
 image:
-  repository: "code.europa.eu:4567/simpl/simpl-open/development/iaa/simpl-fe"
-  pullPolicy: IfNotPresent
-  tag: "0.0.1"
+  repository: code.europa.eu:4567/simpl/simpl-open/development/iaa/simpl-cloud-gateway
+  pullPolicy: Always
+  tag: 0.0.4
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+global:
+  profile: participant
+  ingress:
+    issuer: dev-prod
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -34,7 +40,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 3000
+  port: *server-port
 
 resources: 
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -42,26 +48,26 @@ resources:
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
-    cpu: 250m
-    memory: 512Mi
+    cpu: 500m
+    memory: 1Gi
   requests:
-    cpu: 250m
-    memory: 512Mi
+    cpu: 500m
+    memory: 1Gi
 
-# livenessProbe:
-#   httpGet:
-#     path: "/"
-#     port: http
-#   initialDelaySeconds: 30
-#   periodSeconds: 5
-#   failureThreshold: 10
-# readinessProbe:
-#   httpGet:
-#     path: "/"
-#     port: http
-#   initialDelaySeconds: 30
-#   periodSeconds: 5
-#   failureThreshold: 10
+livenessProbe:
+  httpGet:
+    path: "/actuator/health/liveness"
+    port: *server-port
+  initialDelaySeconds: 120
+  periodSeconds: 5
+  failureThreshold: 10
+readinessProbe:
+  httpGet:
+    path: "/actuator/health/readiness"
+    port: *server-port
+  initialDelaySeconds: 120
+  periodSeconds: 5
+  failureThreshold: 10
 
 autoscaling:
   enabled: false
@@ -81,11 +87,19 @@ volumes: {}
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts: {}
 
+envFrom:
+  - configMapRef:
+      name: simpl-cloud-gateway-configmap
+
+microservices:
+  usersRolesUrl: http://users-roles.{{ .Release.Namespace }}.svc.cluster.local:8080
+  securityAttributesProviderUrl: http://security-attributes-provider.{{ .Release.Namespace }}.svc.cluster.local:8080
+  keycloakUrl: http://keycloak.{{ .Release.Namespace }}.svc.cluster.local
+  onboardingUrl: http://onboarding.{{ .Release.Namespace }}.svc.cluster.local:8080
+  ejbcaUrl: http://ejbca-community-helm.{{ .Release.Namespace }}.svc.cluster.local:30080
+
 nodeSelector: {}
 
 tolerations: []
 
 affinity: {}
-
-ingress:
-  issuer: dev-prod
