@@ -17,4 +17,4 @@ global:
   namespaceTag: dataprovider02
   domainSuffix: int.simpl-europe.eu
   ingress:
-    issuer: issuer-ingress-test
+    issuer: dev-prod

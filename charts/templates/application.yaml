@@ -18,8 +18,8 @@ spec:
     targetRevision: {{ .Values.values.branch }}
     ref: values
   - repoURL: {{ .Values.postgresql.repo_URL }}
-    path: {{ .Values.postgresql.folder }}
-    targetRevision: {{ .Values.postgresql.branch }}
+    targetRevision: {{ .Values.postgresql.targetRevision }}
+    chart: {{ .Values.postgresql.chart_name }}
     helm:
       valueFiles:
         {{- range .Values.postgresql.valueFiles }}
@@ -28,8 +28,8 @@ spec:
       values: |
         fullnameOverride: {{ .Values.postgresql.nameOverride }}
   - repoURL: {{ .Values.keycloak.repo_URL }}
-    path: {{ .Values.keycloak.folder }}
-    targetRevision: {{ .Values.keycloak.branch }}
+    targetRevision: {{ .Values.keycloak.targetRevision }}
+    chart: {{ .Values.keycloak.chart_name }}
     helm:
       valueFiles:
         {{- range .Values.keycloak.valueFiles }}
@@ -37,18 +37,61 @@ spec:
         {{- end }}
       values: |
         fullnameOverride: {{ .Values.keycloak.nameOverride }}
-        apiUrl: "https://participant.be.{{ .Values.namespaceTag }}.int.simpl-europe.eu"
-  - repoURL: {{ .Values.sdtooling.repo_URL }}
-    path: {{ .Values.sdtooling.folder }}
-    targetRevision: {{ .Values.sdtooling.branch }}
+        apiUrl: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
+        extraEnvVars:
+        - name: KC_HOSTNAME_ADMIN_URL
+          value: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/auth"
+        - name: KC_HOSTNAME_URL
+          value: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/auth"
+  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.sdtooling_api_be.projectID }}/packages/helm/stable"
+    path: ''
+    targetRevision: {{ .Values.sdtooling_api_be.targetRevision }}
+    chart: {{ .Values.sdtooling_api_be.chart_name }}
     helm:
       valueFiles:
-        {{- range .Values.sdtooling.valueFiles }}
-        - $values/app-values/SDTooling/{{ . }}
+        {{- range .Values.sdtooling_api_be.valueFiles }}
+        - $values/app-values/sdtooling-api-be/{{ . }}
         {{- end }}
       values: |
-        namespaceTag: {{ .Values.namespaceTag }}
-      releaseName: {{ .Values.sdtooling.nameOverride }}
+        domain: {{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+        apiUrl: https://creation-wizard-api.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+        validation:
+          config:
+            domain: http://sd-creation-wizard-api-validation.{{ .Values.cluster.namespace }}.svc.cluster.local
+      releaseName: {{ .Values.sdtooling_api_be.nameOverride }}
+  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.sdtooling_validation_api_be.projectID }}/packages/helm/stable"
+    path: ''
+    targetRevision: {{ .Values.sdtooling_validation_api_be.targetRevision }}
+    chart: {{ .Values.sdtooling_validation_api_be.chart_name }}
+    helm:
+      valueFiles:
+        {{- range .Values.sdtooling_validation_api_be.valueFiles }}
+        - $values/app-values/sdtooling-validation-api-be/{{ . }}
+        {{- end }}
+      releaseName: {{ .Values.sdtooling_validation_api_be.nameOverride }}
+  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.sdtooling_wizard_fe.projectID }}/packages/helm/stable"
+    path: ''
+    targetRevision: {{ .Values.sdtooling_wizard_fe.targetRevision }}
+    chart: {{ .Values.sdtooling_wizard_fe.chart_name }}
+    helm:
+      valueFiles:
+        {{- range .Values.sdtooling_wizard_fe.valueFiles }}
+        - $values/app-values/sdtooling-wizard-fe/{{ . }}
+        {{- end }}
+      values: |
+        domain: {{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+        apiUrl: https://creation-wizard-api.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+      releaseName: {{ .Values.sdtooling_wizard_fe.nameOverride }}
+  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.xsfc_advsearch_be.projectID }}/packages/helm/stable"
+    path: ''
+    targetRevision: {{ .Values.xsfc_advsearch_be.targetRevision }}
+    chart: {{ .Values.xsfc_advsearch_be.chart_name }}
+    helm:
+      valueFiles:
+        {{- range .Values.xsfc_advsearch_be.valueFiles }}
+        - $values/app-values/xsfc-advsearch-be/{{ . }}
+        {{- end }}
+      releaseName: {{ .Values.xsfc_advsearch_be.nameOverride }}
   - repoURL: {{ .Values.signer.repo_URL }}
     path: {{ .Values.signer.folder }}
     targetRevision: {{ .Values.signer.branch }}
@@ -60,49 +103,99 @@ spec:
       values: |
         serviceAccount:
           name: "{{ .Values.signer.serviceAccountName }}"
-        namespaceTag: {{ .Values.namespaceTag }}
         ingress:
-          frontendDomain: "signer.{{ .Values.namespaceTag }}.int.simpl-europe.eu"
-  - repoURL: {{ .Values.microservices.repo_URL }}
-    path: {{ .Values.microservices.folder }}
-    targetRevision: {{ .Values.microservices.branch }}
+          frontendDomain: signer.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.simpl_cloud_gateway.projectID }}/packages/helm/stable"
+    path: ''
+    targetRevision: {{ .Values.simpl_cloud_gateway.targetRevision }}
+    chart: {{ .Values.simpl_cloud_gateway.chart_name }}
     helm:
       valueFiles:
-        {{- range .Values.microservices.valueFiles }}
-        - $values/app-values/Microservices/{{ . }}
+        {{- range .Values.sdtooling.valueFiles }}
+        - $values/app-values/SDTooling/{{ . }}
         {{- end }}
       values: |
-        simpl-cloud-gateway:
-          authorityUrl: https://participant.be.{{ .Values.namespaceTag }}.int.simpl-europe.eu
+        microservices:
+          usersRolesUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
+          securityAttributesProviderUrl: http://security-attributes-provider.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
+          keycloakUrl: http://keycloak.{{ .Values.cluster.namespace }}.svc.cluster.local
+          onboardingUrl: http://onboarding.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
+          ejbcaUrl: http://ejbca-community-helm.{{ .Values.cluster.namespace }}.svc.cluster.local:30080
         global:
-          namespaceTag: {{ .Values.namespaceTag }}
-  - repoURL: {{ .Values.simpl_fe.repo_URL }}
-    path: {{ .Values.simpl_fe.folder }}
-    targetRevision: {{ .Values.simpl_fe.branch }}
+          hostBe: participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+          hostTls: tls.authority.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+          hostFe: participant.fe.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+          authorityUrl: https://authority.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+          keystore:
+            password: "authority"
+          cors:
+            allowOrigin: https://participant.fe.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:3000
+  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.users_roles.projectID }}/packages/helm/stable"
+    path: ''
+    targetRevision: {{ .Values.users_roles.targetRevision }}
+    chart: {{ .Values.users_roles.chart_name }}
+    helm:
+      valueFiles:
+        {{- range .Values.users_roles.valueFiles }}
+        - $values/app-values/Users-Roles/{{ . }}
+        {{- end }}
+      values: |
+        global:
+          hostBe: participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+          hostTls: tls.authority.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+          hostFe: participant.fe.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+          authorityUrl: https://authority.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+          keystore:
+            password: "authority"
+          cors:
+            allowOrigin: https://participant.fe.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:3000
+          env:
+            SPRING_DATASOURCE_URL: "jdbc:postgresql://postgresql.{{ .Values.cluster.namespace }}.svc.cluster.local:5432/usersroles"
+  #- repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.tls_gateway.projectID }}/packages/helm/stable"
+  #  path: ''
+  #  targetRevision: {{ .Values.tls_gateway.targetRevision }}
+  #  chart: {{ .Values.tls_gateway.chart_name }}
+  - repoURL: {{ .Values.redis.repo_URL }}
+    targetRevision: {{ .Values.redis.targetRevision }}
+    chart: {{ .Values.redis.chart_name }}
+    helm:
+      valueFiles:
+        {{- range .Values.redis.valueFiles }}
+        - $values/app-values/Redis/{{ . }}
+        {{- end }}
+      values: |
+        fullnameOverride: {{ .Values.redis.nameOverride }}
+  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.simpl_fe.projectID }}/packages/helm/stable"
+    path: ''
+    targetRevision: {{ .Values.simpl_fe.targetRevision }}
+    chart: {{ .Values.simpl_fe.chart_name }}
     helm:
       valueFiles:
         {{- range .Values.simpl_fe.valueFiles }}
         - $values/app-values/Simpl-fe/{{ . }}
         {{- end }}
       values: |
-        hostBe: participant.be.{{ .Values.namespaceTag }}.int.simpl-europe.eu
-        hostFe: participant.fe.{{ .Values.namespaceTag }}.int.simpl-europe.eu
+        image:
+          tag: {{ .Values.simpl_fe.targetRevision }}
+        hostBe: participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+        hostFe: participant.fe.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
         cors:
-          allowOrigin: https://participant.fe.{{ .Values.namespaceTag }}.int.simpl-europe.eu,http://localhost:4202,http://localhost:4203,http://localhost:3000
+          allowOrigin: https://participant.fe.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:4203,http://localhost:3000
         env:
         - name: APPLICATION
           value: participant-utility
         - name: API_URL
-          value: "https://participant.be.{{ .Values.namespaceTag }}.int.simpl-europe.eu"
+          value: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
         - name: KEYCLOAK_URL
-          value: "https://participant.be.{{ .Values.namespaceTag }}.int.simpl-europe.eu/auth"
+          value: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/auth"
         - name: KEYCLOAK_REALM
           value: "participant"
         - name: KEYCLOAK_CLIENT_ID
           value: "frontend-cli"
-  - repoURL: {{ .Values.poc_ui.repo_URL }}
-    path: {{ .Values.poc_ui.folder }}
-    targetRevision: {{ .Values.poc_ui.branch }}
+  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.poc_ui.projectID }}/packages/helm/stable"
+    path: ''
+    targetRevision: {{ .Values.poc_ui.targetRevision }}
+    chart: {{ .Values.poc_ui.chart_name }}
     helm:
       valueFiles:
         {{- range .Values.poc_ui.valueFiles }}
@@ -111,17 +204,18 @@ spec:
       values: |
         ingress:
           hosts:
-            - host: poc-ui.{{ .Values.namespaceTag }}.int.simpl-europe.eu
+            - host: poc-ui.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
               paths:
               - path: /
                 pathType: ImplementationSpecific
           tls:
             - secretName: poc-ui-tld-secret
               hosts:
-                - poc-ui.{{ .Values.namespaceTag }}.int.simpl-europe.eu
+                - poc-ui.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
         env:
           AUTH_KEYCLOAK_ID: "federated-catalogue"
-          AUTH_KEYCLOAK_ISSUER: "https://authority.be.{{ .Values.namespaceTag }}.int.simpl-europe.eu/auth/realms/authority/"
-          AUTH_KEYCLOAK_SECRET: ""
-          PUBLIC_FC_URL: "https://fc-server.{{ .Values.namespaceTag }}.int.simpl-europe.eu"
-          PUBLIC_ADAPTER_URL: "https://adapter.{{ .Values.namespaceTag }}.int.simpl-europe.eu"
+          AUTH_KEYCLOAK_ISSUER: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/auth/realms/participant/"
+          AUTH_KEYCLOAK_SECRET: "uPHGXwstfPqSuSux9UVmiYcKPBRao7Sv"
+          PUBLIC_FC_URL: "https://fc-server.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_ADAPTER_URL: "https://adapter.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_CREATION_WIZARD_API_URL: "https://creation-wizard-api.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
