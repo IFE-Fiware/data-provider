@@ -6,35 +6,36 @@ cluster:
   address: https://kubernetes.default.svc
   namespace: ${NAMESPACE}
 
-namespaceTag: ${NAMESPACE_TAG}
+namespaceTag: ${NAMESPACETAG}
+domainSuffix: ${DOMAINSUFFIX}
 
 values:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git
   branch: develop
 
 postgresql:
-  repo_URL: https://code.europa.eu/simpl/simpl-open/development/iaa/charts.git
-  branch: feature/integration-refactor
-  folder: postgresql
+  repo_URL: https://charts.bitnami.com/bitnami
+  chart_name: postgresql
+  targetRevision: v15.2.5
   nameOverride: postgresql
   valueFiles:
     - values.yaml
     - values-participant.yaml
 
 keycloak:
-  repo_URL: https://code.europa.eu/simpl/simpl-open/development/iaa/charts.git
-  branch: feature/integration-refactor
-  folder: keycloak
+  repo_URL: https://charts.bitnami.com/bitnami
+  chart_name: keycloak
+  targetRevision: "21.2.2"
   nameOverride: keycloak
   valueFiles:
     - values.yaml
     - values-participant.yaml
 
-sdtooling:
-  repo_URL: https://code.europa.eu/simpl/simpl-open/development/data1/charts.git
-  branch: feature/add-domain-tag
-  folder: .
-  nameOverride: sd
+redis:
+  repo_URL: 'https://charts.bitnami.com/bitnami'
+  targetRevision: 20.1.0
+  chart_name: redis
+  nameOverride: redis
   valueFiles:
     - values.yaml
     
@@ -46,24 +47,65 @@ signer:
   valueFiles:
     - values.yaml
 
-microservices:
-  repo_URL: https://code.europa.eu/simpl/simpl-open/development/iaa/charts.git
-  branch: feature/add-domain-tag
-  folder: microservices
+sdtooling_api_be:
+  projectID: "778"
+  targetRevision: 0.1.0
+  chart_name: sd-creation-wizard
+  valueFiles:
+    - values.yaml
+  nameOverride: sd
+
+sdtooling_wizard_fe:
+  projectID: "777"
+  targetRevision: 0.1.0
+  chart_name: sd-creation-wizard
+  valueFiles:
+    - values.yaml
+  nameOverride: sd
+
+sdtooling_validation_api_be:
+  projectID: "868"
+  targetRevision: 0.1.0
+  chart_name: sd-creation-wizard
+  valueFiles:
+    - values.yaml
+  nameOverride: sd
+
+xsfc_advsearch_be:
+  projectID: "891"
+  targetRevision: 0.1.0
+  chart_name: xsfc-advsearch
+  valueFiles:
+    - values.yaml
+  nameOverride: sd
+
+simpl_cloud_gateway:
+  projectID: "772"
+  targetRevision: 0.0.4
+  chart_name: simpl-cloud-gateway
+  valueFiles:
+    - values.yaml
+
+users_roles:
+  projectID: "771"
+  targetRevision: 0.0.4
+  chart_name: users-roles
   valueFiles:
     - values.yaml
 
 simpl_fe:
-  repo_URL: https://code.europa.eu/simpl/simpl-open/development/iaa/charts.git
-  branch: feature/add-domain-tag
-  folder: simpl-fe
+  projectID: "769"
+  targetRevision: 0.0.4
+  chart_name: simpl-fe
   valueFiles:
     - values.yaml
-    - values-participant.yaml
+
+tls_gateway:
+  projectID: "860"
+  targetRevision: 0.0.4
+  chart_name: tls-gateway
 
 poc_ui:
-  repo_URL: https://code.europa.eu/simpl/simpl-open/development/gaia-x-edc/poc-gaia-x-edc-ui.git
-  branch: feature/integration-deploy
-  folder: charts
-  valueFiles:
-    - values.yaml
+  projectID: "747"
+  targetRevision: v0.0.2-O-release-1-4-1.275.d842a24b
+  chart_name: charts
