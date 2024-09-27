@@ -1,2 +1,2 @@
 name: data-provider01
-version: 0.1.0
+version: ${PROJECT_VERSION_NUMBER}
