@@ -35,7 +35,12 @@ There are a couple of variables you need to replace.
 | ${NAMESPACETAG}        | dataprovider01      | Namespace tag - that will be in FQDN differentiating the deployment, used for example in participant.be.**dataprovider01**.int.simpl-europe.eu  |
 | ${DOMAINSUFFIX}        | int.simpl-europe.eu | Domain suffix in FQDN, used for example in participant.be.dataprovider01.**int.simpl-europe.eu** |
 
-You might also need to replace the value in key values.branch if you are using a different branch of values repo than "develop". 
+You might also need to modify (if needed) the values in keys:
+
+| Variable key           |     Example         | Description     |
+| ---------------------- |     :-----:         | --------------- |
+| values.repo_URL        | https://....git     | URL for repo with app-values folder |
+| values.branch          | develop             | Branch of this repo to use          |
 
 ### Deployment
 
@@ -47,3 +52,10 @@ Use the command prompt. Proceed to the folder where you have the Chart.yaml file
 After it's been already deployed and you want to implement changes, you can use this command (in the same folder):
 
 `helm upgrade data-provider .`
+
+### Removal
+
+To remove the deployment you need to do two things:
+
+* `helm uninstall data-provider` - which will remove the application from argocd
+* `kubectl delete ns ${NAMESPACE}` - which will remove the namespace ${NAMESPACE} that holds all of the components.
