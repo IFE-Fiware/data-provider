@@ -47,6 +47,7 @@ You might also need to modify (if needed) the values in keys:
 Two volumes needs to be created manually at the moment:
 * nfs-storage-pvc-xsfc
 * nfs-storage-pvc-sdapibe
+
 This will be fixed in future versions.
 
 In values of TLS Gateway you need to input the base64 encoded keystore and truststore, with their passwords, in those keys:
