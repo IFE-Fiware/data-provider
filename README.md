@@ -42,6 +42,25 @@ You might also need to modify (if needed) the values in keys:
 | values.repo_URL        | https://....git     | URL for repo with app-values folder |
 | values.branch          | develop             | Branch of this repo to use          |
 
+### Manual steps
+
+Two volumes needs to be created manually at the moment:
+* nfs-storage-pvc-xsfc
+* nfs-storage-pvc-sdapibe
+This will be fixed in future versions.
+
+In values of TLS Gateway you need to input the base64 encoded keystore and truststore, with their passwords, in those keys:
+
+```
+ssl:
+  keyStore:
+    base64: "yourbase64keystore"
+    password: "yourpassword"
+  trustStore:
+    base64: "yourbase64truststore"
+    password: "yourpassword"
+```
+
 ### Deployment
 
 After you have prepared the values file, you can start the deployment. 
