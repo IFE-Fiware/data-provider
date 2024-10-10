@@ -6,7 +6,9 @@ cluster:
   address: https://kubernetes.default.svc
   namespace: ${NAMESPACE}
 
+project: ${PROJECT}
 namespaceTag: ${NAMESPACETAG}
+authorityNamespaceTag: ${AUTHNAMESPACETAG}
 domainSuffix: ${DOMAINSUFFIX}
 
 values:
@@ -95,15 +97,11 @@ users_roles:
 
 simpl_fe:
   projectID: "769"
-  targetRevision: 0.0.4
+  targetRevision: 0.0.4-620.hotfix.48569299
   chart_name: simpl-fe
   valueFiles:
     - values.yaml
-
-tls_gateway:
-  projectID: "860"
-  targetRevision: 0.0.4
-  chart_name: tls-gateway
+    - values-participant.yaml
 
 poc_ui:
   projectID: "747"
