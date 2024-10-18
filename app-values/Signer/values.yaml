@@ -5,7 +5,7 @@ REPOSITORY: "code.europa.eu:4567/simpl/simpl-open/development/gaia-x-edc/poc-gai
 TAG: "latest"
 
 secretEngine: dev-int
-secretConfigPath: "dev-int/{{ .Release.Namespace }}-infra-adapter-simpl-backend"
+secretConfigPath: "{{ .Values.secretEngine }}/{{ .Release.Namespace }}-infra-adapter-simpl-backend"
 
 ingress:
   host: adapter-infra.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
