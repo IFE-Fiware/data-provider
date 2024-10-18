@@ -91,6 +91,8 @@ spec:
         {{- range .Values.xsfc_advsearch_be.valueFiles }}
         - $values/app-values/xsfc-advsearch-be/{{ . }}
         {{- end }}
+      values: |
+        domain: {{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
       releaseName: {{ .Values.xsfc_advsearch_be.nameOverride }}
   - repoURL: {{ .Values.signer.repo_URL }}
     path: {{ .Values.signer.folder }}
@@ -105,6 +107,7 @@ spec:
           name: "{{ .Values.signer.serviceAccountName }}"
         ingress:
           frontendDomain: signer.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+        secretEngine: {{ .Values.secretEngine }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.simpl_cloud_gateway.projectID }}/packages/helm/stable"
     path: ''
     targetRevision: {{ .Values.simpl_cloud_gateway.targetRevision }}

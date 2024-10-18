@@ -1,3 +1,8 @@
+project: ${PROJECT}
+namespaceTag: ${NAMESPACETAG}
+authorityNamespaceTag: ${AUTHNAMESPACETAG}
+domainSuffix: ${DOMAINSUFFIX}
+
 argocd:
   appname: ${NAMESPACE}
   namespace: argocd
@@ -6,10 +11,9 @@ cluster:
   address: https://kubernetes.default.svc
   namespace: ${NAMESPACE}
 
-project: ${PROJECT}
-namespaceTag: ${NAMESPACETAG}
-authorityNamespaceTag: ${AUTHNAMESPACETAG}
-domainSuffix: ${DOMAINSUFFIX}
+secretEngine: ${SECRETENGINE}
+hashicorp:
+  service: "http://vault.vault.svc.cluster.local:8200"
 
 values:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git
@@ -59,7 +63,7 @@ sdtooling_api_be:
 
 sdtooling_wizard_fe:
   projectID: "777"
-  targetRevision: 0.1.0
+  targetRevision: 1.0.0-106.hotfix.baaa8ec9
   chart_name: sd-creation-wizard
   valueFiles:
     - values.yaml
@@ -90,7 +94,7 @@ simpl_cloud_gateway:
 
 users_roles:
   projectID: "771"
-  targetRevision: 0.0.4
+  targetRevision: 0.0.41-591.hotfix.b1dfc6f7
   chart_name: users-roles
   valueFiles:
     - values.yaml
