@@ -126,9 +126,9 @@ spec:
           ejbcaUrl: http://ejbca-community-helm.{{ .Values.cluster.namespace }}.svc.cluster.local:30080
         global:
           hostBe: participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
-          hostTls: tls.authority.{{ .Values.authorityNamespaceTag }}.{{ .Values.domainSuffix }}
+          hostTls: tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}
           hostFe: participant.fe.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
-          authorityUrl: https://authority.be.{{ .Values.authorityNamespaceTag }}.{{ .Values.domainSuffix }}
+          authorityUrl: https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}
           keystore:
             password: "your-keystore-password"
           cors:
@@ -145,15 +145,16 @@ spec:
       values: |
         global:
           hostBe: participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
-          hostTls: tls.authority.{{ .Values.authorityNamespaceTag }}.{{ .Values.domainSuffix }}
+          hostTls: tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}
           hostFe: participant.fe.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
-          authorityUrl: https://authority.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+          authorityUrl: https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}
           keystore:
             password: "your-keystore-password"
           cors:
             allowOrigin: https://participant.fe.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:3000
         env:
           SPRING_DATASOURCE_URL: "jdbc:postgresql://postgresql.{{ .Values.cluster.namespace }}.svc.cluster.local:5432/usersroles"
+          SPRING_DATA_REDIS_HOST: "redis-master.{{ .Values.cluster.namespace }}.svc.cluster.local"
   - repoURL: {{ .Values.redis.repo_URL }}
     targetRevision: {{ .Values.redis.targetRevision }}
     chart: {{ .Values.redis.chart_name }}
@@ -212,9 +213,9 @@ spec:
               hosts:
                 - poc-ui.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
         env:
-          AUTH_KEYCLOAK_ID: "federated-catalogue"
-          AUTH_KEYCLOAK_ISSUER: "https://authority.be.{{ .Values.authorityNamespaceTag }}.{{ .Values.domainSuffix }}/auth/realms/authority/"
-          AUTH_KEYCLOAK_SECRET: "uPHGXwstfPqSuSux9UVmiYcKPBRao7Sv"
+          AUTH_KEYCLOAK_ID: "{{ .Values.authority.keycloakClientID }}"
+          AUTH_KEYCLOAK_ISSUER: "https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}/auth/realms/authority/"
+          AUTH_KEYCLOAK_SECRET: "{{ .Values.authority.keycloakSecret }}"
           PUBLIC_FC_URL: "https://fc-server.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
           PUBLIC_ADAPTER_URL: "https://adapter.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
           PUBLIC_CREATION_WIZARD_API_URL: "https://creation-wizard-api.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"

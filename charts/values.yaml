@@ -1,6 +1,9 @@
 project: ${PROJECT}
 namespaceTag: ${NAMESPACETAG}
-authorityNamespaceTag: ${AUTHNAMESPACETAG}
+authority:
+  namespaceTag: ${AUTHNAMESPACETAG}
+  keycloakClientID: ${AUTHKEYCLOAKID}
+  keycloakSecret: ${AUTHKEYCLOAKSECRET}
 domainSuffix: ${DOMAINSUFFIX}
 
 argocd:
@@ -109,5 +112,5 @@ simpl_fe:
 
 poc_ui:
   projectID: "747"
-  targetRevision: v0.0.2-O-release-1-4-1.275.d842a24b
+  targetRevision: 0.1.5
   chart_name: charts
