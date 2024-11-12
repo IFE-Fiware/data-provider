@@ -20,8 +20,3 @@ apiUrl: https://creation-wizard-api.dataprovider03.int.simpl-europe.eu
 schemaVolumeClaim: nfs-storage-pvc4
 #Mount path used for schema storage
 schemaPvcMountPath: /data
-
-image:
-  repository: "code.europa.eu:4567/simpl/simpl-open/development/data1/sdtooling-wizard-fe"
-  pullPolicy: Always
-  tag: "0.1.0"

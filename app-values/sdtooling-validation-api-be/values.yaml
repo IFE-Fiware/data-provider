@@ -17,8 +17,3 @@ domain: dataprovider03.int.simpl-europe.eu
 schemaVolumeClaim: nfs-storage-pvc3
 #Mount path used for schema storage
 schemaPvcMountPath: /data
-
-image:
-  repository: "code.europa.eu:4567/simpl/simpl-open/development/data1/sdtooling-validation-api-be"
-  pullPolicy: Always
-  tag: "0.1.0"
