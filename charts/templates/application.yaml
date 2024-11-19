@@ -234,9 +234,9 @@ spec:
           AUTH_KEYCLOAK_ID: "{{ .Values.authority.keycloakClientID }}"
           AUTH_KEYCLOAK_ISSUER: "https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}/auth/realms/authority/"
           AUTH_KEYCLOAK_SECRET: "{{ .Values.authority.keycloakSecret }}"
-          PUBLIC_FC_URL: "https://fc-server.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
-          PUBLIC_ADAPTER_URL: "https://adapter.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
-          PUBLIC_CREATION_WIZARD_API_URL: "https://creation-wizard-api.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_FC_URL: "https://xsfc-data-server-service.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_ADAPTER_URL: "https://adapter.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_CREATION_WIZARD_API_URL: "https://creation-wizard-api.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
           PUBLIC_SIGNER_URL: "https://signer.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.simpl_catalogue_client.projectID }}/packages/helm/stable"
     path: ''
