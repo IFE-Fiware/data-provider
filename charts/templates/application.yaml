@@ -46,7 +46,7 @@ spec:
         - name: KC_HOSTNAME
           value: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/auth"
         - name: USERS_ROLES_BASE_URL
-          value: "http://users-roles.<namespace>.svc.cluster.local:8080"
+          value: "http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080"
         - name: KEYCLOAK_BASE_URL
           value: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/auth"
         - name: REALM
@@ -136,7 +136,7 @@ spec:
           keycloakUrl: http://keycloak.{{ .Values.cluster.namespace }}.svc.cluster.local
         global:
           hostBe: participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
-          hostTls: tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}
+          hostTls: tls.participant.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
           authorityUrl: https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}
           cors:
             allowOrigin: https://participant.fe.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:3000
@@ -203,13 +203,13 @@ spec:
           usersRolesUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
           keycloakUrl: http://keycloak.{{ .Values.cluster.namespace }}.svc.cluster.local
         global:
-          authorityUrl: https://authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }} # this is an example, update this field
+          authorityUrl: https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}
           cors:
             allowOrigin: https://authority.fe.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }},https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:3000
         redis:
           host: "redis-master.{{ .Release.Namespace }}.svc.cluster.local"
         hostT2: "tls.participant.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
-        authorityUrlT1: "https://t1.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+        authorityUrlT1: "https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.sd_ui.projectID }}/packages/helm/stable"
     path: ''
     targetRevision: {{ .Values.sd_ui.targetRevision }}
