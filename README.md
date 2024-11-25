@@ -150,6 +150,8 @@ spec:
           namespaceTag: authority1                              # namespace tag of target authority
         monitoring:
           enabled: true                                         # "true" enables the deployment of ELK stack for monitoring
+        hashicorp:
+          service: "http://vault-ha.vault-ha.svc.cluster.local:8200"  # local service path to your vault
     chart: data-provider
   destination:
     server: 'https://kubernetes.default.svc'
