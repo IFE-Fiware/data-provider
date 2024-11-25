@@ -121,6 +121,35 @@ spec:
         secretEngine: {{ .Values.secretEngine }}
         hashicorp:
           service: {{ .Values.hashicorp.service }}
+  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.simpl_catalogue_client.projectID }}/packages/helm/stable"
+    path: ''
+    targetRevision: {{ .Values.simpl_catalogue_client.targetRevision }}
+    chart: {{ .Values.simpl_catalogue_client.chart_name }}
+    helm:
+      valueFiles:
+        {{- range .Values.simpl_catalogue_client.valueFiles }}
+        - $values/app-values/Simpl-catalogue-client/{{ . }}
+        {{- end }}
+      values: |
+        env:
+          AUTH_KEYCLOAK_ID: "{{ .Values.authority.keycloakClientID }}"
+          AUTH_KEYCLOAK_ISSUER: "https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}/auth/realms/authority/"
+          AUTH_KEYCLOAK_SECRET: "{{ .Values.authority.keycloakSecret }}"
+          PUBLIC_FC_DATA_URL: "https://xsfc-data-server-service.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_FC_INFRA_URL: "https://xsfc-infra-server-service.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_DATA_ADAPTER_URL: "https://adapter.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_INFRA_ADAPTER_URL: "https://adapter.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_CREATION_WIZARD_API_URL: "https://creation-wizard-api.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
+        ingress:
+          hosts:
+            - host: catalogue-ui.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+              paths:
+              - path: /
+                pathType: ImplementationSpecific
+          tls:
+            - secretName: catalogue-ui-tld-secret
+              hosts:
+                - catalogue-ui.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.simpl_cloud_gateway.projectID }}/packages/helm/stable"
     path: ''
     targetRevision: {{ .Values.simpl_cloud_gateway.targetRevision }}
@@ -238,35 +267,6 @@ spec:
           PUBLIC_ADAPTER_URL: "https://adapter.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
           PUBLIC_CREATION_WIZARD_API_URL: "https://creation-wizard-api.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
           PUBLIC_SIGNER_URL: "https://signer.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
-  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.simpl_catalogue_client.projectID }}/packages/helm/stable"
-    path: ''
-    targetRevision: {{ .Values.simpl_catalogue_client.targetRevision }}
-    chart: {{ .Values.simpl_catalogue_client.chart_name }}
-    helm:
-      valueFiles:
-        {{- range .Values.simpl_catalogue_client.valueFiles }}
-        - $values/app-values/Simpl-catalogue-client/{{ . }}
-        {{- end }}
-      values: |
-        env:
-          AUTH_KEYCLOAK_ID: "{{ .Values.authority.keycloakClientID }}"
-          AUTH_KEYCLOAK_ISSUER: "https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}/auth/realms/authority/"
-          AUTH_KEYCLOAK_SECRET: "{{ .Values.authority.keycloakSecret }}"
-          PUBLIC_FC_DATA_URL: "https://xsfc-data-server-service.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
-          PUBLIC_FC_INFRA_URL: "https://xsfc-infra-server-service.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
-          PUBLIC_DATA_ADAPTER_URL: "https://adapter.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
-          PUBLIC_INFRA_ADAPTER_URL: "https://adapter.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
-          PUBLIC_CREATION_WIZARD_API_URL: "https://creation-wizard-api.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
-        ingress:
-          hosts:
-            - host: catalogue-ui.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
-              paths:
-              - path: /
-                pathType: ImplementationSpecific
-          tls:
-            - secretName: catalogue-ui-tld-secret
-              hosts:
-                - catalogue-ui.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
   {{- if .Values.monitoring.enabled }}
   - repoURL: {{ .Values.monitoring.operator.repo_URL }}
     targetRevision: {{ .Values.monitoring.operator.targetRevision }}
