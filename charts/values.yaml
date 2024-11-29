@@ -111,7 +111,7 @@ sdtooling_validation_api_be:
 
 xsfc_advsearch_be:
   projectID: "891"
-  targetRevision: 1.0.0
+  targetRevision: 1.1.0-rc.59
   chart_name: xsfc-advsearch
   resources:
     requests:
