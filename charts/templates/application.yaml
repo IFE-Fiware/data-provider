@@ -267,7 +267,7 @@ spec:
         {{- end }}
       values: |
         ingress:
-          host: edc-consumer.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+          host: edc.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
         {{- if .Values.simpl_edc.resources }}
         resources: {{- toYaml .Values.simpl_edc.resources | nindent 10 }}
         {{- end }}
