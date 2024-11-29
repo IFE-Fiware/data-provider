@@ -218,7 +218,7 @@ spec:
       values: |
         hostFe: participant.fe.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
         cors:
-          allowOrigin: https://participant.fe.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:4203,http://localhost:3000
+          allowOrigin: https://participant.fe.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }},https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:4203,http://localhost:3000
         env:
         - name: API_URL
           value: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
