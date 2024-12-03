@@ -36,14 +36,6 @@ To ensure that the namespace was created successfully, run the following command
 `kubectl get namespaces`
 <br/>This will list all the namespaces in your cluster, and you should see the one you just created listed.
 
-#### Create volumes
-
-Two volumes needs to be created manually at the moment:
-* nfs-storage-pvc-xsfc
-* nfs-storage-pvc-sdapibe
-
-This will be fixed in future versions.
-
 #### Vault related tasks
 
 ##### Preliminal activites (done once)
