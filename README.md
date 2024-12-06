@@ -1,5 +1,28 @@
 # Dataprovider Agent
 
+<!-- TOC -->
+* [Dataprovider Agent](#dataprovider-agent)
+  * [Description](#description)
+  * [Pre-Requisites](#pre-requisites)
+    * [Onboarding](#onboarding-)
+    * [Tools](#tools)
+  * [Installation](#installation)
+    * [Prerequisites](#prerequisites)
+      * [Create the Namespace](#create-the-namespace)
+      * [Verify the Namespace](#verify-the-namespace)
+      * [Vault related tasks](#vault-related-tasks)
+        * [Preliminal activites (done once)](#preliminal-activites-done-once)
+        * [Secret for Signer](#secret-for-signer)
+    * [Deployment](#deployment)
+      * [Deployment using ArgoCD](#deployment-using-argocd)
+      * [Manual deployment](#manual-deployment)
+        * [Files preparation](#files-preparation)
+        * [Deployment](#deployment-1)
+    * [Monitoring](#monitoring)
+    * [Removal](#removal)
+* [Troubleshooting](#troubleshooting-)
+<!-- TOC -->
+
 ## Description
 
 This repo contains:
@@ -8,16 +31,24 @@ This repo contains:
 
 ## Pre-Requisites
 
-| Pre-Requisites         |     Version     | Description                                                                                                                                     |
-| ---------------------- |     :-----:     | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| DNS sub-domain name    |       N/A       | This domain will be used to address all services of the agent. <br/> example: `*.dataprovider01.int.simpl-europe.eu`                            |  
-| Kubernetes Cluster     | 1.29.x or newer | Other version *might* work but tests were performed using 1.29.x version                                                                        |
-| nginx-ingress          | 1.10.x or newer | Used as ingress controller. <br/> Other version *might* work but tests were performed using 1.10.x version. <br/> Image used: `registry.k8s.io/ingress-nginx/controller:v1.10.0`  |
-| cert-manager           | 1.15.x or newer | Used for automatic cert management. <br/> Other version *might* work but tests were performed using 1.15.x version. <br/> Image used: `quay.io/jetstack/cert-manager-controller::v1.15.3` |
-| Hashicorp Vault        | 1.17.x or newer | Other version *might* work but tests were performed using 1.17.x version. <br/> Image used: `hashicorp/vault:1.17.2`                            |
-| nfs-provisioner        | 4.0.x or newer  | Backend for *Read/Write many* volumes. <br/> Other version *might* work but tests were performed using 4.0.x version. <br/> Image used: `registry.k8s.io/sig-storage/nfs-provisioner:v4.0.8` |
-| argocd                 | 2.11.x or newer | Used as GitOps tool . App of apps concept. <br/> Other version *might* work but tests were performed using 2.11.x version. <br/> Image used: `quay.io/argoproj/argocd:v2.11.3` |
-| kube-state-metrics     | present         | Used for monitoring, Metricbeat statuses in Kibana dashboard |
+### Onboarding 
+
+Prior to the installation of the data provider agent, make sure to follow the onboarding steps for a data space participant.
+
+[Onboarding a Participant](https://code.europa.eu/simpl/simpl-open/development/iaa/charts/-/blob/develop/doc/0.7.x/ONBOARD.md?ref_type=heads#onboarding-a-participant)
+
+### Tools
+
+| Pre-Requisites      |     Version     | Description                                                                                                                                                                                  |
+|---------------------|:---------------:|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| DNS sub-domain name |       N/A       | This domain will be used to address all services of the agent. <br/> example: `*.dataprovider01.int.simpl-europe.eu`                                                                         |  
+| Kubernetes Cluster  | 1.29.x or newer | Other version *might* work but tests were performed using 1.29.x version                                                                                                                     |
+| nginx-ingress       | 1.10.x or newer | Used as ingress controller. <br/> Other version *might* work but tests were performed using 1.10.x version. <br/> Image used: `registry.k8s.io/ingress-nginx/controller:v1.10.0`             |
+| cert-manager        | 1.15.x or newer | Used for automatic cert management. <br/> Other version *might* work but tests were performed using 1.15.x version. <br/> Image used: `quay.io/jetstack/cert-manager-controller::v1.15.3`    |
+| Hashicorp Vault     | 1.17.x or newer | Other version *might* work but tests were performed using 1.17.x version. <br/> Image used: `hashicorp/vault:1.17.2`                                                                         |
+| nfs-provisioner     | 4.0.x or newer  | Backend for *Read/Write many* volumes. <br/> Other version *might* work but tests were performed using 4.0.x version. <br/> Image used: `registry.k8s.io/sig-storage/nfs-provisioner:v4.0.8` |
+| argocd              | 2.11.x or newer | Used as GitOps tool . App of apps concept. <br/> Other version *might* work but tests were performed using 2.11.x version. <br/> Image used: `quay.io/argoproj/argocd:v2.11.3`               |
+| kube-state-metrics  |     present     | Used for monitoring, Metricbeat statuses in Kibana dashboard                                                                                                                                 |
 
 ## Installation
 
@@ -46,15 +77,14 @@ To ensure that the namespace was created successfully, run the following command
 4. Enable kubernetes interaction with vault `vault auth enable kubernetes`
 5. Add config for kubernetes `vault write auth/kubernetes/config  kubernetes_host="https://$KUBERNETES_PORT_443_TCP_ADDR:443"`
 6. Write policy in vault for fetching credentials by kubernetes
-```
-vault policy write dev-policy - <<EOF
-path "dev/data/*" {
-   capabilities = ["read"]
-}
-EOF 
-```
-in this example `dev-policy` is name of policy - it can be anything, and path
-`dev/data/*` needs to relate existing secret engine declared in pt 3.
+    ```
+    vault policy write dev-policy - <<EOF
+    path "dev/data/*" {
+       capabilities = ["read"]
+    }
+    EOF 
+    ```
+    in this example `dev-policy` is name of policy - it can be anything, and path `dev/data/*` needs to relate existing secret engine declared in pt 3. 
 
 7. Create role in vault that will bind policy with given service account name and service account namespace
 
@@ -76,7 +106,7 @@ Steps 1-7 need to be executed only once , if given role, policy, already exists 
 
 ##### Secret for Signer
 
-One secret is needed, its naming syntax is {{ .Release.Namespace }}-infra-adapter-simpl-backend", it should be created in created before kv secret engine.
+One secret is needed, its naming syntax is "{{ .Release.Namespace }}-infra-adapter-simpl-backend", it should be created in created before kv secret engine.
 Its content is (to be revised):
 
 ```
@@ -211,3 +241,10 @@ To remove the deployment you need to do two things:
 
 * `helm uninstall data-provider` - which will remove the application from argocd
 * `kubectl delete ns ${NAMESPACE}` - which will remove the namespace ${NAMESPACE} that holds all of the components.
+
+# Troubleshooting 
+If you encounter issues during deployment, check the following:
+
+- Ensure that ArgoCD is properly set up and running.
+- Verify that the test01 namespace exists in your Kubernetes cluster.
+- Check the ArgoCD application logs and Helm error messages for specific issues.
