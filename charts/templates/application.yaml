@@ -42,7 +42,7 @@ spec:
         fullnameOverride: {{ .Values.keycloak.nameOverride }}
         apiUrl: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
         externalDatabase:
-          host: "postgresql.{{ .Release.Namespace }}.svc.cluster.local"
+          host: "postgresql.{{ .Values.cluster.namespace }}.svc.cluster.local"
         extraEnvVars:
         - name: KC_HOSTNAME_ADMIN
           value: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/auth"
@@ -159,15 +159,15 @@ spec:
         - $values/app-values/Simpl-Cloud-Gateway/{{ . }}
         {{- end }}
       values: |
-        keycloakUrl: http://keycloak.{{ .Values.cluster.namespace }}.svc.cluster.local
-        usersRolesUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
-        authenticationProviderUrl: http://authentication-provider.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
         global:
           hostBe: participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
           hostTls: tls.participant.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
           authorityUrl: https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}
           cors:
             allowOrigin: https://participant.fe.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:3000
+        keycloakUrl: http://keycloak.{{ .Values.cluster.namespace }}.svc.cluster.local
+        usersRolesUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
+        authenticationProviderUrl: http://authentication-provider.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
         {{- if .Values.simpl_cloud_gateway.resources }}
         resources: {{- toYaml .Values.simpl_cloud_gateway.resources | nindent 10 }}
         {{- end }}
@@ -241,13 +241,13 @@ spec:
         - $values/app-values/tls-gateway/{{ . }}
         {{- end }}
       values: |
+        global:
+          cors:
+            allowOrigin: https://authority.fe.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }},https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:3000
         microservices:
           usersRolesUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
           keycloakUrl: http://keycloak.{{ .Values.cluster.namespace }}.svc.cluster.local
           authenticationProviderUrl: http://authentication-provider.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
-        global:
-          cors:
-            allowOrigin: https://authority.fe.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }},https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:3000
         redis:
           host: "redis-master.{{ .Release.Namespace }}.svc.cluster.local"
         hostT2: "tls.participant.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"

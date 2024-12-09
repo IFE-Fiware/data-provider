@@ -22,5 +22,5 @@ appConfig:
     #   method: GET
     #   disable-ephemeral-proof-check: true
     #   identity-attributes:
-    #     - NOTARY
-    #     - T1UAR_M
+    #     - CONSUMER
+    #     - DATA_PROVIDER
