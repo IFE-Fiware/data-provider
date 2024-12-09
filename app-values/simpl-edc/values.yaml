@@ -14,5 +14,4 @@ ingress:
 # it would be better to move those to vault in the future or use sops encryption
 env:
   edcApiAuthKey: "password"
-  vaultToken: "aHZzLkE5bVd6RG1HNUtFRGFVbUlaTGp3UXVUQg=="
-  
+  vaultToken: "aHZzLkg4TXdJOEhxVFdrNTBvT01ZUkpPV0I1Vwo="
