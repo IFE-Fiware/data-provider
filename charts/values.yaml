@@ -176,6 +176,7 @@ simpl_edc:
       memory: "0"
   valueFiles:
     - values.yaml
+    - values-provider.yaml
 
 simpl_catalogue_client:
   projectID: "937"

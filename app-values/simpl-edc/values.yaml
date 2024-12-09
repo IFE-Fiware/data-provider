@@ -1,25 +1,18 @@
 deployment:
-  containerApiPort: 29191
-  containerManagementPort: 29193
-  containerProtocolPort: 29194
-  label: consumer
-  imagePullPolicy: Always
-
-service:
-  apiPort: 29191
-  managementPort: 29193
-  protocolPort: 29194
+  vault:
+    secretPath: /v1/edc
+    timeout: 30
 
 ingress:
-  tlsSecretName: consumer-simpl-backend-tls
+  enabled: true
   apiPath: /api
   managementPath: /management
   protocolPath: /protocol
+  publicPath: /public
+  controlPath: /control
 
-# it would be better to move those to vault in the future
+# it would be better to move those to vault in the future or use sops encryption
 env:
   edcApiAuthKey: "password"
-  edcParticipantId: "consumer"
-  edcIdsId: "urn:connector:consumer"
-
-
+  vaultToken: "aHZzLkE5bVd6RG1HNUtFRGFVbUlaTGp3UXVUQg=="
+  
