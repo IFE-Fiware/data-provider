@@ -145,8 +145,6 @@ spec:
           namespace: dataprovider01-iaa                         # where the app will be deployed
           kubeStateHost: kube-prometheus-stack-kube-state-metrics.devsecopstools.svc.cluster.local:8080    # link to kube-state-metrics svc
         authority:
-          keycloakClientID: federated-catalogue                 # name of the client in authority keycloak
-          keycloakSecret: clientsecretfromkeycloak              # secret of that client (from its credentials)
           namespaceTag: authority1                              # namespace tag of target authority
         monitoring:
           enabled: true                                         # "true" enables the deployment of ELK stack for monitoring
@@ -172,8 +170,6 @@ project: default                                  # Project to which the namespa
 namespaceTag: dataprovider01                      # identifier of deployment and part of fqdn
 authority:
   namespaceTag: authority1                        # namespace tag of target authority
-  keycloakClientID: federated-catalogue           # name of the client in authority keycloak
-  keycloakSecret: clientsecretfromkeycloak        # secret of that client (from its credentials)
 domainSuffix: int.simpl-europe.eu                 # last part of fqdn
 
 argocd:

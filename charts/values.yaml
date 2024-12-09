@@ -2,8 +2,6 @@ project: ${PROJECT}
 namespaceTag: ${NAMESPACETAG}
 authority:
   namespaceTag: ${AUTHNAMESPACETAG}
-  keycloakClientID: "federated-catalogue"
-  keycloakSecret: ${AUTHKEYCLOAKSECRET}
 domainSuffix: ${DOMAINSUFFIX}
 
 argocd:
