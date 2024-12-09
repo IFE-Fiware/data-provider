@@ -128,14 +128,11 @@ spec:
         {{- end }}
       values: |
         env:
-          AUTH_KEYCLOAK_ID: "{{ .Values.authority.keycloakClientID }}"
-          AUTH_KEYCLOAK_ISSUER: "https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}/auth/realms/authority/"
-          AUTH_KEYCLOAK_SECRET: "{{ .Values.authority.keycloakSecret }}"
-          PUBLIC_FC_DATA_URL: "https://xsfc-data-server-service.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
-          PUBLIC_FC_INFRA_URL: "https://xsfc-infra-server-service.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
-          PUBLIC_DATA_ADAPTER_URL: "https://adapter.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
-          PUBLIC_INFRA_ADAPTER_URL: "https://adapter.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
-          PUBLIC_CREATION_WIZARD_API_URL: "https://creation-wizard-api.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_AUTH_KEYCLOAK_REALM: "participant"
+          PUBLIC_AUTH_KEYCLOAK_CLIENT_ID: "frontend-cli"
+          PUBLIC_FC_DATA_URL: "https://xsfc-server-service.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_SEARCH_API_URL: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/private/xsfc-advsearch-be"
         ingress:
           hosts:
             - host: catalogue-ui.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
@@ -312,12 +309,10 @@ spec:
               hosts:
                 - sd-ui.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
         env:
-          AUTH_KEYCLOAK_ID: "{{ .Values.authority.keycloakClientID }}"
-          AUTH_KEYCLOAK_ISSUER: "https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}/auth/realms/authority/"
-          AUTH_KEYCLOAK_SECRET: "{{ .Values.authority.keycloakSecret }}"
-          PUBLIC_FC_URL: "https://xsfc-data-server-service.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
-          PUBLIC_ADAPTER_URL: "https://adapter.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
-          PUBLIC_CREATION_WIZARD_API_URL: "https://creation-wizard-api.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_AUTH_KEYCLOAK_REALM: "participant"
+          PUBLIC_AUTH_KEYCLOAK_CLIENT_ID: "frontend-cli"
+          PUBLIC_CREATION_WIZARD_API_URL: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/private/sdtooling-api"
           PUBLIC_SIGNER_URL: "https://signer.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
   {{- if .Values.monitoring.enabled }}
   - repoURL: {{ .Values.monitoring.operator.repo_URL }}
