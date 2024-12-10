@@ -5,6 +5,8 @@ deployment:
   containerProtocolPort: 19194
   containerPublicPort: 19291
   label: provider
+  include:
+    postgres: false
 
 service:
   apiPort: 19191
@@ -25,4 +27,7 @@ postgresql:
   fullnameOverride: edc-postgres
   nameOverride: edc-postgres
   password: CncnjtWhFN
+  username: "edc"
+  password: "edc"
+
 
