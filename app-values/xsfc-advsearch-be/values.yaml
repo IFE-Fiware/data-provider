@@ -15,3 +15,24 @@ domain: int.simpl-europe.eu
 schemaVolumeClaim: nfs-storage-pvc-xsfc
 #Mount path used for schema storage
 schemaPvcMountPath: /data
+
+# catalog adapter application (catalogue-adapter-service)
+catalogueAdapter:
+  tier2Gateway:
+    # URI to the tier2 tls gateway of the catalog adapter application
+    uri: https://91.134.104.42
+    # tier2 tls gateway path configured as route rule to the catalog adapter application
+    pathPrefix: /mtls/catalogue-adapter-service
+
+# participant provider
+participant:
+  onboarding:
+    # onboarding credential certificate password
+    credentialPassword: authority
+  
+web:
+  mvc:
+    cors:
+      # optional allowed origins for cross calls (separated by comma or * to allow all origins)
+      # if empty no cross calls are allowed
+      allowedOrigins: ""  
