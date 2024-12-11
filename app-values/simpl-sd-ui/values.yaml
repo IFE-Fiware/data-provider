@@ -1,7 +1,7 @@
 # Default values for charts.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-server-port: &server-port 4322
+
 replicaCount: 1
 
 imagePullSecrets: []
@@ -37,7 +37,7 @@ securityContext:
 
 service:
   type: ClusterIP
-  port: *server-port
+  port: 4322
 
 ingress:
   enabled: true
@@ -63,17 +63,12 @@ resources:
 livenessProbe:
   httpGet:
     path: /
-    port: *server-port
-  initialDelaySeconds: 120
-  periodSeconds: 5
-  failureThreshold: 10
+    port: http
 readinessProbe:
   httpGet:
     path: /
-    port: *server-port
-  initialDelaySeconds: 120
-  periodSeconds: 5
-  failureThreshold: 10
+    port: http
+
 autoscaling:
   enabled: false
   minReplicas: 1
