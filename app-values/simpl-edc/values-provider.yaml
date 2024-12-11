@@ -26,7 +26,6 @@ env:
 postgresql:
   fullnameOverride: edc-postgres
   nameOverride: edc-postgres
-  password: CncnjtWhFN
   username: "edc"
   password: "edc"
 
