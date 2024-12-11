@@ -167,7 +167,7 @@ tls_gateway:
 
 simpl_edc:
   projectID: "920"
-  targetRevision: 1.1.0
+  targetRevision: 0.0.7-SNAPSHOT.243.8e6f819d
   chart_name: edc
   nameOverride: simpl-edc
   resources:

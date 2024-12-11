@@ -283,6 +283,7 @@ spec:
             url: {{ .Values.hashicorp.service }}
         postgresql:
           url: "jdbc:postgresql://postgresql.{{ .Values.cluster.namespace }}.svc.cluster.local:5432/edc"
+          policyUrl: "jdbc:postgresql://postgresql.{{ .Values.cluster.namespace }}.svc.cluster.local:5432/edc"
         {{- if .Values.simpl_edc.resources }}
         resources: {{- toYaml .Values.simpl_edc.resources | nindent 10 }}
         {{- end }}
