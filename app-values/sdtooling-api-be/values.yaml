@@ -14,7 +14,7 @@ domainUrlEnvIdentifier: dev
 domain: dev.simpl-europe.eu
 
 #ID of persistentVolumeClaims associated with NFS Storage
-schemaVolumeClaim: nfs-storage-pvc-sdapibe
+schemaVolumeClaim: nfs-storage-pvc-sd
 #Mount path used for schema storage
 schemaPvcMountPath: /data
 
