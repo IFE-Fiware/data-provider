@@ -141,7 +141,7 @@ spec:
         {{- end }}
       values: |
         env:
-          PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://participant.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
           PUBLIC_AUTH_KEYCLOAK_REALM: "participant"
           PUBLIC_AUTH_KEYCLOAK_CLIENT_ID: "frontend-cli"
           PUBLIC_FC_DATA_URL: "https://xsfc-server-service.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
@@ -327,7 +327,7 @@ spec:
               hosts:
                 - sd-ui.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
         env:
-          PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://participant.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
           PUBLIC_AUTH_KEYCLOAK_REALM: "participant"
           PUBLIC_AUTH_KEYCLOAK_CLIENT_ID: "frontend-cli"
           PUBLIC_CREATION_WIZARD_API_URL: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/private/sdtooling-api"
