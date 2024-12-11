@@ -37,7 +37,7 @@ securityContext:
 
 service:
   type: ClusterIP
-  port: 4322
+  port: *server-port
 
 ingress:
   enabled: true
