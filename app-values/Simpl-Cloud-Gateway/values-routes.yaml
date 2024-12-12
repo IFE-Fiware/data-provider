@@ -46,6 +46,40 @@ appConfig:
         path: "/auth-api/keypair"
 
     rbac:
+      - path: "/sdtooling-api/**"
+        method: GET
+        roles:
+          - SD_PUBLISHER
+      - path: "/sdtooling-api/**"
+        method: POST
+        roles:
+          - SD_PUBLISHER 
+      - path: "/signer/**"
+        method: GET
+        roles:
+          - SD_PUBLISHER
+      - path: "/signer/**"
+        method: POST
+        roles:
+          - SD_PUBLISHER
+      - path: "/xsfc-advsearch-be/**"
+        method: GET
+        roles:
+          - SD_PUBLISHER
+          - SD_CONSUMER
+      - path: "/xsfc-advsearch-be/**"
+        method: POST
+        roles:
+          - SD_PUBLISHER
+          - SD_CONSUMER
+      - path: "/contract-consumption/**"
+        method: GET
+        roles:
+          - SD_CONSUMER
+      - path: "/contract-consumption/**"
+        method: POST
+        roles:
+          - SD_CONSUMER
       - path: "/user-api/agent/identity-attributes"
         method: GET
         roles:

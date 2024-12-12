@@ -145,7 +145,7 @@ spec:
           PUBLIC_AUTH_KEYCLOAK_REALM: "participant"
           PUBLIC_AUTH_KEYCLOAK_CLIENT_ID: "frontend-cli"
           PUBLIC_FC_DATA_URL: "https://xsfc-server-service.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
-          PUBLIC_SEARCH_API_URL: "https://xsfc-advsearch-be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_SEARCH_API_URL: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/xfsc-advsearch-be"
         ingress:
           hosts:
             - host: catalogue-ui.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
@@ -178,6 +178,35 @@ spec:
         keycloakUrl: http://keycloak.{{ .Values.cluster.namespace }}.svc.cluster.local
         usersRolesUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
         authenticationProviderUrl: http://authentication-provider.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
+        appConfig:
+          spring:
+            cloud:
+              gateway:
+                routes: 
+                  - id: contract-consumption-be
+                    uri: http://contract-consumption-be.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
+                    predicates:
+                      - Path=/contract-consumption/**
+                    filters:
+                      - StripPrefix=1
+                  - id: sdtooling-wizard-be
+                    uri: http://sdtool-be-creation-wizard-api.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
+                    predicates:
+                      - Path=/sdtooling-api/**
+                    filters:
+                      - StripPrefix=1
+                  - id: xsfc-advsearch-be
+                    uri: http://xsfc-advsearch-be.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
+                    predicates:
+                      - Path=/xsfc-advsearch-be/**
+                    filters:
+                      - StripPrefix=1
+                  - id: signer
+                    uri: http://signer.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
+                    predicates:
+                      - Path=/signer/**
+                    filters:
+                      - StripPrefix=1
         {{- if .Values.simpl_cloud_gateway.resources }}
         resources: {{- toYaml .Values.simpl_cloud_gateway.resources | nindent 10 }}
         {{- end }}
@@ -332,7 +361,7 @@ spec:
           PUBLIC_AUTH_KEYCLOAK_REALM: "participant"
           PUBLIC_AUTH_KEYCLOAK_CLIENT_ID: "frontend-cli"
           PUBLIC_CREATION_WIZARD_API_URL: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/sdtooling-api"
-          PUBLIC_SIGNER_URL: "https://signer.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_SIGNER_URL: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
   {{- if .Values.monitoring.enabled }}
   - repoURL: {{ .Values.monitoring.operator.repo_URL }}
     targetRevision: {{ .Values.monitoring.operator.targetRevision }}
