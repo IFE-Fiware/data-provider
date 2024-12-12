@@ -24,7 +24,7 @@ env:
   edcIdsId: "urn:connector:provider"
 
 postgresql:
-  fullnameOverride: postgres
+  fullnameOverride: postgresql
   username: "edc"
   password: "edc"
 
