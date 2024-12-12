@@ -182,7 +182,25 @@ spec:
           spring:
             cloud:
               gateway:
-                routes: 
+                routes:
+                  - id: keycloak
+                    uri: ${keycloak.url}
+                    predicates:
+                      - Path=/auth/**
+                    filters:
+                      - StripPrefix=1
+                  - id: users-roles
+                    uri: ${users-roles.url}
+                    predicates:
+                      - Path=/user-api/**
+                    filters:
+                      - StripPrefix=1
+                  - id: authentication-provider
+                    uri: ${authentication-provider.url}
+                    predicates:
+                      - Path=/auth-api/**
+                    filters:
+                      - StripPrefix=1
                   - id: contract-consumption-be
                     uri: http://contract-consumption-be.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
                     predicates:
