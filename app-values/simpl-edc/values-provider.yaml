@@ -29,4 +29,8 @@ postgresql:
   username: "edc"
   password: "edc"
 
-
+tls:
+  keystore:
+    type: PKCS12
+    password: keystore-generated-password
+    path: http://users-roles:8080/credential/download
