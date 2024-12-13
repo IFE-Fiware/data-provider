@@ -77,7 +77,18 @@ spec:
         validation:
           config:
             domain: http://sd-creation-wizard-api-validation.{{ .Values.cluster.namespace }}.svc.cluster.local
-      releaseName: {{ .Values.sdtooling_api_be.nameOverride }}
+        edcConnector:
+          baseUrl: https://edc.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+        usersRoles:
+          apiUrl: https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/user-api
+        federatedCatalogue:
+          tier2Gateway:
+            uri:
+              releaseName: "tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+        participant:
+          onboarding:
+            # onboarding authority URI
+            authorityTLSUri: "tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.sdtooling_validation_api_be.projectID }}/packages/helm/stable"
     path: ''
     targetRevision: {{ .Values.sdtooling_validation_api_be.targetRevision }}
