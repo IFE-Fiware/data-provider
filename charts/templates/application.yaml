@@ -208,7 +208,7 @@ spec:
                     filters:
                       - StripPrefix=1
                   - id: sdtooling-wizard-be
-                    uri: http://sdtool-be-creation-wizard-api.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
+                    uri: http://sd-creation-wizard-api.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
                     predicates:
                       - Path=/sdtooling-api/**
                     filters:
