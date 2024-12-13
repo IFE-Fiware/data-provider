@@ -180,7 +180,7 @@ simpl_edc:
 
 simpl_catalogue_client:
   projectID: "937"
-  targetRevision: 0.2.0
+  targetRevision: 0.2.1
   chart_name: charts
   resources:
     requests:
