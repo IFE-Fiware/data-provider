@@ -80,7 +80,7 @@ spec:
         edcConnector:
           baseUrl: http://edc.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
         usersRoles:
-          apiUrl: http://users-roles{{ .Values.cluster.namespace }}.svc.cluster.local
+          apiUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local
         federatedCatalogue:
           tier2Gateway:
             uri:
