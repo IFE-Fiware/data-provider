@@ -85,7 +85,7 @@ simpl_cloud_gateway:
 
 sdtooling_api_be:
   projectID: "778"
-  targetRevision: 1.3.0
+  targetRevision: v1.4.0-rc.445
   chart_name: sd-creation-wizard
   resources:
     requests:
