@@ -89,6 +89,7 @@ spec:
           onboarding:
             # onboarding authority URI
             authorityTLSUri: "tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+      releaseName: {{ .Values.sdtooling_api_be.nameOverride }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.sdtooling_validation_api_be.projectID }}/packages/helm/stable"
     path: ''
     targetRevision: {{ .Values.sdtooling_validation_api_be.targetRevision }}
