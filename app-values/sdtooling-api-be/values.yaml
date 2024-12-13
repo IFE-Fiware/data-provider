@@ -56,7 +56,7 @@ federatedCatalogue:
   tier2Gateway:
     # URI to the tier2 tls gateway of the federated catalog application
     # tier2 tls gateway path configured as route rule to the federated catalog application
-    pathPrefix: /fc-service
+    pathPrefix: /fc
 
 # configuration for generating hash values
 hash:
