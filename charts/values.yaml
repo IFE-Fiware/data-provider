@@ -144,8 +144,8 @@ simpl_fe:
 
 sd_ui:
   projectID: "923"
-  targetRevision: 0.3.0
-  chart_name: charts
+  targetRevision: 0.3.1
+  chart_name: sd-ui
   resources:
     requests:
       cpu: "0"
