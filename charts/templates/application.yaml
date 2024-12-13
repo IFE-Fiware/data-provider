@@ -84,10 +84,10 @@ spec:
         federatedCatalogue:
           tier2Gateway:
             uri:
-              releaseName: "tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+              releaseName: "https://tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
         participant:
           onboarding:
-            authorityTLSUri: "tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+            authorityTLSUri: "https://tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
       releaseName: {{ .Values.sdtooling_api_be.nameOverride }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.sdtooling_validation_api_be.projectID }}/packages/helm/stable"
     path: ''
