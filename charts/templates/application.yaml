@@ -78,7 +78,7 @@ spec:
           config:
             domain: http://sd-creation-wizard-api-validation.{{ .Values.cluster.namespace }}.svc.cluster.local
         edcConnector:
-          baseUrl: http://edc.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+          baseUrl: https://edc-provider.dev.simpl-europe.eu
         usersRoles:
           apiUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
         federatedCatalogue:
