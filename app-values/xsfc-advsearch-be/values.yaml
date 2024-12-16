@@ -20,6 +20,13 @@ schemaPvcMountPath: /data
 authenticationProvider:
   apiUrl: http://authentication-provider:8080
 
+# federated catalog application (fc-service)
+federatedCatalogue:
+  tier2Gateway:
+    # URI to the tier2 tls gateway of the federated catalog application
+    # tier2 tls gateway path configured as route rule to the federated catalog application
+    pathPrefix: /fc
+
 # catalog adapter application (catalogue-adapter-service)
 catalogueAdapter:
   tier2Gateway:
