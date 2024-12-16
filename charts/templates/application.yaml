@@ -110,13 +110,16 @@ spec:
       values: |
         domain: {{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
         usersRoles:
-          apiUrl: https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/user-api
-        participant:
-        onboarding:
-          authorityTLSUri: "tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+          apiUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
         catalogueAdapter:
           tier2Gateway:
             uri: "https://tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+        federatedCatalogue:
+          tier2Gateway:
+            uri: "https://tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+        participant:
+          onboarding:
+            authorityTLSUri: "tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
       releaseName: {{ .Values.xsfc_advsearch_be.nameOverride }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.signer.projectID }}/packages/helm/stable"
     path: ''

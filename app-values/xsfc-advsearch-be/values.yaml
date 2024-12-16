@@ -16,6 +16,10 @@ schemaVolumeClaim: nfs-storage-pvc-sd
 #Mount path used for schema storage
 schemaPvcMountPath: /data
 
+# authentication provider
+authenticationProvider:
+  apiUrl: http://authentication-provider:8080
+
 # catalog adapter application (catalogue-adapter-service)
 catalogueAdapter:
   tier2Gateway:
