@@ -117,7 +117,7 @@ spec:
         catalogueAdapter:
           tier2Gateway:
             # URI to the tier2 tls gateway of the catalog adapter application
-            uri: "https://tls.participant.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
+            uri: "https://tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
         participant:
           onboarding:
             # onboarding credential certificate password

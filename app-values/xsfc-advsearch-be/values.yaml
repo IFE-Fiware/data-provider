@@ -19,10 +19,8 @@ schemaPvcMountPath: /data
 # catalog adapter application (catalogue-adapter-service)
 catalogueAdapter:
   tier2Gateway:
-    # URI to the tier2 tls gateway of the catalog adapter application
-    uri: https://91.134.104.42
     # tier2 tls gateway path configured as route rule to the catalog adapter application
-    pathPrefix: /mtls/catalogue-adapter-service
+    pathPrefix: /adapter
 
 # participant provider
 participant:
