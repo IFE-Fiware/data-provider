@@ -320,32 +320,6 @@ spec:
         {{- if .Values.tls_gateway.resources }}
         resources: {{- toYaml .Values.tls_gateway.resources | nindent 10 }}
         {{- end }}
-  # - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.simpl_edc.projectID }}/packages/helm/stable"
-  #   path: ''
-  #   targetRevision: {{ .Values.simpl_edc.targetRevision }}
-  #   chart: {{ .Values.simpl_edc.chart_name }}
-  #   helm:
-  #     releaseName: {{ .Values.simpl_edc.nameOverride }}
-  #     valueFiles:
-  #       {{- range .Values.simpl_edc.valueFiles }}
-  #       - $values/app-values/simpl-edc/{{ . }}
-  #       {{- end }}
-  #     values: |
-  #       ingress:
-  #         host: edc.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
-  #       deployment:
-  #         vault:
-  #           url: {{ .Values.hashicorp.service }}
-  #       postgresql:
-  #         url: "jdbc:postgresql://postgresql.{{ .Values.cluster.namespace }}.svc.cluster.local:5432/edc"
-  #         policyUrl: "jdbc:postgresql://postgresql.{{ .Values.cluster.namespace }}.svc.cluster.local:5432/edc"
-  #       tls:
-  #         client:
-  #           authority:
-  #             url: "tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
-  #       {{- if .Values.simpl_edc.resources }}
-  #       resources: {{- toYaml .Values.simpl_edc.resources | nindent 10 }}
-  #       {{- end }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.auth_provider.projectID }}/packages/helm/stable"
     path: ''
     targetRevision: {{ .Values.auth_provider.targetRevision }}
