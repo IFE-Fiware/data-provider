@@ -119,7 +119,7 @@ spec:
             uri: "https://tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
         participant:
           onboarding:
-            authorityTLSUri: "tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+            authorityTLSUri: "https://tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
       releaseName: {{ .Values.xsfc_advsearch_be.nameOverride }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.signer.projectID }}/packages/helm/stable"
     path: ''
