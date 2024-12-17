@@ -28,7 +28,7 @@ elasticsearch:
   storageClassName: csi-cinder-high-speed
   resources:
     requests:
-      memory: 0Gi
+      memory: "0"
       cpu: "0"
     limits:
       memory: 4Gi
@@ -51,7 +51,7 @@ kibana:
     xpack.reporting.roles.enabled: false
   resources:
     requests:
-      memory: 0Gi
+      memory: "0"
       cpu: "0"
     limits:
       memory: 1Gi
@@ -86,7 +86,7 @@ logstash:
     ls_java_opts: "-Xms3g -Xmx3g"
   resources:
     requests:
-      memory: 0Gi
+      memory: "0"
       cpu: "0"
     limits:
       memory: 4Gi
@@ -293,7 +293,7 @@ filebeat:
   imageTag: ""
   resources:
     requests:
-      memory: 0Gi
+      memory: "0"
       cpu: "0"
     limits:
       memory: 1Gi
@@ -391,7 +391,7 @@ metricbeat:
       min_age: 365d
   resources:
     requests:
-      memory: 0Gi
+      memory: "0"
       cpu: "0"
     limits:
       memory: 500Mi
