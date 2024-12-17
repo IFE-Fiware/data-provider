@@ -367,16 +367,6 @@ spec:
           PUBLIC_CREATION_WIZARD_API_URL: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/sdtooling-api"
           PUBLIC_SIGNER_URL: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
   {{- if .Values.monitoring.enabled }}
-  - repoURL: {{ .Values.monitoring.operator.repo_URL }}
-    targetRevision: {{ .Values.monitoring.operator.targetRevision }}
-    chart: {{ .Values.monitoring.operator.chart_name }}
-    helm:
-      valueFiles:
-        {{- range .Values.monitoring.operator.valueFiles }}
-        - $values/app-values/monitoring-operator/{{ . }}
-        {{- end }}
-      values: |
-        managedNamespaces: [{{ .Values.cluster.namespace }}]
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.monitoring.projectID }}/packages/helm/stable"
     path: ''
     targetRevision: {{ .Values.monitoring.targetRevision }}
@@ -390,6 +380,7 @@ spec:
       values: |
         domainSuffix: {{ .Values.domainSuffix }}
         namespaceTag: {{ .Values.namespaceTag }}
+        mainNamespace: {{ .Values.cluster.commonToolsNamespace }}
         metricbeat:
           kubeStateHost: {{ .Values.cluster.kubeStateHost }}
         heartbeat:

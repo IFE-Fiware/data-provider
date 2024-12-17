@@ -12,6 +12,7 @@ cluster:
   address: https://kubernetes.default.svc
   namespace: ${NAMESPACE}
   kubeStateHost: kube-prometheus-stack-kube-state-metrics.devsecopstools.svc.cluster.local:8080
+  commonToolsNamespace: ${COMMONNAMESPACE}
 
 secretEngine: ${SECRETENGINE}
 hashicorp:
@@ -201,18 +202,11 @@ auth_provider:
     - values.yaml
 
 monitoring:
-  enabled: false
-  operator:
-    repo_URL: https://helm.elastic.co/
-    chart_name: eck-operator
-    targetRevision: "2.14.0"
-    nameOverride: eck-operator
-    valueFiles:
-      - values.yaml
+  enabled: true
   projectID: "828"
-  targetRevision: v0.1.3
+  targetRevision: 0.1.6
   chart_name: eck-monitoring
   fullnameOverride: elastic
   valueFiles:
     - values.yaml
-    - values-size.yaml
+    - values_other.yaml
