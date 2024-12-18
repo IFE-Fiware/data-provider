@@ -36,14 +36,6 @@ To ensure that the namespace was created successfully, run the following command
 `kubectl get namespaces`
 <br/>This will list all the namespaces in your cluster, and you should see the one you just created listed.
 
-#### Create volumes
-
-Two volumes needs to be created manually at the moment:
-* nfs-storage-pvc-xsfc
-* nfs-storage-pvc-sdapibe
-
-This will be fixed in future versions.
-
 #### Vault related tasks
 
 ##### Preliminal activites (done once)
@@ -97,7 +89,7 @@ Its content is (to be revised):
   "HTTP_WRITE_TIMEOUT": "10s",
   "LOG_ENCODING": "json",
   "LOG_LEVEL": "debug",
-  "VAULT_ADRESS": "http://vault-ha.vault-ha.svc.cluster.local:8200",
+  "VAULT_ADRESS": "http://vaultservice.vaultnamespace.svc.cluster.local:8200",
   "VAULT_TOKEN": "hvs.generatedtoken"
 }
 ```
@@ -106,7 +98,7 @@ Where you need to modify:
 
 | Variable name                 |     Example         | Description     |
 | ----------------------        |     :-----:         | --------------- |
-| VAULT_ADDRESS            | http://vault-ha.vault-ha.svc.cluster.local:8200 | Internal link to Vault service  |
+| VAULT_ADDRESS            | http://vaultservice.vaultnamespace.svc.cluster.local:8200 | Internal link to Vault service  |
 | VAULT_TOKEN              | hvs.generatedtoken | Token to access the Vault  |
 
 ### Deployment
@@ -122,38 +114,37 @@ When you create it, you set up the values below (example values)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: 'dataprovider01-deployer'                               # name of the deploying app in argocd
+  name: 'dataprovider01-deployer'           # name of the deploying app in argocd
 spec:
   project: default
   source:
     repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
     path: '""'
-    targetRevision: 0.3.1
+    targetRevision: 1.0.0                   # version of package
     helm:
       values: |
         values:
-          branch: develop                                       # branch of repo with values - this is develop by default
-        secretEngine: dev-int                                   # container for your secrets in vault
+          branch: v1.0.0                    # branch of repo with values - for released version it should be the release branch
         project: default
-        namespaceTag: dataprovider01                            # identifier of deployment and part of fqdn
-        domainSuffix: int.simpl-europe.eu                       # last part of fqdn
+        namespaceTag: dataprovider01        # identifier of deployment and part of fqdn
+        domainSuffix: int.simpl-europe.eu   # last part of fqdn
         argocd:
-          appname: dataprovider01-iaa                           # name of generated argocd app 
-          namespace: argocd                                     # namespace of your argocd
+          appname: dataprovider01           # name of generated argocd app 
+          namespace: argocd                 # namespace of your argocd
         cluster:
           address: https://kubernetes.default.svc
-          namespace: dataprovider01-iaa                         # where the app will be deployed
+          namespace: dataprovider01         # where the app will be deployed
           kubeStateHost: kube-prometheus-stack-kube-state-metrics.devsecopstools.svc.cluster.local:8080    # link to kube-state-metrics svc
-        authority:
-          namespaceTag: authority1                              # namespace tag of target authority
-        monitoring:
-          enabled: true                                         # "true" enables the deployment of ELK stack for monitoring
+          commonToolsNamespace: common      # namespace where main monitoring stack is deployed
         hashicorp:
           service: "http://vault-ha.vault-ha.svc.cluster.local:8200"  # local service path to your vault
+        secretEngine: dev-int               # container for your secrets in vault
+        authority:
+          namespaceTag: authority1          # namespace tag of target authority
     chart: data-provider
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: dataprovider01-iaa                               # where the package will be deployed
+    namespace: dataprovider01               # where the package will be deployed
 ```
 
 #### Manual deployment
@@ -166,29 +157,29 @@ There is basically one file that you need to modify - values.yaml.
 There are a couple of variables you need to replace - described below. The rest you don't need to change.
 
 ```
-project: default                                  # Project to which the namespace is attached
-namespaceTag: dataprovider01                      # identifier of deployment and part of fqdn
+project: default                   # Project to which the namespace is attached
+namespaceTag: dataprovider01       # identifier of deployment and part of fqdn
 authority:
-  namespaceTag: authority1                        # namespace tag of target authority
-domainSuffix: int.simpl-europe.eu                 # last part of fqdn
+  namespaceTag: authority1         # namespace tag of target authority
+domainSuffix: int.simpl-europe.eu  # last part of fqdn
 
 argocd:
-  appname: dataprovider01-iaa                     # name of generated argocd app 
-  namespace: argocd                               # namespace of your argocd
+  appname: dataprovider01          # name of generated argocd app 
+  namespace: argocd                # namespace of your argocd
 
 cluster:
   address: https://kubernetes.default.svc
-  namespace: dataprovider01-iaa                   # where the package will be deployed
+  namespace: dataprovider01        # where the package will be deployed
   kubeStateHost: kube-prometheus-stack-kube-state-metrics.devsecopstools.svc.cluster.local:8080    # link to kube-state-metrics svc
+  commonToolsNamespace: common     # namespace where main monitoring stack is deployed
 
-
-secretEngine: dev-int                             # container for your secrets in vault
+secretEngine: dev-int              # container for your secrets in vault
 hashicorp:
   service: "http://vault-ha.vault-ha.svc.cluster.local:8200"  # local service path to your vault
 
 values:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git  # repo URL
-  branch: develop                                                                         # branch of code in repo
+  branch: v1.0.0                    # branch of repo with values - for released version it should be the release branch
 ```
 
 ##### Deployment
