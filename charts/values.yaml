@@ -201,6 +201,17 @@ auth_provider:
   valueFiles:
     - values.yaml
 
+contract:
+  projectID: "939"
+  targetRevision: 0.0.4-SNAPSHOT.408.c600c640
+  chart_name: simpl-contract
+  resources:
+    requests:
+      cpu: "0"
+      memory: "0"
+  valueFiles:
+    - values.yaml    
+
 monitoring:
   enabled: true
   projectID: "828"
