@@ -156,7 +156,7 @@ sd_ui:
 
 tls_gateway:
   projectID: "860"
-  targetRevision: 0.8.1
+  targetRevision: 0.8.3
   chart_name: tls-gateway
   resources:
     requests:
