@@ -202,7 +202,7 @@ auth_provider:
     - values.yaml
 
 contract:
-  projectID: "939"
+  projectID: "872"
   targetRevision: 0.0.4-SNAPSHOT.408.c600c640
   chart_name: simpl-contract
   resources:
