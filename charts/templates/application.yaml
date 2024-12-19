@@ -17,6 +17,9 @@ spec:
   - repoURL: {{ .Values.values.repo_URL }}
     targetRevision: {{ .Values.values.branch }}
     ref: values
+  - repoURL: 'https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts'
+    targetRevision: 1.4.7
+    chart: secrets-store-csi-driver
   - repoURL: {{ .Values.postgresql.repo_URL }}
     targetRevision: {{ .Values.postgresql.targetRevision }}
     chart: {{ .Values.postgresql.chart_name }}
@@ -340,6 +343,26 @@ spec:
         {{- if .Values.auth_provider.resources }}
         resources: {{- toYaml .Values.auth_provider.resources | nindent 10 }}
         {{- end }}
+  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.contract.projectID }}/packages/helm/stable"
+    path: ''
+    targetRevision: {{ .Values.contract.targetRevision }}
+    chart: {{ .Values.contract.chart_name }}
+    helm:
+      valueFiles:
+        {{- range .Values.contract.valueFiles }}
+        - $values/app-values/contract/{{ . }}
+        {{- end }}
+      values: |
+        deployment:
+          db:
+            url: "jdbc:postgresql://postgresql.{{ .Values.cluster.namespace }}.svc.cluster.local:5432:/simpl_contract"
+          kafka:
+            bootstrapServer: http://kafka.{{ .Values.cluster.commonToolsNamespace }}.svc.cluster.local:9092
+          vault:
+            address: {{ .Values.hashicorp.service }}   
+          {{- if .Values.contract.resources }}
+          resources: {{- toYaml .Values.contract.resources | nindent 10 }}
+          {{- end }}        
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.sd_ui.projectID }}/packages/helm/stable"
     path: ''
     targetRevision: {{ .Values.sd_ui.targetRevision }}

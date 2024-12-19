@@ -1,0 +1,34 @@
+deployment:
+  replicas: 1
+  mode: PROVIDER
+  db:
+    user: postgres
+  kafka:
+    clientUser: user1
+    securityProtocol: SASL_PLAINTEXT
+    sasl:
+      mechanism: PLAIN
+  urls:
+    stubs: 'http://simpl-stubs:8080'
+  vault:
+    dbPasswordUrl: "kv/data/contract-billing/db-secrets"
+    dbPasswordName: DB_PASSWORD
+    apiKeyUrl: "kv/data/contract-billing/apikey-secrets"
+    apiKeyName: API_KEY
+    kafkaPasswordUrl: "kv/data/contract-billing/kafka-secrets"
+    kafkaPasswordName: KAFKA_CLIENT_PASSWORD
+    roleName: contract
+
+environment: default
+resources:
+  requests:
+    memory: "300Mi"
+    cpu: "150m"
+  limits:
+    memory: "700Mi"
+    cpu: "300m"
+
+probe:
+  endpoint: "/actuator/health"
+  scheme: HTTP
+  port: 8080
