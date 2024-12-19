@@ -1,8 +1,4 @@
 deployment:
-  image:
-    artifact: code.europa.eu:4567/simpl/simpl-open/development/contract-billing/contract
-    tag: ${PROJECT_RELEASE_VERSION}
-    pullPolicy: Always
   replicas: 1
   mode: PROVIDER
   db:

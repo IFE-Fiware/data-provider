@@ -17,6 +17,9 @@ spec:
   - repoURL: {{ .Values.values.repo_URL }}
     targetRevision: {{ .Values.values.branch }}
     ref: values
+  - repoURL: 'https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts'
+    targetRevision: 1.4.7
+    chart: secrets-store-csi-driver
   - repoURL: {{ .Values.postgresql.repo_URL }}
     targetRevision: {{ .Values.postgresql.targetRevision }}
     chart: {{ .Values.postgresql.chart_name }}
