@@ -8,6 +8,7 @@ global:
   profile: participant
   ingress:
     issuer: dev-prod
+  externalUrls: true
 
 serviceAccount:
   # Specifies whether a service account should be created
