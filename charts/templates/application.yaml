@@ -240,7 +240,7 @@ spec:
                       - Path=/xsfc-advsearch-be/**
                     filters:
                       - StripPrefix=1
-                  - id: signer
+                  - id: signer-service
                     uri: http://signer.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
                     predicates:
                       - Path=/signer/**

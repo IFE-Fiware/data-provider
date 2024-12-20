@@ -22,7 +22,6 @@ appConfig:
               - Path=/auth-api/**
             filters:
               - StripPrefix=1
-
           # Cli configurations
           - id: cli-authentication-provider
             uri: ${authentication-provider.url}
@@ -34,7 +33,6 @@ appConfig:
                 args:
                   #clientid: requiredRole1,requiredRole2
                   cli: cli-role
-
           - id: cli-users-and-roles
             uri: ${users-roles.url}
             predicates:
