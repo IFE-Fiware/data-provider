@@ -184,7 +184,7 @@ simpl_edc:
 simpl_catalogue_client:
   projectID: "937"
   targetRevision: 0.2.2-SNAPSHOT.107.4c19e538
-  chart_name: charts
+  chart_name: catalogue-ui
   resources:
     requests:
       cpu: "0"
