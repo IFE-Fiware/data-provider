@@ -119,7 +119,7 @@ Its content is (to be revised):
   "HTTP_WRITE_TIMEOUT": "10s",
   "LOG_ENCODING": "json",
   "LOG_LEVEL": "debug",
-  "VAULT_ADRESS": "http://vault-ha.vault-ha.svc.cluster.local:8200",
+  "VAULT_ADRESS": "http://vaultservice.vaultnamespace.svc.cluster.local:8200",
   "VAULT_TOKEN": "hvs.generatedtoken"
 }
 ```
@@ -128,7 +128,7 @@ Where you need to modify:
 
 | Variable name                 |     Example         | Description     |
 | ----------------------        |     :-----:         | --------------- |
-| VAULT_ADDRESS            | http://vault-ha.vault-ha.svc.cluster.local:8200 | Internal link to Vault service  |
+| VAULT_ADDRESS            | http://vaultservice.vaultnamespace.svc.cluster.local:8200 | Internal link to Vault service  |
 | VAULT_TOKEN              | hvs.generatedtoken | Token to access the Vault  |
 
 ### Deployment
@@ -144,77 +144,70 @@ When you create it, you set up the values below (example values)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: 'dataprovider01-deployer'                               # name of the deploying app in argocd
+  name: 'dataprovider01-deployer'           # name of the deploying app in argocd
 spec:
   project: default
   source:
     repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
     path: '""'
-    targetRevision: 0.3.1
+    targetRevision: 1.0.0                   # version of package
     helm:
       values: |
         values:
-          branch: develop                                       # branch of repo with values - this is develop by default
-        secretEngine: dev-int                                   # container for your secrets in vault
+          branch: v1.0.0                    # branch of repo with values - for released version it should be the release branch
         project: default
-        namespaceTag: dataprovider01                            # identifier of deployment and part of fqdn
-        domainSuffix: int.simpl-europe.eu                       # last part of fqdn
+        namespaceTag: dataprovider01        # identifier of deployment and part of fqdn
+        domainSuffix: int.simpl-europe.eu   # last part of fqdn
         argocd:
-          appname: dataprovider01-iaa                           # name of generated argocd app 
-          namespace: argocd                                     # namespace of your argocd
+          appname: dataprovider01           # name of generated argocd app 
+          namespace: argocd                 # namespace of your argocd
         cluster:
           address: https://kubernetes.default.svc
-          namespace: dataprovider01-iaa                         # where the app will be deployed
-          kubeStateHost: kube-prometheus-stack-kube-state-metrics.devsecopstools.svc.cluster.local:8080    # link to kube-state-metrics svc
-        authority:
-          keycloakClientID: federated-catalogue                 # name of the client in authority keycloak
-          keycloakSecret: clientsecretfromkeycloak              # secret of that client (from its credentials)
-          namespaceTag: authority1                              # namespace tag of target authority
-        monitoring:
-          enabled: true                                         # "true" enables the deployment of ELK stack for monitoring
+          namespace: dataprovider01         # where the app will be deployed
+          commonToolsNamespace: common      # namespace where main monitoring stack is deployed
         hashicorp:
           service: "http://vault-ha.vault-ha.svc.cluster.local:8200"  # local service path to your vault
+        secretEngine: dev-int               # container for your secrets in vault
+        authority:
+          namespaceTag: authority1          # namespace tag of target authority
     chart: data-provider
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: dataprovider01-iaa                               # where the package will be deployed
+    namespace: dataprovider01               # where the package will be deployed
 ```
 
 #### Manual deployment
 
 ##### Files preparation
 
-The suggested way for deployment, is to unpack the released package to a folder on a host where you have kubectl and helm available and configured. 
+Another way for deployment, is to unpack the released package to a folder on a host where you have kubectl and helm available and configured. 
 
 There is basically one file that you need to modify - values.yaml. 
 There are a couple of variables you need to replace - described below. The rest you don't need to change.
 
 ```
-project: default                                  # Project to which the namespace is attached
-namespaceTag: dataprovider01                      # identifier of deployment and part of fqdn
+project: default                   # Project to which the namespace is attached
+namespaceTag: dataprovider01       # identifier of deployment and part of fqdn
 authority:
-  namespaceTag: authority1                        # namespace tag of target authority
-  keycloakClientID: federated-catalogue           # name of the client in authority keycloak
-  keycloakSecret: clientsecretfromkeycloak        # secret of that client (from its credentials)
-domainSuffix: int.simpl-europe.eu                 # last part of fqdn
+  namespaceTag: authority1         # namespace tag of target authority
+domainSuffix: int.simpl-europe.eu  # last part of fqdn
 
 argocd:
-  appname: dataprovider01-iaa                     # name of generated argocd app 
-  namespace: argocd                               # namespace of your argocd
+  appname: dataprovider01          # name of generated argocd app 
+  namespace: argocd                # namespace of your argocd
 
 cluster:
   address: https://kubernetes.default.svc
-  namespace: dataprovider01-iaa                   # where the package will be deployed
-  kubeStateHost: kube-prometheus-stack-kube-state-metrics.devsecopstools.svc.cluster.local:8080    # link to kube-state-metrics svc
+  namespace: dataprovider01        # where the package will be deployed
+  commonToolsNamespace: common     # namespace where main monitoring stack is deployed
 
-
-secretEngine: dev-int                             # container for your secrets in vault
+secretEngine: dev-int              # container for your secrets in vault
 hashicorp:
   service: "http://vault-ha.vault-ha.svc.cluster.local:8200"  # local service path to your vault
 
 values:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git  # repo URL
-  branch: develop                                                                         # branch of code in repo
+  branch: v1.0.0                    # branch of repo with values - for released version it should be the release branch
 ```
 
 ##### Deployment
@@ -222,29 +215,26 @@ values:
 After you have prepared the values file, you can start the deployment. 
 Use the command prompt. Proceed to the folder where you have the Chart.yaml file and execute the following command. The dot at the end is crucial - it points to current folder to look for the chart. 
 
-`helm install data-provider .`
+Now you can deploy the agent:
 
-After it's been already deployed and you want to implement changes, you can use this command (in the same folder):
+`helm install data-provider . `
 
-`helm upgrade data-provider .`
+## Additional steps
+
+:rotating_light: :rotating_light: :rotating_light: **Attention!!!** :rotating_light: :rotating_light: :rotating_light: <br>
+<b><i>After installing the agent, you need to get through the onboarding process. 
+The entire procedure is described in the code repository:</i></b>
+
+https://code.europa.eu/simpl/simpl-open/development/iaa/charts/-/blob/develop/doc/0.8.x/ONBOARD.md?ref_type=heads
 
 ### Monitoring
 
-ELK stack for monitoring is added with this release.  
-Its deployment can be disabled by switch the value monitoring.enabled to false.  
-When it's enabled, after the stack is deployed, you can access the ELK stack UI by https://kibana.**namespacetag**.**domainsuffix**  
-Default user is "elastic", its password can be extracted by kubectl command. `kubectl get secret elastic-elasticsearch-es-elastic-user -o go-template='{{.data.elastic | base64decode}}' -n {namespace}`
+Filebeat components for monitoring are included in this release.   
+Their deployment can be disabled by switching the value monitoring.enabled to false.
 
-### Removal
-
-To remove the deployment you need to do two things:
-
-* `helm uninstall data-provider` - which will remove the application from argocd
-* `kubectl delete ns ${NAMESPACE}` - which will remove the namespace ${NAMESPACE} that holds all of the components.
-
-# Troubleshooting 
+# Troubleshooting
 If you encounter issues during deployment, check the following:
 
 - Ensure that ArgoCD is properly set up and running.
-- Verify that the test01 namespace exists in your Kubernetes cluster.
+- Verify that the namespace exists in your Kubernetes cluster.
 - Check the ArgoCD application logs and Helm error messages for specific issues.
