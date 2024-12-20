@@ -46,6 +46,15 @@ ingress:
     acme.cert-manager.io/http01-edit-in-place: "true"
     cert-manager.io/cluster-issuer: dev-prod
     # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: catalogue-ui.dev.simpl-europe.eu
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: catalogue-ui-tld-secret
+      hosts:
+        - catalogue-ui.dev.simpl-europe.eu
 
 resources:
   {}
@@ -60,13 +69,21 @@ resources:
   #   cpu: 100m
   #   memory: 128Mi
 
+env:
+  PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://tier1-gateway.gaiax-edc-dev-sd.dev.simpl-europe.eu"
+  PUBLIC_AUTH_KEYCLOAK_REALM: "participant"
+  PUBLIC_AUTH_KEYCLOAK_CLIENT_ID: "frontend-cli"
+  PUBLIC_SEARCH_API_URL: "https://tier1-gateway.gaiax-edc-dev-sd.dev.simpl-europe.eu/xsfc-advsearch-be"
+  PUBLIC_CONTRACT_CONSUMPTION_API_URL: "https://tier1-gateway.gaiax-edc-dev-sd.dev.simpl-europe.eu/contract-consumption"
+  PUBLIC_AGENT_TYPE: "consumer"
+
 livenessProbe:
   httpGet:
-    path: /
+    path: /status
     port: http
 readinessProbe:
   httpGet:
-    path: /
+    path: /status
     port: http
 
 autoscaling:

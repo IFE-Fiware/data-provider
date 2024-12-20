@@ -167,6 +167,7 @@ spec:
           PUBLIC_AUTH_KEYCLOAK_CLIENT_ID: "frontend-cli"
           PUBLIC_FC_DATA_URL: "https://tls.{{ .Values.authority.baseUrl }}/fc"
           PUBLIC_SEARCH_API_URL: "http://xsfc-advsearch-be.{{ .Values.cluster.namespace }}.svc.cluster.local:8080"
+          PUBLIC_AGENT_TYPE: "provider"
         ingress:
           hosts:
             - host: catalogue-ui.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
@@ -456,7 +457,7 @@ spec:
               hosts:
                 - sd-ui.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
         env:
-          PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://be.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}/auth"
+          PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://be.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}"
           PUBLIC_AUTH_KEYCLOAK_REALM: "participant"
           PUBLIC_AUTH_KEYCLOAK_CLIENT_ID: "frontend-cli"
           PUBLIC_CREATION_WIZARD_API_URL: "https://be.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}/sdtooling-api"
