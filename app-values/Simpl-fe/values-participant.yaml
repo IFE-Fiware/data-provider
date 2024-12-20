@@ -1,10 +1,23 @@
+hostBe: participant.be.aruba-simpl.cloud
+hostFe: participant.fe.aruba-simpl.cloud
+cors:
+  allowOrigin: https://participant.fe.aruba-simpl.cloud,http://localhost:4202,http://localhost:4203,http://localhost:3000
 ingress:
   issuer: dev-prod
 
 microfrontends:
-- name: usersroles
-  application: usersandroles
-  path: "/users-roles"
-- name: participant
-  application: participant-utility
-  path: "/participant-utility"
+  - name: participant
+    application: participant-utility
+    path: "/"
+
+env:
+  - name: APPLICATION
+    value: participant-utility
+  - name: API_URL
+    value: "https://participant.be.aruba-simpl.cloud"
+  - name: KEYCLOAK_URL
+    value: "https://participant.be.aruba-simpl.cloud/auth"
+  - name: KEYCLOAK_REALM
+    value: "participant"
+  - name: KEYCLOAK_CLIENT_ID
+    value: "frontend-cli"

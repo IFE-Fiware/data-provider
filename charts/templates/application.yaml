@@ -197,7 +197,7 @@ spec:
       values: |
         global:
           hostBe: be.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
-          hostTls: tls.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
+          hostTls: tls.{{ .Values.authority.baseUrl }}
           authorityUrl: https://be.{{ .Values.authority.baseUrl }}
           cors:
             allowOrigin: https://fe.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:3000
@@ -266,7 +266,7 @@ spec:
       values: |
         global:
           hostBe: be.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
-          hostTls: tls.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
+          hostTls: tls.{{ .Values.authority.baseUrl }}
         db:
           url: "jdbc:postgresql://postgresql.{{ .Values.cluster.namespace }}.svc.cluster.local:5432/usersroles"
         redis:
