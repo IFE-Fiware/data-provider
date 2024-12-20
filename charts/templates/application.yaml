@@ -124,12 +124,16 @@ spec:
         domain: {{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
         usersRoles:
           apiUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
+        authenticationProvider:
+          apiUrl: http://authentication-provider.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
         catalogueAdapter:
           tier2Gateway:
             uri: "https://tls.{{ .Values.authority.baseUrl }}"
+            pathPrefix: /adapter
         federatedCatalogue:
           tier2Gateway:
             uri: "https://tls.{{ .Values.authority.baseUrl }}"
+            pathPrefix: /fc
         participant:
           onboarding:
             authorityTLSUri: "https://tls.{{ .Values.authority.baseUrl }}"
