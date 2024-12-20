@@ -43,18 +43,18 @@ spec:
         {{- end }}
       values: |
         fullnameOverride: {{ .Values.keycloak.nameOverride }}
-        apiUrl: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
+        apiUrl: "https://be.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}"
         externalDatabase:
           host: "postgresql.{{ .Values.cluster.namespace }}.svc.cluster.local"
         extraEnvVars:
         - name: KC_HOSTNAME_ADMIN
-          value: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/auth"
+          value: "https://be.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}/auth"
         - name: KC_HOSTNAME
-          value: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/auth"
+          value: "https://be.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}/auth"
         - name: USERS_ROLES_BASE_URL
           value: "http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080"
         - name: KEYCLOAK_BASE_URL
-          value: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/auth"
+          value: "https://be.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}/auth"
         - name: REALM
           value: "participant"
         - name: KEYCLOAK_EXTRA_ARGS
@@ -75,21 +75,21 @@ spec:
         - $values/app-values/sdtooling-api-be/{{ . }}
         {{- end }}
       values: |
-        domain: {{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
-        apiUrl: https://creation-wizard-api.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+        domain: {{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
+        apiUrl: https://creation-wizard-api.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
         validation:
           config:
             domain: http://sd-creation-wizard-api-validation.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
         edcConnector:
-          baseUrl: https://edc-provider.dev.simpl-europe.eu
+          baseUrl: https://edc.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
         usersRoles:
           apiUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
         federatedCatalogue:
           tier2Gateway:
-            uri: "https://tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+            uri: "https://tls.{{ .Values.authority.baseUrl }}"
         participant:
           onboarding:
-            authorityTLSUri: "https://tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+            authorityTLSUri: "https://tls.{{ .Values.authority.baseUrl }}"
       releaseName: {{ .Values.sdtooling_api_be.nameOverride }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.sdtooling_validation_api_be.projectID }}/packages/helm/stable"
     path: ''
@@ -111,18 +111,18 @@ spec:
         - $values/app-values/xsfc-advsearch-be/{{ . }}
         {{- end }}
       values: |
-        domain: {{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+        domain: {{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
         usersRoles:
           apiUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
         catalogueAdapter:
           tier2Gateway:
-            uri: "https://tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+            uri: "https://tls.{{ .Values.authority.baseUrl }}"
         federatedCatalogue:
           tier2Gateway:
-            uri: "https://tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+            uri: "https://tls.{{ .Values.authority.baseUrl }}"
         participant:
           onboarding:
-            authorityTLSUri: "https://tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+            authorityTLSUri: "https://tls.{{ .Values.authority.baseUrl }}"
       releaseName: {{ .Values.xsfc_advsearch_be.nameOverride }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.signer.projectID }}/packages/helm/stable"
     path: ''
@@ -137,7 +137,7 @@ spec:
         serviceAccount:
           name: "{{ .Values.signer.serviceAccountName }}"
         ingress:
-          frontendDomain: signer.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+          frontendDomain: signer.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
         secretEngine: {{ .Values.secretEngine }}
         hashicorp:
           service: {{ .Values.hashicorp.service }}
@@ -152,21 +152,21 @@ spec:
         {{- end }}
       values: |
         env:
-          PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://be.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}"
           PUBLIC_AUTH_KEYCLOAK_REALM: "participant"
           PUBLIC_AUTH_KEYCLOAK_CLIENT_ID: "frontend-cli"
-          PUBLIC_FC_DATA_URL: "https://xsfc-server-service.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
-          PUBLIC_SEARCH_API_URL: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/xsfc-advsearch-be"
+          PUBLIC_FC_DATA_URL: "https://tls.{{ .Values.authority.baseUrl }}/fc"
+          PUBLIC_SEARCH_API_URL: "https://be.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}/xsfc-advsearch-be"
         ingress:
           hosts:
-            - host: catalogue-ui.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+            - host: catalogue-ui.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
               paths:
               - path: /
                 pathType: ImplementationSpecific
           tls:
             - secretName: catalogue-ui-tld-secret
               hosts:
-                - catalogue-ui.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+                - catalogue-ui.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
         {{- if .Values.simpl_catalogue_client.resources }}
         resources: {{- toYaml .Values.simpl_catalogue_client.resources | nindent 10 }}
         {{- end }}
@@ -181,11 +181,11 @@ spec:
         {{- end }}
       values: |
         global:
-          hostBe: participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
-          hostTls: tls.participant.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
-          authorityUrl: https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}
+          hostBe: be.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
+          hostTls: tls.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
+          authorityUrl: https://be.{{ .Values.authority.baseUrl }}
           cors:
-            allowOrigin: https://participant.fe.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:3000
+            allowOrigin: https://fe.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:3000
         keycloakUrl: http://keycloak.{{ .Values.cluster.namespace }}.svc.cluster.local
         usersRolesUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
         authenticationProviderUrl: http://authentication-provider.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
@@ -213,9 +213,9 @@ spec:
                     filters:
                       - StripPrefix=1
                   - id: contract-consumption-be
-                    uri: http://contract-consumption-be.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
+                    uri: http://simpl-contract.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
                     predicates:
-                      - Path=/contract-consumption/**
+                      - Path=/simpl-contract/**
                     filters:
                       - StripPrefix=1
                   - id: sdtooling-wizard-be
@@ -250,8 +250,8 @@ spec:
         {{- end }}
       values: |
         global:
-          hostBe: participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
-          hostTls: tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}
+          hostBe: be.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
+          hostTls: tls.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
         db:
           url: "jdbc:postgresql://postgresql.{{ .Values.cluster.namespace }}.svc.cluster.local:5432/usersroles"
         redis:
@@ -284,14 +284,14 @@ spec:
         - $values/app-values/Simpl-fe/{{ . }}
         {{- end }}
       values: |
-        hostFe: participant.fe.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+        hostFe: fe.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
         cors:
-          allowOrigin: https://participant.fe.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }},https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:4203,http://localhost:3000
+          allowOrigin: https://fe.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }},https://be.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:4203,http://localhost:3000
         env:
         - name: API_URL
-          value: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
+          value: "https://be.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}"
         - name: KEYCLOAK_URL
-          value: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/auth"
+          value: "https://be.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}/auth"
         - name: KEYCLOAK_REALM
           value: "participant"
         - name: KEYCLOAK_CLIENT_ID
@@ -311,15 +311,15 @@ spec:
       values: |
         global:
           cors:
-            allowOrigin: https://authority.fe.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }},https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:3000
+            allowOrigin: https://fe.{{ .Values.authority.baseUrl }},https://be.{{ .Values.authority.baseUrl }},http://localhost:4202,http://localhost:3000
         microservices:
           usersRolesUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
           keycloakUrl: http://keycloak.{{ .Values.cluster.namespace }}.svc.cluster.local
           authenticationProviderUrl: http://authentication-provider.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
         redis:
           host: "redis-master.{{ .Release.Namespace }}.svc.cluster.local"
-        hostT2: "tls.participant.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
-        authorityUrlT1: "https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
+        hostT2: "tls.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}"
+        authorityUrlT1: "https://be.{{ .Values.authority.baseUrl }}"
         {{- if .Values.tls_gateway.resources }}
         resources: {{- toYaml .Values.tls_gateway.resources | nindent 10 }}
         {{- end }}
@@ -339,30 +339,86 @@ spec:
           usersRolesUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
         simpl:
           certificate:
-            san: "tls.participant.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
+            san: "tls.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}"
         {{- if .Values.auth_provider.resources }}
         resources: {{- toYaml .Values.auth_provider.resources | nindent 10 }}
         {{- end }}
-  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.contract.projectID }}/packages/helm/stable"
+  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.simpl_edc.projectID }}/packages/helm/stable"
     path: ''
-    targetRevision: {{ .Values.contract.targetRevision }}
-    chart: {{ .Values.contract.chart_name }}
+    targetRevision: {{ .Values.simpl_edc.targetRevision }}
+    chart: {{ .Values.simpl_edc.chart_name }}
     helm:
+      releaseName: {{ .Values.simpl_edc.nameOverride }}
       valueFiles:
-        {{- range .Values.contract.valueFiles }}
-        - $values/app-values/contract/{{ . }}
+        {{- range .Values.simpl_edc.valueFiles }}
+        - $values/app-values/simpl-edc/{{ . }}
         {{- end }}
       values: |
         deployment:
-          db:
-            url: "jdbc:postgresql://postgresql.{{ .Values.cluster.namespace }}.svc.cluster.local:5432:/simpl_contract"
+          # image: "code.europa.eu:4567/simpl/simpl-open/development/gaia-x-edc/simpl-edc"
+          # tag: "0.0.7-F-feature-simpl-8656-upgrade-aruba-lib.latest"
+          callbackAddress: https://tls.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}/edc
+          label: edc
+          vault:
+            url: {{ .Values.hashicorp.service }}
+            secretPath: /v1/edc
+            timeout: 30
+        ingress:
+          enabled: false
+          protocolPath: /protocol
+        env:
+          edcParticipantId: "{{ .Values.domainPrefix }}"
+          edcIdsId: "urn:connector:{{ .Values.domainPrefix }}"
+        # this might not be needed as it's moved to vault but test like this for now
+        postgresql:
+          url: "jdbc:postgresql://postgresql.{{ .Values.cluster.namespace }}.svc.cluster.local:5432/edc"
+          policyUrl: "jdbc:postgresql://postgresql.{{ .Values.cluster.namespace }}.svc.cluster.local:5432/edc"
+          password: "edc"
+        tls:
+          url:
+            authority: "https://tls.{{ .Values.authority.baseUrl }}"
+            usersRoles: "http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080/credential/download"
+            authenticationProvider: "http://authentication-provider.{{ .Values.cluster.namespace }}.svc.cluster.local:8080/keypair"
+        {{- if .Values.simpl_edc.resources }}
+        resources: {{- toYaml .Values.simpl_edc.resources | nindent 10 }}
+        {{- end }}
+  {{ if .Values.simpl_contract.enabled }}
+  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.simpl_contract.projectID }}/packages/helm/stable"
+    path: ''
+    targetRevision: {{ .Values.simpl_contract.targetRevision }}
+    chart: {{ .Values.simpl_contract.chart_name }}
+    helm:
+      valueFiles:
+        {{- range .Values.simpl_contract.valueFiles }}
+        - $values/app-values/simpl-contract/{{ . }}
+        {{- end }}
+      values: |
+        deployment:
+          mode: PROVIDER
           kafka:
             bootstrapServer: http://kafka.{{ .Values.cluster.commonToolsNamespace }}.svc.cluster.local:9092
+            clientUser: user1
+            securityProtocol: SASL_PLAINTEXT
+            sasl:
+              mechanism: PLAIN
+          urls:
+            stubs: "http://simpl-stubs.{{ .Values.cluster.namespace }}.svc.cluster.local:8080"
+          db:
+            url: "jdbc:postgresql://postgresql.{{ .Values.cluster.namespace }}.svc.cluster.local:5432/simpl_contract"
+            user: "simpl_contract"
           vault:
-            address: {{ .Values.hashicorp.service }}   
-          {{- if .Values.contract.resources }}
-          resources: {{- toYaml .Values.contract.resources | nindent 10 }}
+            address: {{ .Values.hashicorp.service }}
+            dbPasswordUrldbPasswordUrl: "kv/data/contract-billing/db-secrets"
+            dbPasswordName: DB_PASSWORD
+            apiKeyUrl: "kv/data/contract-billing/apikey-secrets"
+            apiKeyName: API_KEY
+            kafkaPasswordUrl: "kv/data/contract-billing/kafka-secrets"
+            kafkaPasswordName: KAFKA_CLIENT_PASSWORD
+            roleName: contract
+          {{- if .Values.simpl_contract.resources }}
+          resources: {{- toYaml .Values.simpl_contract.resources | nindent 10 }}
           {{- end }}        
+  {{- end }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.sd_ui.projectID }}/packages/helm/stable"
     path: ''
     targetRevision: {{ .Values.sd_ui.targetRevision }}
@@ -375,20 +431,20 @@ spec:
       values: |
         ingress:
           hosts:
-            - host: sd-ui.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+            - host: sd-ui.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
               paths:
               - path: /
                 pathType: ImplementationSpecific
           tls:
             - secretName: sd-ui-tld-secret
               hosts:
-                - sd-ui.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+                - sd-ui.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
         env:
-          PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://be.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}/auth"
           PUBLIC_AUTH_KEYCLOAK_REALM: "participant"
           PUBLIC_AUTH_KEYCLOAK_CLIENT_ID: "frontend-cli"
-          PUBLIC_CREATION_WIZARD_API_URL: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/sdtooling-api"
-          PUBLIC_SIGNER_URL: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_CREATION_WIZARD_API_URL: "https://be.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}/sdtooling-api"
+          PUBLIC_SIGNER_URL: "https://be.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}/signer"
   {{- if .Values.monitoring.enabled }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.monitoring.projectID }}/packages/helm/stable"
     path: ''
@@ -401,8 +457,8 @@ spec:
         - $values/app-values/monitoring/{{ . }}
         {{- end }}
       values: |
-        domainSuffix: {{ .Values.domainSuffix }}
-        namespaceTag: {{ .Values.namespaceTag }}
+        domainSuffix: {{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
+        namespaceTag: {{ .Values.domainPrefix }}
         mainNamespace: {{ .Values.cluster.commonToolsNamespace }}
         metricbeat:
           kubeStateHost: {{ .Values.cluster.kubeStateHost }}
@@ -418,7 +474,7 @@ spec:
               name: Kibana GUI
               id: kibana:443
               schedule: '@every 5s'
-              hosts: ["kibana.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}:443"]
+              hosts: ["kibana.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}.{{ .Values.domainSuffix }}:443"]
             - type: icmp
               id: kibana/icmp
               name: Kibana ICMP

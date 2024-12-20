@@ -1,7 +1,11 @@
 deployment:
   vault:
     secretPath: /v1/edc
+    url: http://vault.gaiax-edc-dev-vault.svc.cluster.local:8200
     timeout: 30
+  include:
+    postgres: true
+  callbackAddress: http://{{ .Release.Name }}-service:{{ .Values.deployment.containerProtocolPort }}
 
 ingress:
   enabled: true
@@ -13,5 +17,12 @@ ingress:
 
 # it would be better to move those to vault in the future or use sops encryption
 env:
-  edcApiAuthKey: "password"
-  vaultToken: "aHZzLkg4TXdJOEhxVFdrNTBvT01ZUkpPV0I1Vw=="
+  vaultToken: "aHZzLkE5bVd6RG1HNUtFRGFVbUlaTGp3UXVUQg=="
+  edcParticipantId: ""
+  edcIdsId: ""
+
+contractmanager:
+  extension:
+    enabled: true
+  apikey: test
+  url: http://url:8080/contract/v1/

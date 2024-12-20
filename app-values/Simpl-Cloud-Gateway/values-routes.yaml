@@ -3,7 +3,7 @@ appConfig:
   spring:
     cloud:
       gateway:
-        routes: 
+        routes:
           - id: keycloak
             uri: ${keycloak.url}
             predicates:
@@ -22,6 +22,30 @@ appConfig:
               - Path=/auth-api/**
             filters:
               - StripPrefix=1
+
+          # Cli configurations
+          - id: cli-authentication-provider
+            uri: ${authentication-provider.url}
+            predicates:
+              - Path=/cli/auth-api/csr/generate,/cli/auth-api/keypair/generate,/cli/auth-api/keypair
+            filters:
+              - StripPrefix=2
+              - name: ClientCredentialsFilter
+                args:
+                  #clientid: requiredRole1,requiredRole2
+                  cli: cli-role
+
+          - id: cli-users-and-roles
+            uri: ${users-roles.url}
+            predicates:
+              - Path=/cli/user-api/user/import,/cli/user-api/role/import,/cli/user-api/role/*/identity-attributes
+            filters:
+              - StripPrefix=2
+              - name: ClientCredentialsFilter
+                args:
+                  #clientid: requiredRole1,requiredRole2
+                  cli: cli-role
+
   springdoc:
     swagger-ui:
       urls:
@@ -46,22 +70,6 @@ appConfig:
         path: "/auth-api/keypair"
 
     rbac:
-      - path: "/sdtooling-api/**"
-        method: GET
-        roles:
-          - SD_PUBLISHER
-      - path: "/sdtooling-api/**"
-        method: POST
-        roles:
-          - SD_PUBLISHER 
-      - path: "/signer/**"
-        method: GET
-        roles:
-          - SD_PUBLISHER
-      - path: "/signer/**"
-        method: POST
-        roles:
-          - SD_PUBLISHER
       - path: "/xsfc-advsearch-be/**"
         method: GET
         roles:
@@ -139,14 +147,19 @@ appConfig:
       - method: POST
         path: "/auth-api/keypair/import"
         roles:
-          - ONBOARDER_M 
+          - ONBOARDER_M
+      - method: POST
+        path: "/user-api/credential/*"
+        roles:
+          - ONBOARDER_M
+          - T1UAR_M
       - path: "/auth-api/keypair/**"
         roles:
-          - ONBOARDER_M 
+          - ONBOARDER_M
       - method: POST
         path: "/auth-api/csr/generate"
         roles:
-          - ONBOARDER_M 
+          - ONBOARDER_M
       - path: "/auth-api/keypair"
         method: HEAD
         roles:
