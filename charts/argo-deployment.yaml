@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: "provider1-deployer" # name of the deploying app in argocd
+spec:
+  project: gaiax
+  source:
+    path: charts
+    repoURL: "https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git"
+    targetRevision: feature/DEV_DEPLOY
+    helm:
+      values: |
+        values:
+          branch: feature/DEV_DEPLOY                 
+          repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git
+        authority:
+          baseUrl: authority1.dev.simpl-europe.eu
+        project: gaiax                                              
+        domainPrefix: provider1                                     
+        domainSuffix: simpl-europe.eu                             
+        namespaceEnvironment: dev                                 
+        argocd:
+          appname: provider1                                     
+          namespace: argo-cd                                     
+        cluster:
+          address: https://kubernetes.default.svc
+          namespace: gaiax-edc-dev-provider1                     
+          kubeStateHost: kube-prometheus-stack-kube-state-metrics.devsecopstools.svc.cluster.local:8080    
+          commonToolsNamespace: be-common
+        secretEngine: dev
+        hashicorp:
+          service: "http://vault.gaiax-edc-dev-vault.svc.cluster.local:8200"  
+        monitoring:
+          enabled: false
+    chart: data-provider
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: gaiax-edc-dev-provider1 # where the package will be deployed
+

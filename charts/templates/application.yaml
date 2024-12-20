@@ -379,6 +379,11 @@ spec:
             authority: "https://tls.{{ .Values.authority.baseUrl }}"
             usersRoles: "http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080/credential/download"
             authenticationProvider: "http://authentication-provider.{{ .Values.cluster.namespace }}.svc.cluster.local:8080/keypair"
+        contractmanager:
+          extension:
+            enabled: true
+          apikey: test
+          url: http://url:8080/contract/v1/
         {{- if .Values.simpl_edc.resources }}
         resources: {{- toYaml .Values.simpl_edc.resources | nindent 10 }}
         {{- end }}
