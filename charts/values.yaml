@@ -112,7 +112,7 @@ sdtooling_validation_api_be:
 
 xsfc_advsearch_be:
   projectID: "891"
-  targetRevision: v1.3.0-rc.119
+  targetRevision: 1.3.0
   chart_name: xsfc-advsearch
   resources:
     requests:
@@ -183,7 +183,7 @@ simpl_edc:
 
 simpl_catalogue_client:
   projectID: "937"
-  targetRevision: 0.2.1
+  targetRevision: 0.2.2-SNAPSHOT.107.4c19e538
   chart_name: charts
   resources:
     requests:

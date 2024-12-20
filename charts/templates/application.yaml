@@ -76,17 +76,23 @@ spec:
         {{- end }}
       values: |
         domain: {{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
-        apiUrl: https://creation-wizard-api.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
+        vaultEnvIdentifier: {{ .Values.secretEngine }}
+        domainUrlEnvIdentifier: {{ .Values.namespaceEnvironment }}
         validation:
           config:
             domain: http://sd-creation-wizard-api-validation.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
         edcConnector:
           baseUrl: https://edc.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
+          tier2BaseUrl: https://tls.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}/edc
+          participantId: {{ .Values.domainPrefix }}
         usersRoles:
           apiUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
+        authenticationProvider:
+          apiUrl: http://authentication-provider.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
         federatedCatalogue:
           tier2Gateway:
             uri: "https://tls.{{ .Values.authority.baseUrl }}"
+            pathPrefix: /fc
         participant:
           onboarding:
             authorityTLSUri: "https://tls.{{ .Values.authority.baseUrl }}"
@@ -96,6 +102,10 @@ spec:
     targetRevision: {{ .Values.sdtooling_validation_api_be.targetRevision }}
     chart: {{ .Values.sdtooling_validation_api_be.chart_name }}
     helm:
+      values: |
+        domain: {{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
+        domainUrlEnvIdentifier: {{ .Values.namespaceEnvironment }}
+        vaultEnvIdentifier: {{ .Values.secretEngine }}
       valueFiles:
         {{- range .Values.sdtooling_validation_api_be.valueFiles }}
         - $values/app-values/sdtooling-validation-api-be/{{ . }}
