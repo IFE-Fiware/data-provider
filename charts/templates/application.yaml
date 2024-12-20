@@ -166,7 +166,7 @@ spec:
           PUBLIC_AUTH_KEYCLOAK_REALM: "participant"
           PUBLIC_AUTH_KEYCLOAK_CLIENT_ID: "frontend-cli"
           PUBLIC_FC_DATA_URL: "https://tls.{{ .Values.authority.baseUrl }}/fc"
-          PUBLIC_SEARCH_API_URL: "https://be.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}/xsfc-advsearch-be"
+          PUBLIC_SEARCH_API_URL: "http://xsfc-advsearch-be.{{ .Values.cluster.namespace }}.svc.cluster.local:8080"
         ingress:
           hosts:
             - host: catalogue-ui.{{ .Values.domainPrefix }}.{{ .Values.namespaceEnvironment }}.{{ .Values.domainSuffix }}
