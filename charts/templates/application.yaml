@@ -133,6 +133,8 @@ spec:
                         ]'
       releaseName: {{ .Values.sdtooling_api_be.nameOverride }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.sdtooling_validation_api_be.projectID }}/packages/helm/stable"
+    path: ''
+    targetRevision: {{ .Values.sdtooling_validation_api_be.targetRevision }}
     chart: {{ .Values.sdtooling_validation_api_be.chart_name }}
     helm:
       valueFiles:
