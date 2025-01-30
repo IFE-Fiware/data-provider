@@ -93,6 +93,7 @@ spec:
         hash:
           config:
             algorithm: "SHA256"
+            templates: '[
                           {
                             "key": "Contract Template 1",
                             "value": "https://files.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/static/contract/ContractTemplate1.json"
