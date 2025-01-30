@@ -1,0 +1,15 @@
+
+ui:
+  apibaseurl: http://api:8080/
+image:
+  docker_enable: false  
+frontend:
+  image:
+    tag: 0.1.6-rc.latest
+ingress:
+  enabled: true
+  className: nginx 
+  annotations:
+    cert-manager.io/cluster-issuer: "dev-prod"
+serviceAccount:
+  name: infrastructure-fe-sa

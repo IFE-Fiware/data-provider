@@ -69,40 +69,9 @@ To ensure that the namespace was created successfully, run the following command
 
 #### Vault related tasks
 
-##### Preliminal activites (done once)
+##### Secret engine for Signer
 
-1. Execute shell of your vault pod `kubectl exec -it vault-0 -- /bin/sh`. In this case pod name is `vault-0`
-2. Login to vault using cmd `vault login`. You will need to provide token for auth
-3. Create secret engine `vault secrets enable -path=dev kv-v2` in this case name of the engine is `dev`
-4. Enable kubernetes interaction with vault `vault auth enable kubernetes`
-5. Add config for kubernetes `vault write auth/kubernetes/config  kubernetes_host="https://$KUBERNETES_PORT_443_TCP_ADDR:443"`
-6. Write policy in vault for fetching credentials by kubernetes
-    ```
-    vault policy write dev-policy - <<EOF
-    path "dev/data/*" {
-       capabilities = ["read"]
-    }
-    EOF 
-    ```
-    in this example `dev-policy` is name of policy - it can be anything, and path `dev/data/*` needs to relate existing secret engine declared in pt 3. 
-
-7. Create role in vault that will bind policy with given service account name and service account namespace
-
-```
-vault write auth/kubernetes/role/gaiax-edc_role \
-      bound_service_account_names=*-iaa \
-      bound_service_account_namespaces=*-iaa \
-      policies=dev_policy \
-      ttl=24h
-```
-Explanation: `gaiax-edc_role` is a role name, it can be anything. `gaiax-edc-dev*` is a name for both service accounts
-and kubernetes namespaces names of services account. In this case `*` wildcard was used so to use this role in each namespace
-there should be kubernetes service account created with the name ending with `iaa` additionally this service
-account need to be placed in namespace with a name ending with `iaa`. If you require other namespace naming convention
-then the role need to be modified with correct namespaces names. `dev-policy` is a policy name defined in pt 6.
-
-IMPORTANT  
-Steps 1-7 need to be executed only once , if given role, policy, already exists in vault, then there is no need of configuring them again.
+Go to Vault UI and define new transit secret engine with path `transit/simpl` create encryption key `gaia-x-key1` with type `ed25519`.
 
 ##### Secret for Signer
 
@@ -131,6 +100,72 @@ Where you need to modify:
 | VAULT_ADDRESS            | http://vaultservice.vaultnamespace.svc.cluster.local:8200 | Internal link to Vault service  |
 | VAULT_TOKEN              | hvs.generatedtoken | Token to access the Vault  |
 
+##### Secret for Contract
+
+One secret is needed, its naming syntax is "{{ .Release.Namespace }}-contract", it should be created in created before kv secret engine.
+Its content is:
+
+```
+{
+  "API_KEY": "apikey",
+  "DBPASSWORD": "contract",
+  "DB_URL": "jdbc:postgresql://postgresql.consumer03.svc.cluster.local:5432/contract",
+  "DB_USER": "contract",
+  "KAFKA_CLIENT_PASSWORDS": "contract"
+}
+```
+
+Where you need to modify:
+
+| Variable name                 |     Example         | Description     |
+| ----------------------        |     :-----:         | --------------- |
+| DB_USER            | contract | User for contract database |
+| DBPASSWORD         | contract | Password for contract database  |
+| DB_URL             | jdbc:postgresql://postgresql.consumer03.svc.cluster.local:5432/contract | Link to datasource |
+| KAFKA_CLIENT_PASSWORDS  | password | Password for kafka connection |
+
+##### Secret for Infrastructure-BE
+
+One secret is needed, its name is "infrastructure-be", it should be created in created before kv secret engine.
+Its content is:
+
+{
+  "kafka.sasl.enabled": true,
+  "spring.datasource.password": "infrabe",
+  "spring.datasource.url": "jdbc:postgresql://postgres.dataprovider03.svc.cluster.local:5432/infrabe",
+  "spring.datasource.username": "infrabe",
+  "spring.flyway.password": "infrabe",
+  "spring.flyway.url": "jdbc:postgresql://postgresql.dataprovider03.svc.cluster.local:5432/infrabe",
+  "spring.flyway.user": "infrabe",
+  "spring.kafka.bootstrap-servers": "kafka.common03.svc.cluster.local:9092",
+  "spring.mail.password": "pass",
+  "spring.mail.username": "user"
+}
+
+| Variable name                |     Example         | Description     |
+| ----------------------       |     :-----:         | --------------- |
+| kafka.sasl.enabled           | true | If kafka authentication is enabled |
+| spring.datasource.password   | infrabe | Password for infrabe database  |
+| spring.datasource.url        | jdbc:postgresql://postgresql.consumer03.svc.cluster.local:5432/infrabe | Link to datasource |
+| spring.datasource.username   | infrabe | Username for infrabe database |
+| spring.flyway.password   | infrabe | Password for infrabe database  |
+| spring.flyway.url        | jdbc:postgresql://postgresql.consumer03.svc.cluster.local:5432/infrabe | Link to datasource |
+| spring.flyway.user   | infrabe | Username for infrabe database |
+| spring.kafka.bootstrap-servers   | kafka.common03.svc.cluster.local:9092 | Link to kafka bootstrap service  |
+| spring.mail.password        | password | Password to ionos smtp |
+| spring.mail.username   | infrabe | Username to ionos smtp |
+
+##### Secret engine for EDC
+
+A new KV v2 secret engine is needed for EDC. It should be named "edc". 
+You need to create 5 secrets in it, their names are as below (example in brackets - "content" is the key name, value is after the colon)
+
+- edc.ionos.access.key (content: suppliedstring)
+- edc.ionos.endpoint (content: s3 server url)
+- edc.ionos.endpoint.region (content: two letter country code)
+- edc.ionos.secret.key (content: secretkeystring)
+- edc.ionos.token (content: tokenstring)
+
 ### Deployment
 
 #### Deployment using ArgoCD
@@ -150,11 +185,11 @@ spec:
   source:
     repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
     path: '""'
-    targetRevision: 1.0.0                   # version of package
+    targetRevision: 1.1.0                   # version of package
     helm:
       values: |
         values:
-          branch: v1.0.0                    # branch of repo with values - for released version it should be the release branch
+          branch: v1.1.0                    # branch of repo with values - for released version it should be the release branch
         project: default
         namespaceTag: dataprovider01        # identifier of deployment and part of fqdn
         domainSuffix: int.simpl-europe.eu   # last part of fqdn
@@ -165,11 +200,30 @@ spec:
           address: https://kubernetes.default.svc
           namespace: dataprovider01         # where the app will be deployed
           commonToolsNamespace: common      # namespace where main monitoring stack is deployed
+          issuer: dev-prod                  # issuer of certificates
         hashicorp:
-          service: "http://vault-ha.vault-ha.svc.cluster.local:8200"  # local service path to your vault
-        secretEngine: dev-int               # container for your secrets in vault
+          service: "http://vault-common.common.svc.cluster.local:8200"  # local service path to your vault
+          token: "hvs.string"               # token to access the vault
+          tokenEncoded: "aHZzLnFPSHdxbTdnWnV1eDlZZEllYzY4bkt3Uw=="  # the same token but base64 encoded
+          role: dev-int-role                # role created in vault for access
+          secretEngine: dev-int             # secret engine name created in vault
         authority:
           namespaceTag: authority1          # namespace tag of target authority
+        crossplane:
+          enabled: true                     # if infrastructure components should be deployed (there can be only one instance per cluster)
+          gitea:
+            username: user                  # username for gitea
+            password: pass                  # password for gitea
+          kafka:
+            username: user                  # username to connect to kafka
+            password: pass                  # password to connect to kafka
+          ionos:
+            SMTPpassword: "pass"            # password for smtp in ionos
+            token: "tokenstring"            # token to access ionos
+          infrastructure_be:
+            database:
+              username: infrabe             # username to access postgres for infra-be
+              password: infrabe             # password to access postgres for infra-be
     chart: data-provider
   destination:
     server: 'https://kubernetes.default.svc'
@@ -186,28 +240,48 @@ There is basically one file that you need to modify - values.yaml.
 There are a couple of variables you need to replace - described below. The rest you don't need to change.
 
 ```
-project: default                   # Project to which the namespace is attached
-namespaceTag: dataprovider01       # identifier of deployment and part of fqdn
+project: default                    # Project to which the namespace is attached
+namespaceTag: dataprovider01        # identifier of deployment and part of fqdn
 authority:
-  namespaceTag: authority1         # namespace tag of target authority
-domainSuffix: int.simpl-europe.eu  # last part of fqdn
+  namespaceTag: authority1          # namespace tag of target authority
+domainSuffix: int.simpl-europe.eu   # last part of fqdn
 
 argocd:
-  appname: dataprovider01          # name of generated argocd app 
-  namespace: argocd                # namespace of your argocd
+  appname: dataprovider01           # name of generated argocd app 
+  namespace: argocd                 # namespace of your argocd
 
 cluster:
   address: https://kubernetes.default.svc
-  namespace: dataprovider01        # where the package will be deployed
-  commonToolsNamespace: common     # namespace where main monitoring stack is deployed
+  namespace: dataprovider01         # where the package will be deployed
+  commonToolsNamespace: common      # namespace where main monitoring stack is deployed
+  issuer: dev-prod                  # issuer of certificates
 
-secretEngine: dev-int              # container for your secrets in vault
 hashicorp:
   service: "http://vault-ha.vault-ha.svc.cluster.local:8200"  # local service path to your vault
+  token: "hvs.string"               # token to access the vault
+  tokenEncoded: "aHZzLnFPSHdxbTdnWnV1eDlZZEllYzY4bkt3Uw=="  # the same token but base64 encoded
+  role: dev-int-role                # role created in vault for access
+  secretEngine: dev-int             # secret engine name created in vault
+
+crossplane:
+  enabled: true                     # if infrastructure components should be deployed (there can be only one instance per cluster)
+  gitea:
+    username: user                  # username for gitea
+    password: pass                  # password for gitea
+  kafka:
+    username: user                  # username to connect to kafka
+    password: pass                  # password to connect to kafka
+  ionos:
+    SMTPpassword: "pass"            # password for smtp in ionos
+    token: "tokenstring"            # token to access ionos
+  infrastructure_be:
+    database:
+      username: infrabe             # username to access postgres for infra-be
+      password: infrabe             # password to access postgres for infra-be
 
 values:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git  # repo URL
-  branch: v1.0.0                    # branch of repo with values - for released version it should be the release branch
+  branch: v1.1.0                    # branch of repo with values - for released version it should be the release branch
 ```
 
 ##### Deployment
@@ -225,7 +299,7 @@ Now you can deploy the agent:
 <b><i>After installing the agent, you need to get through the onboarding process. 
 The entire procedure is described in the code repository:</i></b>
 
-https://code.europa.eu/simpl/simpl-open/development/iaa/charts/-/blob/develop/doc/0.8.x/ONBOARD.md?ref_type=heads
+https://code.europa.eu/simpl/simpl-open/development/iaa/charts/-/blob/develop/doc/1.0.x/ONBOARD.md?ref_type=heads
 
 ### Monitoring
 
