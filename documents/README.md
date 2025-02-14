@@ -45,10 +45,8 @@ Prior to the installation of the data provider agent, make sure to follow the on
 | Kubernetes Cluster  | 1.29.x or newer | Other version *might* work but tests were performed using 1.29.x version                                                                                                                     |
 | nginx-ingress       | 1.10.x or newer | Used as ingress controller. <br/> Other version *might* work but tests were performed using 1.10.x version. <br/> Image used: `registry.k8s.io/ingress-nginx/controller:v1.10.0`             |
 | cert-manager        | 1.15.x or newer | Used for automatic cert management. <br/> Other version *might* work but tests were performed using 1.15.x version. <br/> Image used: `quay.io/jetstack/cert-manager-controller::v1.15.3`    |
-| Hashicorp Vault     | 1.17.x or newer | Other version *might* work but tests were performed using 1.17.x version. <br/> Image used: `hashicorp/vault:1.17.2`                                                                         |
 | nfs-provisioner     | 4.0.x or newer  | Backend for *Read/Write many* volumes. <br/> Other version *might* work but tests were performed using 4.0.x version. <br/> Image used: `registry.k8s.io/sig-storage/nfs-provisioner:v4.0.8` |
 | argocd              | 2.11.x or newer | Used as GitOps tool . App of apps concept. <br/> Other version *might* work but tests were performed using 2.11.x version. <br/> Image used: `quay.io/argoproj/argocd:v2.11.3`               |
-| kube-state-metrics  |     present     | Used for monitoring, Metricbeat statuses in Kibana dashboard                                                                                                                                 |
 
 ## Installation
 
@@ -146,10 +144,10 @@ Its content is:
 | ----------------------       |     :-----:         | --------------- |
 | kafka.sasl.enabled           | true | If kafka authentication is enabled |
 | spring.datasource.password   | infrabe | Password for infrabe database  |
-| spring.datasource.url        | jdbc:postgresql://postgresql.consumer03.svc.cluster.local:5432/infrabe | Link to datasource |
+| spring.datasource.url        | jdbc:postgresql://postgres.dataprovider03.svc.cluster.local:5432/infrabe | Link to datasource |
 | spring.datasource.username   | infrabe | Username for infrabe database |
 | spring.flyway.password   | infrabe | Password for infrabe database  |
-| spring.flyway.url        | jdbc:postgresql://postgresql.consumer03.svc.cluster.local:5432/infrabe | Link to datasource |
+| spring.flyway.url        | jdbc:postgresql://postgresql.dataprovider03.svc.cluster.local:5432/infrabe | Link to datasource |
 | spring.flyway.user   | infrabe | Username for infrabe database |
 | spring.kafka.bootstrap-servers   | kafka.common03.svc.cluster.local:9092 | Link to kafka bootstrap service  |
 | spring.mail.password        | password | Password to ionos smtp |
@@ -185,11 +183,11 @@ spec:
   source:
     repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
     path: '""'
-    targetRevision: 1.1.0                   # version of package
+    targetRevision: 1.1.3                   # version of package
     helm:
       values: |
         values:
-          branch: v1.1.0                    # branch of repo with values - for released version it should be the release branch
+          branch: v1.1.3                    # branch of repo with values - for released version it should be the release branch
         project: default
         namespaceTag: dataprovider01        # identifier of deployment and part of fqdn
         domainSuffix: int.simpl-europe.eu   # last part of fqdn
@@ -281,7 +279,7 @@ crossplane:
 
 values:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git  # repo URL
-  branch: v1.1.0                    # branch of repo with values - for released version it should be the release branch
+  branch: v1.1.3                    # branch of repo with values - for released version it should be the release branch
 ```
 
 ##### Deployment
