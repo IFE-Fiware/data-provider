@@ -64,6 +64,7 @@ spec:
         {{- if .Values.keycloak.resources }}
         resources: {{- toYaml .Values.keycloak.resources | nindent 10 }}
         {{- end }}
+  {{- if .Values.sdtooling_api_be.enabled }}      
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.sdtooling_api_be.projectID }}/packages/helm/stable"
     path: ''
     targetRevision: {{ .Values.sdtooling_api_be.targetRevision }}
@@ -132,6 +133,8 @@ spec:
                           }
                         ]'
       releaseName: {{ .Values.sdtooling_api_be.nameOverride }}
+  {{- end }}    
+  {{- if .Values.sdtooling_validation_api_be.enabled }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.sdtooling_validation_api_be.projectID }}/packages/helm/stable"
     path: ''
     targetRevision: {{ .Values.sdtooling_validation_api_be.targetRevision }}
@@ -142,6 +145,8 @@ spec:
         - $values/app-values/sdtooling-validation-api-be/{{ . }}
         {{- end }}
       releaseName: {{ .Values.sdtooling_validation_api_be.nameOverride }}
+  {{- end }}    
+  {{- if .Values.xsfc_advsearch_be.enabled }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.xsfc_advsearch_be.projectID }}/packages/helm/stable"
     path: ''
     targetRevision: {{ .Values.xsfc_advsearch_be.targetRevision }}
@@ -152,8 +157,6 @@ spec:
         - $values/app-values/xsfc-advsearch-be/{{ . }}
         {{- end }}
       values: |
-        image:
-          repository: "code.europa.eu:4567/simpl/simpl-open/development/data1/xsfc-advsearch-be:{{ .Values.xsfc_advsearch_be.targetRevision }}"
         domain: {{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
         usersRoles:
           apiUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
@@ -167,6 +170,8 @@ spec:
           onboarding:
             authorityTLSUri: "https://tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
       releaseName: {{ .Values.xsfc_advsearch_be.nameOverride }}
+  {{- end }}    
+  {{- if .Values.signer.enabled }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.signer.projectID }}/packages/helm/stable"
     path: ''
     targetRevision: {{ .Values.signer.targetRevision }}
@@ -181,10 +186,14 @@ spec:
           name: "{{ .Values.signer.serviceAccountName }}"
         ingress:
           frontendDomain: signer.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+          annotations:
+            cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
         hashicorp:
           service: {{ .Values.hashicorp.service }}
           role: {{ .Values.hashicorp.role }}
           secretEngine: {{ .Values.hashicorp.secretEngine }}
+  {{- end }}    
+  {{- if .Values.simpl_catalogue_client.enabled }}    
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.simpl_catalogue_client.projectID }}/packages/helm/stable"
     path: ''
     targetRevision: {{ .Values.simpl_catalogue_client.targetRevision }}
@@ -197,12 +206,9 @@ spec:
       values: |
         env:
           PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
-          PUBLIC_AUTH_KEYCLOAK_REALM: "participant"
-          PUBLIC_AUTH_KEYCLOAK_CLIENT_ID: "frontend-cli"
           PUBLIC_FC_DATA_URL: "https://xsfc-server-service.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
           PUBLIC_SEARCH_API_URL: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/xsfc-advsearch-be"
           PUBLIC_CONTRACT_CONSUMPTION_API_URL: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/contract-consumption"
-          PUBLIC_AGENT_TYPE: "consumer"
         ingress:
           hosts:
             - host: catalogue-ui.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
@@ -213,9 +219,12 @@ spec:
             - secretName: catalogue-ui-tld-secret
               hosts:
                 - catalogue-ui.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+          annotations:
+            cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
         {{- if .Values.simpl_catalogue_client.resources }}
         resources: {{- toYaml .Values.simpl_catalogue_client.resources | nindent 10 }}
         {{- end }}
+  {{- end }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.simpl_cloud_gateway.projectID }}/packages/helm/stable"
     path: ''
     targetRevision: {{ .Values.simpl_cloud_gateway.targetRevision }}
@@ -232,6 +241,8 @@ spec:
           authorityUrl: https://authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}
           cors:
             allowOrigin: https://participant.fe.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:3000
+          ingress:
+            issuer: {{ .Values.cluster.issuer }}
         keycloakUrl: http://keycloak.{{ .Values.cluster.namespace }}.svc.cluster.local
         usersRolesUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
         authenticationProviderUrl: http://authentication-provider.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
@@ -276,6 +287,42 @@ spec:
                       - Path=/xsfc-advsearch-be/**
                     filters:
                       - StripPrefix=1
+                  # CLI configurations
+                  - id: cli-authentication-providerV1
+                    uri: ${authentication-provider.url}
+                    predicates:
+                      - Path=
+                        /cli/authApi/v1/csr/generate,
+                        /cli/authApi/v1/keypairs/generate,
+                        /cli/authApi/v1/keypairs,
+                        /cli/authApi/v1/credentials,
+                        /cli/authApi/v1/credentials/download,
+                        /cli/authApi/v1/agent/ping
+                    filters:
+                      - StripPrefix=2
+                      - name: ClientCredentialsFilter
+                        args:
+                          # Here you specify the clientid and the required client role to invoke this api
+                          # in the following order: 
+                          # client-id-name: client-role-1, client-role-1
+                          # The default configuration is shown below.
+                          cli: cli-role
+                  - id: cli-users-and-rolesV1
+                    uri: ${users-roles.url}
+                    predicates:
+                      - Path=
+                        /cli/userApi/v1/users/import,
+                        /cli/userApi/v1/roles/import,
+                        /cli/userApi/v1/roles/*/identityAttributes
+                    filters:
+                      - StripPrefix=2
+                      - name: ClientCredentialsFilter
+                        args:
+                          # Here you specify the clientid and the required client role to invoke this api
+                          # in the following order: 
+                          # client-id-name: client-role-1, client-role-1
+                          # The default configuration is shown below.
+                          cli: cli-role                  
                   - id: signer
                     uri: http://signer.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
                     predicates:
@@ -298,6 +345,8 @@ spec:
         global:
           hostBe: participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
           hostTls: tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}
+          ingress:
+            issuer: {{ .Values.cluster.issuer }}
         db:
           url: "jdbc:postgresql://postgresql.{{ .Values.cluster.namespace }}.svc.cluster.local:5432/usersroles"
         redis:
@@ -330,6 +379,8 @@ spec:
         - $values/app-values/Simpl-fe/{{ . }}
         {{- end }}
       values: |
+        ingress:
+          issuer: {{ .Values.cluster.issuer }}
         hostFe: participant.fe.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
         cors:
           allowOrigin: https://participant.fe.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }},https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:4203,http://localhost:3000
@@ -396,6 +447,7 @@ spec:
         - $values/app-values/auth-provider/{{ . }}
         {{- end }}
       values: |
+        urlAuthorityT2: "https://tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
         db:
           url: "jdbc:postgresql://postgresql.{{ .Values.cluster.namespace }}.svc.cluster.local:5432/authenticationprovider"
         microservices:
@@ -403,9 +455,12 @@ spec:
         simpl:
           certificate:
             san: "tls.participant.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
+        redis:
+          host: "redis-master.{{ .Values.cluster.namespace }}.svc.cluster.local"
         {{- if .Values.auth_provider.resources }}
         resources: {{- toYaml .Values.auth_provider.resources | nindent 10 }}
         {{- end }}
+  {{- if .Values.sd_ui.enabled }}      
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.sd_ui.projectID }}/packages/helm/stable"
     path: ''
     targetRevision: {{ .Values.sd_ui.targetRevision }}
@@ -426,12 +481,16 @@ spec:
             - secretName: sd-ui-tld-secret
               hosts:
                 - sd-ui.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+          annotations:
+            cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
         env:
           PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
           PUBLIC_AUTH_KEYCLOAK_REALM: "participant"
           PUBLIC_AUTH_KEYCLOAK_CLIENT_ID: "frontend-cli"
           PUBLIC_CREATION_WIZARD_API_URL: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/sdtooling-api"
-          PUBLIC_SIGNER_URL: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}"
+          PUBLIC_SIGNER_URL: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/signer"
+  {{- end }}  
+  {{- if .Values.simpl_edc.enabled }}      
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.simpl_edc.projectID }}/packages/helm/stable"
     path: ''
     targetRevision: {{ .Values.simpl_edc.targetRevision }}
@@ -452,17 +511,20 @@ spec:
           callbackAddress: "https://tls.participant.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/edc"
         env:
           vaultToken: {{ .Values.hashicorp.tokenEncoded }}
-        postgresql:
-          url: "jdbc:postgresql://postgresql.{{ .Values.cluster.namespace }}.svc.cluster.local:5432/edc"
-          policyUrl: "jdbc:postgresql://postgresql.{{ .Values.cluster.namespace }}.svc.cluster.local:5432/edc"
+          datasourceurl: "jdbc:postgresql://postgresql.{{ .Values.cluster.namespace }}.svc.cluster.local:5432/edc"
         tls:
           url:
             authority: "https://tls.authority.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}"
             usersRoles: "http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080/credential/download"
             authenticationProvider: "http://authentication-provider.{{ .Values.cluster.namespace }}.svc.cluster.local:8080/keypair"
+        hashicorp:
+          role: {{ .Values.hashicorp.role }}
+          service: {{ .Values.hashicorp.service }}
+        secretEngine: {{ .Values.hashicorp.secretEngine }}
         {{- if .Values.simpl_edc.resources }}
         resources: {{- toYaml .Values.simpl_edc.resources | nindent 10 }}
         {{- end }}
+  {{- end }}      
   {{- if .Values.monitoring.enabled }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.monitoring.projectID }}/packages/helm/stable"
     path: ''
@@ -475,6 +537,7 @@ spec:
         - $values/app-values/monitoring/{{ . }}
         {{- end }}
       values: |
+        clusterIssuer: {{ .Values.cluster.issuer }}
         domainSuffix: {{ .Values.domainSuffix }}
         namespaceTag: {{ .Values.namespaceTag }}
         mainNamespace: {{ .Values.cluster.commonToolsNamespace }}
@@ -530,6 +593,7 @@ spec:
         {{- range .Values.stubs.valueFiles }}
         - $values/app-values/stubs/{{ . }}
         {{- end }}
+  {{- if .Values.files.enabled }}      
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.files.projectID }}/packages/helm/stable"
     path: ''
     targetRevision: {{ .Values.files.targetRevision }}
@@ -546,6 +610,31 @@ spec:
         resources: {{- toYaml .Values.files.resources | nindent 10 }}
         {{- end }}
       releaseName: {{ .Values.files.nameOverride }}
+  {{- end }}    
+  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.simpl_cli.projectID }}/packages/helm/stable"
+    path: ''
+    targetRevision: {{ .Values.simpl_cli.targetRevision }}
+    chart: {{ .Values.simpl_cli.chart_name }}
+    helm:
+      releaseName: {{ .Values.simpl_cli.fullnameOverride }}
+      valueFiles:
+        {{- range .Values.simpl_cli.valueFiles }}
+        - $values/app-values/simpl-cli/{{ . }}
+        {{- end }}
+      values: |
+        initParticipant:
+          hostT1: participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+          authorityHostT1: authority.be.{{ .Values.authority.namespaceTag }}.{{ .Values.domainSuffix }}
+          csr:
+            cn: tls.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+            o: {{ .Values.namespaceTag }}
+            ou: {{ .Values.namespaceTag }}
+          keycloak:
+            internalHost: "keycloak.{{ .Release.Namespace }}.svc.cluster.local"
+            url: "https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/auth"
+          microservices:
+            usersRolesUrl: https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/cli/userApi/v1/
+            authenticationProviderUrl: https://participant.be.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}/cli/authApi/v1/
   {{- if .Values.crossplane.enabled }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.infrastructure_be.projectID }}/packages/helm/stable"
     path: ''
@@ -572,9 +661,12 @@ spec:
             SPRING_KAFKA_PROPERTIES_SASL_JAAS_CONFIG: org.apache.kafka.common.security.plain.PlainLoginModule required username={{ .Values.crossplane.kafka.username }} password={{ .Values.crossplane.kafka.password }}
             SPRING_MAIL_PASSWORD: {{ .Values.crossplane.ionos.SMTPpassword }}
             SPRING_CLOUD_VAULT_URL: {{ .Values.hashicorp.service }}/v1/{{ .Values.hashicorp.secretEngine }}/data/users/
-            SPRING_CONFIG_IMPORT: "vault://{{ .Values.hashicorp.secretEngine }}/infrastructure-be"
+            SPRING_CONFIG_IMPORT: "vault://{{ .Values.hashicorp.secretEngine }}/{{ .Values.cluster.namespace }}-infrastructure-be"
             SPRING_DATASOURCE_USERNAME: {{ .Values.crossplane.infrastructure_be.database.username }}
             SPRING_DATASOURCE_PASSWORD: {{ .Values.crossplane.infrastructure_be.database.password }}
+            GITEA_USER: {{ .Values.crossplane.gitea.username }}
+            GITEA_PASSWORD: {{ .Values.crossplane.gitea.password }}
+            GITEA_URL: "http://gitea-http.{{ .Values.cluster.namespace }}.svc.cluster.local:3000/api/v1"
           ingress:
             hosts:
               - host: {{ .Values.infrastructure_be.fullnameOverride }}.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
@@ -613,99 +705,9 @@ spec:
           tls:
             - secretName: {{ .Values.infrastructure_fe.fullnameOverride }}-tld-secret
               hosts:
-                - {{ .Values.infrastructure_fe.fullnameOverride }}.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}  
-  - repoURL: {{ .Values.crossplane.repo_URL }}
-    targetRevision: {{ .Values.crossplane.targetRevision }}
-    chart: {{ .Values.crossplane.chart_name }}
-    helm:
-      valueFiles:
-        {{- range .Values.crossplane.valueFiles }}
-        - $values/app-values/crossplane/{{ . }}
-        {{- end }}
-      values: |
-        {{- if .Values.crossplane.resourcesCrossplane }}
-        resourcesCrossplane: {{- toYaml .Values.crossplane.resourcesCrossplane | nindent 10 }}
-        {{- end }}
-        {{- if .Values.crossplane.resourcesRBACManager }}
-        resourcesRBACManager: {{- toYaml .Values.crossplane.resourcesRBACManager | nindent 10 }}
-        {{- end }}
-  - repoURL: {{ .Values.gitea.repo_URL }}
-    targetRevision: {{ .Values.gitea.targetRevision }}
-    chart: {{ .Values.gitea.chart_name }}
-    helm:
-      releaseName: {{ .Values.gitea.nameOverride }}
-      valueFiles:
-        {{- range .Values.gitea.valueFiles }}
-        - $values/app-values/gitea/{{ . }}
-        {{- end }}
-      values: |
-        ingress:
-          enabled: true
+                - {{ .Values.infrastructure_fe.fullnameOverride }}.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
           annotations:
             cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
-          className: nginx
-          hosts:
-            - host: gitea.crossplane.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
-              paths:
-              - path: /
-                pathType: ImplementationSpecific
-          tls:
-            - secretName: gitea-crossplane-tld-secret
-              hosts:
-                - gitea.crossplane.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
-        {{- if .Values.gitea.resources  }}
-        resources: {{- toYaml .Values.gitea.resources | nindent 10 }}
-        {{- end }}
-  - repoURL: {{ .Values.argocd.repo_URL }}
-    targetRevision: {{ .Values.argocd.targetRevision }}
-    chart: {{ .Values.argocd.chart_name }}
-    helm:
-      releaseName: {{ .Values.argocd.nameOverride }}
-      valueFiles:
-        {{- range .Values.argocd.valueFiles }}
-        - $values/app-values/argocd/{{ . }}
-        {{- end }}
-      values: |
-        global:
-          domain: argoui.crossplane.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
-        server:
-          ingress:
-            enabled: true
-            annotations:
-              cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
-            tls: true
-            ingressClassName: nginx
-            pathType: ImplementationSpecific
-        fullnameOverride: {{ .Values.argocd.nameOverride }}
-  - repoURL: {{ .Values.argoevents.repo_URL }}
-    targetRevision: {{ .Values.argoevents.targetRevision }}
-    chart: {{ .Values.argoevents.chart_name }}
-    helm:
-      releaseName: {{ .Values.argoevents.nameOverride }}
-      values: |
-        fullnameOverride: {{ .Values.argoevents.nameOverride }}
-  - repoURL: {{ .Values.argoworkflows.repo_URL }}
-    targetRevision: {{ .Values.argoworkflows.targetRevision }}
-    chart: {{ .Values.argoworkflows.chart_name }}
-    helm:
-      releaseName: {{ .Values.argoworkflows.nameOverride }}
-      values: |
-        server:
-          ingress:
-            enabled: true
-            annotations:
-              cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
-            ingressClassName: nginx
-            hosts:
-              - argoworkflows.crossplane.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
-            paths:
-              - /
-            pathType: ImplementationSpecific
-            tls:
-              - secretName: argowf-crossplane-tld-secret
-                hosts:
-                  - argoworkflows.crossplane.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
-        fullnameOverride: {{ .Values.argoworkflows.nameOverride }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.provisionerresources.projectID }}/packages/helm/stable"
     targetRevision: {{ .Values.provisionerresources.targetRevision }}
     chart: {{ .Values.provisionerresources.chart_name }}

@@ -17,3 +17,6 @@ domain: dataprovider03.int.simpl-europe.eu
 schemaVolumeClaim: nfs-storage-pvc-sd
 #Mount path used for schema storage
 schemaPvcMountPath: /data
+
+serviceAccount:
+  name: sdtooling-validation-api-be-service-account
