@@ -21,6 +21,13 @@ appConfig:
     - method: POST
       path: "/user-api/mtls/ephemeral-proof"
       disable-ephemeral-proof-check: true
+    - method: POST
+      path: "/edc/**"
+      disable-ephemeral-proof-check: true
+    - method: GET
+      path: "/edc/**"
+      disable-ephemeral-proof-check: true
+
     # Example of ABAC
     # - path: "/this-is-an-example"
     #   method: GET

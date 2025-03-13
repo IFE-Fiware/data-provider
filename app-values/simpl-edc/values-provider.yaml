@@ -22,5 +22,4 @@ env:
   edcIdsId: "urn:connector:provider"
 
 postgresql:
-  password: edc
   username: edc
