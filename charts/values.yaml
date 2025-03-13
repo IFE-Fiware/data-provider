@@ -66,6 +66,7 @@ redis:
     - values.yaml
     
 signer:
+  enabled: true
   projectID: "954"
   targetRevision: 0.0.2
   chart_name: signer
@@ -75,7 +76,7 @@ signer:
 
 simpl_cloud_gateway:
   projectID: "772"
-  targetRevision: 1.0.0
+  targetRevision: 1.1.0
   chart_name: simpl-cloud-gateway
   resources:
     requests:
@@ -86,8 +87,9 @@ simpl_cloud_gateway:
     - values-routes.yaml
 
 sdtooling_api_be:
+  enabled: true
   projectID: "778"
-  targetRevision: 1.5.1
+  targetRevision: 1.6.0
   chart_name: sd-creation-wizard
   resources:
     requests:
@@ -98,8 +100,9 @@ sdtooling_api_be:
   nameOverride: sd
 
 sdtooling_validation_api_be:
+  enabled: true
   projectID: "868"
-  targetRevision: 1.3.0
+  targetRevision: 1.5.0
   chart_name: sd-creation-wizard
   resources:
     requests:
@@ -110,8 +113,9 @@ sdtooling_validation_api_be:
   nameOverride: sd
 
 xsfc_advsearch_be:
+  enabled:  true
   projectID: "891"
-  targetRevision: 1.4.1
+  targetRevision: 1.5.2
   chart_name: xsfc-advsearch
   resources:
     requests:
@@ -123,7 +127,7 @@ xsfc_advsearch_be:
 
 users_roles:
   projectID: "771"
-  targetRevision: 1.0.0
+  targetRevision: 1.1.2
   chart_name: users-roles
   resources:
     requests:
@@ -134,7 +138,7 @@ users_roles:
 
 simpl_fe:
   projectID: "769"
-  targetRevision: 1.0.7
+  targetRevision: 1.1.2
   chart_name: simpl-fe
   resources:
     requests:
@@ -145,8 +149,9 @@ simpl_fe:
     - values-participant.yaml
 
 sd_ui:
+  enabled: true
   projectID: "923"
-  targetRevision: 1.0.0
+  targetRevision: 1.1.0
   chart_name: sd-ui
   resources:
     requests:
@@ -157,7 +162,7 @@ sd_ui:
 
 infrastructure_be:
   projectID: "896"
-  targetRevision: 0.2.1
+  targetRevision: 0.2.3
   chart_name: infrastructure-be
   fullnameOverride: infrastructure-be
   valueFiles:
@@ -165,7 +170,7 @@ infrastructure_be:
 
 infrastructure_fe:
   projectID: "895"
-  targetRevision: 0.1.9
+  targetRevision: 0.1.10
   chart_name: frontend
   fullnameOverride: infrastructure-fe
   valueFiles:
@@ -174,7 +179,7 @@ infrastructure_fe:
 
 tls_gateway:
   projectID: "860"
-  targetRevision: 1.0.1
+  targetRevision: 1.1.0
   chart_name: tls-gateway
   resources:
     requests:
@@ -185,8 +190,9 @@ tls_gateway:
     - values-routes.yaml
 
 simpl_edc:
+  enabled:  true
   projectID: "920"
-  targetRevision: 1.0.1
+  targetRevision: 1.0.3
   chart_name: edc
   nameOverride: simpl-edc
   resources:
@@ -198,8 +204,9 @@ simpl_edc:
     - values-provider.yaml
 
 simpl_catalogue_client:
+  enabled: true
   projectID: "937"
-  targetRevision: 1.0.0
+  targetRevision: 1.2.0
   chart_name: catalogue-ui
   resources:
     requests:
@@ -210,7 +217,7 @@ simpl_catalogue_client:
 
 auth_provider:
   projectID: "939"
-  targetRevision: 1.0.0
+  targetRevision: 1.1.2
   chart_name: authentication-provider
   resources:
     requests:
@@ -222,7 +229,7 @@ auth_provider:
 monitoring:
   enabled: true
   projectID: "828"
-  targetRevision: 0.1.11
+  targetRevision: 0.1.12
   chart_name: eck-monitoring
   fullnameOverride: elastic
   valueFiles:
@@ -252,8 +259,9 @@ stubs:
     - values.yaml  
 
 files:
+  enabled:  true
   projectID: "978"
-  targetRevision: 0.0.2
+  targetRevision: 0.0.3
   chart_name: simpl-files
   nameOverride: simpl-files
   resources:
@@ -322,3 +330,11 @@ provisionerresources:
   nameOverride: infrastructure-crossplane
   valueFiles:
     - values.yaml
+
+simpl_cli:
+  projectID: "882"
+  targetRevision: 1.1.0
+  chart_name: simpl-cli
+  fullnameOverride: simpl-cli
+  valueFiles:
+    - values.yaml    

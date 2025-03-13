@@ -13,6 +13,9 @@ domainUrlEnvIdentifier: dev
 # domain associated with Dev Cluster (don't modify it)
 domain: dev.simpl-europe.eu
 
+serviceAccount:
+  name: sdtooling-api-be-service-account
+
 # ID of persistentVolumeClaims associated with NFS Storage
 schemaVolumeClaim: nfs-storage-pvc-sd
 # mount path used for schema storage

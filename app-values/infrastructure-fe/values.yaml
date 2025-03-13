@@ -2,14 +2,9 @@
 ui:
   apibaseurl: http://api:8080/
 image:
-  docker_enable: false  
-frontend:
-  image:
-    tag: 0.1.6-rc.latest
+  docker_enable: false
 ingress:
   enabled: true
-  className: nginx 
-  annotations:
-    cert-manager.io/cluster-issuer: "dev-prod"
+  className: nginx
 serviceAccount:
   name: infrastructure-fe-sa

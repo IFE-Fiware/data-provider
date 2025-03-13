@@ -11,7 +11,6 @@ ingress:
   tls:
     secretName: adapter-infra-simpl-backend-tls
   annotations:
-    cert-manager.io/cluster-issuer: "dev-prod"
     acme.cert-manager.io/http01-edit-in-place: "false"
 
 deployment:
