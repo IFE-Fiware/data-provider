@@ -261,7 +261,7 @@ stubs:
 files:
   enabled:  true
   projectID: "978"
-  targetRevision: 0.0.3
+  targetRevision: 0.0.4
   chart_name: simpl-files
   nameOverride: simpl-files
   resources:
