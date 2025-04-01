@@ -197,11 +197,11 @@ spec:
   source:
     repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
     path: '""'
-    targetRevision: 1.2.0                   # version of package
+    targetRevision: 1.2.1                   # version of package
     helm:
       values: |
         values:
-          branch: v1.2.0                    # branch of repo with values - for released version it should be the release branch
+          branch: v1.2.1                    # branch of repo with values - for released version it should be the release branch
         project: default
         namespaceTag: dataprovider01        # identifier of deployment and part of fqdn
         domainSuffix: int.simpl-europe.eu   # last part of fqdn
@@ -293,7 +293,7 @@ crossplane:
 
 values:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git  # repo URL
-  branch: v1.2.0                    # branch of repo with values - for released version it should be the release branch
+  branch: v1.2.1                    # branch of repo with values - for released version it should be the release branch
 ```
 
 ##### Deployment
