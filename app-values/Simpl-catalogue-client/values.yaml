@@ -97,4 +97,4 @@ affinity: {}
 env:
   PUBLIC_AUTH_KEYCLOAK_REALM: "participant"
   PUBLIC_AUTH_KEYCLOAK_CLIENT_ID: "frontend-cli"
-  PUBLIC_AGENT_TYPE: "consumer"
+  PUBLIC_AGENT_TYPE: "provider"
