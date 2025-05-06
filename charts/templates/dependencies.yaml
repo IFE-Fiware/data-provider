@@ -1,3 +1,4 @@
+{{- if .Values.crossplane.enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -19,7 +20,6 @@ spec:
   - repoURL: {{ .Values.values.repo_URL }}
     targetRevision: {{ .Values.values.branch }}
     ref: values
-  {{- if .Values.crossplane.enabled }}
   - repoURL: {{ .Values.crossplane.repo_URL }}
     targetRevision: {{ .Values.crossplane.targetRevision }}
     chart: {{ .Values.crossplane.chart_name }}
@@ -112,4 +112,4 @@ spec:
                 hosts:
                   - argoworkflows.crossplane.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
         fullnameOverride: {{ .Values.argoworkflows.nameOverride }}
-  {{- end }}
+{{- end }}
