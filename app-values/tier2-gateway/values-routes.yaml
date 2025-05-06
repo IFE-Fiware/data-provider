@@ -35,3 +35,12 @@ appConfig:
     #   identity-attributes:
     #     - CONSUMER
     #     - DATA_PROVIDER
+
+  logging:
+    business:
+      - method: GET
+        path: /user-api/mtls/ping
+        config:
+          operations:
+            - PING_REQUEST
+
