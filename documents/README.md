@@ -66,16 +66,33 @@ Go to Vault UI and create an encryption key `gaia-x-key1` in secret engine `tran
 
 ##### Secret for Signer
 
-Modify the "*namespace*-infra-adapter-simpl-backend" secret, add the following key. This will probably be automated in next release. 
-As value insert the same token you've extracted above for Vault access.
+Create a key for Signer named "*namespace*-infra-adapter-simpl-backend" replacing the data mentioned in the table with proper values. 
 
 ```
-"VAULT_TOKEN": "hvs.string"
+{
+  "ENGINE_PATH": "/opt/plugins/hashicorp-vault-provider.so",
+  "HTTP_HOST": "",
+  "HTTP_IDLE_TIMEOUT": "120s",
+  "HTTP_PORT": "8080",
+  "HTTP_READ_TIMEOUT": "10s",
+  "HTTP_WRITE_TIMEOUT": "10s",
+  "LOG_ENCODING": "json",
+  "LOG_LEVEL": "debug",
+  "VAULT_ADRESS": "https://vault.common.int.simpl-europe.eu",
+  "VAULT_TOKEN": "hvs.generatedtoken"
+}
 ```
+
+Where you need to modify:
+
+| Variable name                 |     Example         | Description     |
+| ----------------------        |     :-----:         | --------------- |
+| VAULT_ADDRESS            | http://vault.commonnamespace.domainsuffix | Vault ingress address  |
+| VAULT_TOKEN              | hvs.generatedtoken | Token to access the Vault  |
 
 ##### Secret for EDC
 
-Modify the "*namespace*-simpl-edc" secret replacing the data mentioned in the table with proper access credentials. 
+Create a secret named "*namespace*-simpl-edc" replacing the data mentioned in the table with proper values. 
 
 ```
 {
@@ -90,8 +107,13 @@ Modify the "*namespace*-simpl-edc" secret replacing the data mentioned in the ta
 }
 ```
 
+Where you need to modify:
+
 | Variable name                    |     Example         | Description              |
 | ----------------------           |     :-----:         | ---------------          |
+| contractmanager_apikey           | apikey              | api key string           |
+| edc_datasource_default_password  | dbpassstring        | take the password from *namespace*-postgres-passwords vault secret, key *namespace*-edc |
+| edc_datasource_policy_password   | dbpassstring        | take the password from *namespace*-postgres-passwords vault secret, key *namespace*-edc |
 | edc_ionos_access_key             | accesskeystring     | Access key for S3        |
 | edc_ionos_endpoint               | s3-eu-central-1.ionoscloud.com | S3 server url |
 | edc_ionos_endpoint_region        | de                  | Two letter country code  |
@@ -119,11 +141,11 @@ spec:
   source:
     repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
     path: '""'
-    targetRevision: 1.3.0                   # version of package
+    targetRevision: 1.3.1                   # version of package
     helm:
       values: |
         values:
-          branch: v1.3.0                    # branch of repo with values - for released version it should be the release branch
+          branch: v1.3.1                    # branch of repo with values - for released version it should be the release branch
         project: default
         namespaceTag: dataprovider01        # identifier of deployment and part of fqdn
         domainSuffix: int.simpl-europe.eu   # last part of fqdn
@@ -171,7 +193,7 @@ There are a couple of variables you need to replace - described below. The rest 
 ```
 values:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git  # repo URL
-  branch: v1.3.0                    # branch of repo with values - for released version it should be the release branch
+  branch: v1.3.1                    # branch of repo with values - for released version it should be the release branch
 
 project: default                    # Project to which the namespace is attached
 namespaceTag: dataprovider01        # identifier of deployment and part of fqdn
