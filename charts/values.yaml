@@ -108,7 +108,7 @@ sdtooling_validation_api_be:
     - values.yaml
   nameOverride: sd
 
-xsfc_advsearch_be:
+xfsc_advsearch_be:
   enabled:  true
   projectID: "891"
   targetRevision: 1.6.0
@@ -119,7 +119,7 @@ xsfc_advsearch_be:
       memory: "0"
   valueFiles:
     - values.yaml
-  nameOverride: xsfc-advsearch-be
+  nameOverride: xfsc-advsearch-be
 
 users_roles:
   projectID: "771"
