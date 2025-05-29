@@ -52,12 +52,12 @@ appConfig:
         method: POST
         roles:
           - SD_PUBLISHER
-      - path: "/xsfc-advsearch-be/**"
+      - path: "/xfsc-advsearch-be/**"
         method: GET
         roles:
           - SD_PUBLISHER
           - SD_CONSUMER
-      - path: "/xsfc-advsearch-be/**"
+      - path: "/xfsc-advsearch-be/**"
         method: POST
         roles:
           - SD_PUBLISHER
