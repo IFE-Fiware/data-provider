@@ -122,6 +122,33 @@ Where you need to modify:
 
 All the other necessary secrets are now created automatically with proper data.
 
+##### Secret for Infrastructure-be
+
+Create a key for Signer named "*namespace*-infrastructure-be" replacing the data mentioned in the table with proper values. 
+
+```
+{
+  "kafka.sasl.enabled": true,
+  "kafka.sasl.password": "kafkapassword",
+  "kafka.sasl.username": "dataprovider01_infrabe",
+  "spring.datasource.password": "dbpassword",
+  "spring.datasource.username": "dataprovider01_infrabe",
+  "spring.mail.password": "smtppassword",
+  "spring.mail.username": "no-reply@simplservices.com"
+}
+```
+
+Where you need to modify:
+
+| Variable name                 |     Example                | Description              |
+| ----------------------        |     :-----:                | ---------------          |
+| kafka.sasl.password           | kafkapassword              | take the password from *common-namespace*-kafka-credentials vault secret, key *namespace*_infrabe           |
+| kafka.sasl.username           | dataprovider01_infrabe     | *namespace*_infrabe      |
+| spring.datasource.password    | dbpassword                 | take the password from *namespace*-postgres-passwords vault secret, key *namespace*-infrabe |
+| spring.datasource.username    | dataprovider01_infrabe     | *namespace*_infrabe      |
+| spring.mail.password          | smtppassword               | Password for smtp server |
+| spring.mail.username          | no-reply@simplservices.com | Username for smtp server |
+
 ### Deployment
 
 #### Deployment using ArgoCD
@@ -141,13 +168,16 @@ spec:
   source:
     repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
     path: '""'
-    targetRevision: 1.3.3                   # version of package
+    targetRevision: 2.0.0                   # version of package
     helm:
       values: |
         values:
-          branch: v1.3.3                    # branch of repo with values - for released version it should be the release branch
+          branch: v2.0.0                    # branch of repo with values - for released version it should be the release branch
         project: default
-        namespaceTag: dataprovider01        # identifier of deployment and part of fqdn
+        namespaceTag:
+          dataprovider: dataprovider01      # identifier of deployment and part of fqdn for this agent
+          authority: authority01            # identifier of deployment and part of fqdn for authority
+          common: common01                  # identifier of deployment and part of fqdn for common components
         domainSuffix: int.simpl-europe.eu   # last part of fqdn
         argocd:
           appname: dataprovider01           # name of generated argocd app 
@@ -157,8 +187,6 @@ spec:
           namespace: dataprovider01         # where the app will be deployed
           commonToolsNamespace: common      # namespace where main monitoring stack is deployed
           issuer: dev-prod                  # issuer of certificates
-        authority:
-          namespaceTag: authority1          # namespace tag of target authority
         hashicorp:
           service: "https://vault.common.domainsuffix"  # link to your vault ingress (apply domain suffix)
           role: dev-int-role                # role created in vault for access
@@ -193,10 +221,13 @@ There are a couple of variables you need to replace - described below. The rest 
 ```
 values:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git  # repo URL
-  branch: v1.3.3                   # branch of repo with values - for released version it should be the release branch
+  branch: v2.0.0                    # branch of repo with values - for released version it should be the release branch
 
 project: default                    # Project to which the namespace is attached
-namespaceTag: dataprovider01        # identifier of deployment and part of fqdn
+namespaceTag:
+  dataprovider: dataprovider01      # identifier of deployment and part of fqdn for this agent
+  authority: authority01            # identifier of deployment and part of fqdn for authority
+  common: common01                  # identifier of deployment and part of fqdn for common components
 domainSuffix: int.simpl-europe.eu   # last part of fqdn
 
 argocd:
