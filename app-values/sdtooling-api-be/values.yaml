@@ -27,7 +27,7 @@ validation:
     enabled: true
     # domain is the URL of SD-Tooling-Api-Validation service
     # (sd-creation-wizard-api-validation is name of Kube service associated. Check it!)
-    domain: "http://sd-creation-wizard-api-validation:8080"
+    domain: "http://sd-validation:8080"
     # name of Validation API Method
     validationApi: "/validate-ttl"
     validationJsonldApi: "/validate-jsonld"
@@ -43,16 +43,13 @@ web:
       # if true a JWT token must be present as Bearer in any request  
       required: true
 
-
-edcConnector:
-  # url to the EDC connector domain
-  # the participant id to be used as assigner in policies as expected by the EDC connector on contract negotiation
-  participantId: provider
-
-
 # url to the AuthenticationProvider internal service
 authenticationProvider:
-  apiUrl: http://authentication-provider:8080
+  service:
+    url: http://authentication-provider:8080
+
+openTelemetry:
+  disabled: false
 
 # federated catalog application (fc-service)
 federatedCatalogue:

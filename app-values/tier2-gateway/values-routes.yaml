@@ -3,6 +3,18 @@ appConfig:
     cloud:
       gateway:
         routes:
+          - id: edc
+            uri: http://simpl-edc-service:19194
+            predicates:
+              - Path=/edc/**
+            filters:
+              - StripPrefix=1
+          - id: edc-connector
+            uri: http://edc-connector-adapter:8080
+            predicates:
+              - Path=/edc-connector-adapter/**
+            filters:
+              - StripPrefix=1
           - id: users-roles
             uri: ${users-roles.url}
             predicates:
@@ -17,6 +29,10 @@ appConfig:
       path: "/edc/**"
     - method: POST
       path: "/edc/**"
+    - method: GET
+      path: "/edc-connector/**"
+    - method: POST
+      path: "/edc-connector/**"
   abac:
     - method: POST
       path: "/user-api/mtls/ephemeral-proof"
@@ -26,6 +42,12 @@ appConfig:
       disable-ephemeral-proof-check: true
     - method: GET
       path: "/edc/**"
+      disable-ephemeral-proof-check: true
+    - method: POST
+      path: "/edc-connector/**"
+      disable-ephemeral-proof-check: true
+    - method: GET
+      path: "/edc-connector/**"
       disable-ephemeral-proof-check: true
 
     # Example of ABAC
