@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2025-06-11
+- Hotfix for advsearch
+
 ## [2.0.0] - 2025-06-06
 - Updated many components to implement Data Provider version 2.0.0.
 - Added edc connector adapter component to Data Provider Agent.
@@ -129,6 +132,7 @@ No changes.
 #### Fixed
 - Improved Dockerfile for use simpluser
 
+#### 1.3.0 (2025-03-31)
 
 ### infrastructure-be
 
