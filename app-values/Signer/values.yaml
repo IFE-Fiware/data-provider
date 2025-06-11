@@ -7,7 +7,7 @@ TAG: "latest"
 secretConfigPath: "{{ .Values.hashicorp.secretEngine }}/{{ .Release.Namespace }}-infra-adapter-simpl-backend"
 
 ingress:
-  host: adapter-infra.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+  host: adapter-infra.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
   tls:
     secretName: adapter-infra-simpl-backend-tls
   annotations:
