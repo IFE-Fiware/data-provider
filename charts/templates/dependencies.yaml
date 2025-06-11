@@ -51,14 +51,14 @@ spec:
             cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
           className: nginx
           hosts:
-            - host: gitea.crossplane.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+            - host: gitea.crossplane.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
               paths:
               - path: /
                 pathType: ImplementationSpecific
           tls:
             - secretName: gitea-crossplane-tld-secret
               hosts:
-                - gitea.crossplane.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+                - gitea.crossplane.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
         {{- if .Values.gitea.resources  }}
         resources: {{- toYaml .Values.gitea.resources | nindent 10 }}
         {{- end }}
@@ -73,7 +73,7 @@ spec:
         {{- end }}
       values: |
         global:
-          domain: argoui.crossplane.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+          domain: argoui.crossplane.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
         server:
           ingress:
             enabled: true
@@ -103,13 +103,13 @@ spec:
               cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
             ingressClassName: nginx
             hosts:
-              - argoworkflows.crossplane.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+              - argoworkflows.crossplane.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
             paths:
               - /
             pathType: ImplementationSpecific
             tls:
               - secretName: argowf-crossplane-tld-secret
                 hosts:
-                  - argoworkflows.crossplane.{{ .Values.namespaceTag }}.{{ .Values.domainSuffix }}
+                  - argoworkflows.crossplane.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
         fullnameOverride: {{ .Values.argoworkflows.nameOverride }}
 {{- end }}

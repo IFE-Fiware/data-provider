@@ -104,3 +104,4 @@ backend:
     KAFKA_PROVISIONING_RESPONSES_TOPIC_NAME: provisioned
     KAFKA_DECOMMISSIONING_REQUESTS_TOPIC_NAME: to-decommission
     KAFKA_DECOMMISSIONING_RESPONSES_TOPIC_NAME: decommissioned
+    REQUEST_MATCHERS_PERMITTED: /status/**,/swagger-ui.html,/swagger-ui/**,/v3/api-docs/**,/scripts/trigger

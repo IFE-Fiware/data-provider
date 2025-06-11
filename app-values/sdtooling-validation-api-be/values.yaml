@@ -20,3 +20,6 @@ schemaPvcMountPath: /data
 
 serviceAccount:
   name: sdtooling-validation-api-be-service-account
+
+openTelemetry:
+  disabled: false
