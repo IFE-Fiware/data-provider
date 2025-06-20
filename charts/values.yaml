@@ -87,7 +87,7 @@ tier1_gateway:
 sdtooling_api_be:
   enabled: true
   projectID: "778"
-  targetRevision: 1.10.1
+  targetRevision: 1.10.0
   chart_name: sd-creation-wizard
   resources:
     requests:
@@ -100,7 +100,7 @@ sdtooling_api_be:
 sdtooling_validation_api_be:
   enabled: true
   projectID: "868"
-  targetRevision: 1.10.1
+  targetRevision: 1.10.0
   chart_name: sd-creation-wizard
   resources:
     requests:
