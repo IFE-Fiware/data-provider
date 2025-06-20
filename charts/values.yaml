@@ -298,13 +298,6 @@ argocd:
   valueFiles:
     - values.yaml
 
-name: tf-controller
-    repository: https://flux-iac.github.io/tofu-controller
-    version: 0.15.1
-    nameOverride: tofu-controller
-    valueFiles:
-      - values.yaml
-
 argoevents:
   repo_URL: https://argoproj.github.io/argo-helm
   targetRevision: 2.4.8
@@ -336,9 +329,3 @@ simpl_cli:
   fullnameOverride: simpl-cli
   valueFiles:
     - values.yaml
-
-name: tf-controller
-  repository: https://flux-iac.github.io/tofu-controller
-  version: 0.15.1
-  chart_name: tofu-controller
-  nameOverride: infrastructure-tofu-controller
