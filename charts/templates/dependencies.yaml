@@ -90,6 +90,13 @@ spec:
       releaseName: {{ .Values.argoevents.nameOverride }}
       values: |
         fullnameOverride: {{ .Values.argoevents.nameOverride }}
+  - repoURL: {{ .Values.tf-controller.repo_URL }}
+    targetRevision: {{ .Values.tf-controller.targetRevision }}
+    chart: {{ .Values.tf-controller.chart_name }}
+    helm:
+      releaseName: {{ .Values.tf-controller.nameOverride }}
+      values: |
+        fullnameOverride: {{ .Values.tf-controller.nameOverride }}
   - repoURL: {{ .Values.argoworkflows.repo_URL }}
     targetRevision: {{ .Values.argoworkflows.targetRevision }}
     chart: {{ .Values.argoworkflows.chart_name }}
