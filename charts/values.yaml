@@ -87,7 +87,7 @@ tier1_gateway:
 sdtooling_api_be:
   enabled: true
   projectID: "778"
-  targetRevision: 1.10.1
+  targetRevision: 1.11.1
   chart_name: sd-creation-wizard
   resources:
     requests:
@@ -100,7 +100,7 @@ sdtooling_api_be:
 sdtooling_validation_api_be:
   enabled: true
   projectID: "868"
-  targetRevision: 1.9.1
+  targetRevision: 1.10.1
   chart_name: sd-creation-wizard
   resources:
     requests:
@@ -160,7 +160,7 @@ sd_ui:
 
 infrastructure_be:
   projectID: "896"
-  targetRevision: 0.2.8-795.hotfix.1bc15fca
+  targetRevision: 1.0.2
   chart_name: infrastructure-be
   fullnameOverride: infrastructure-be
   valueFiles:
@@ -168,7 +168,7 @@ infrastructure_be:
 
 infrastructure_fe:
   projectID: "895"
-  targetRevision: 0.2.3
+  targetRevision: 0.2.4
   chart_name: frontend
   fullnameOverride: infrastructure-fe
   valueFiles:
@@ -316,7 +316,7 @@ argoworkflows:
 
 provisionerresources:
   projectID: "912"
-  targetRevision: 0.1.2
+  targetRevision: 1.1.0-rc.2
   chart_name: infrastructure-crossplane
   nameOverride: infrastructure-crossplane
   valueFiles:
