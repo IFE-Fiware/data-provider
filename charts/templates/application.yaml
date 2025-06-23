@@ -75,7 +75,7 @@ spec:
           command: ["/bin/sh", "-c"]
           env:
             - name: REDIRECT_URIS
-              value: |
+              value: |-
                 [ "participant.fe.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/*" ]
             - name: REALM_NAME
               value: realm
@@ -83,7 +83,7 @@ spec:
               value: https://code.europa.eu/simpl/simpl-open/development/iaa/charts/-/raw/develop/samples/keycloak-realms/2.0.0/participant-realm-export.json?ref_type=heads
           args:
             - |
-              curl ${URL} | gettext '$REDIRECT_URIS' > /config/${REALM_NAME}.json;
+              curl ${URL} | envsubst '$REDIRECT_URIS' > /config/${REALM_NAME}.json;
           volumeMounts:
             - name: realm-volume
               mountPath: /config
