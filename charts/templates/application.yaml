@@ -76,7 +76,7 @@ spec:
           env:
             - name: REDIRECT_URIS
               value: |-
-                [ "participant.fe.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/*" ]
+                [ "https://participant.fe.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/*" ]
             - name: REALM_NAME
               value: realm
             - name: URL
