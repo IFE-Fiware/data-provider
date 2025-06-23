@@ -114,7 +114,7 @@ xfsc_advsearch_be:
   enabled:  true
   projectID: "891"
   targetRevision: 1.10.0
-  chart_name: xsfc-advsearch
+  chart_name: xfsc-advsearch
   resources:
     requests:
       cpu: "0"
