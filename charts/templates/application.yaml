@@ -90,8 +90,15 @@ spec:
         {{- if .Values.keycloak.resourcesPreset }}
         resourcesPreset: {{ .Values.keycloak.resourcesPreset }}
         {{- end }}
-        {{- if .Values.keycloak.resources }}
+        {{- if eq .Values.resourcePreset "low" }}
+        resources:
+          requests:
+            cpu: "0"
+            memory: "0"
+        {{- else }}
+          {{- if .Values.keycloak.resources }}
         resources: {{- toYaml .Values.keycloak.resources | nindent 10 }}
+          {{- end }}
         {{- end }}
   {{- if .Values.sdtooling_api_be.enabled }}      
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.sdtooling_api_be.projectID }}/packages/helm/stable"

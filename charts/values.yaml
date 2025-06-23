@@ -9,6 +9,8 @@ namespaceTag:
   authority: ${AUTHNAMESPACETAG}
   common: ${COMMONSPACETAG}
 
+resourcePreset: default
+
 argocd:
   appname: ${NAMESPACE}
   namespace: argocd
@@ -59,8 +61,11 @@ keycloak:
   resourcesPreset: "none"
   resources:
     requests:
-      cpu: "0"
-      memory: "0"
+      cpu: "500m"
+      memory: "512Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
   valueFiles:
     - values.yaml
     
