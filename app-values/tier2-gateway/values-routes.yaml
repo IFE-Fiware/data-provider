@@ -15,10 +15,10 @@ appConfig:
               - Path=/edc-connector-adapter/**
             filters:
               - StripPrefix=1
-          - id: users-roles
-            uri: ${users-roles.url}
+          - id: authentication-provider
+            uri: ${authentication-provider.url}
             predicates:
-              - Path=/user-api/mtls/**
+              - Path=/authApi/v1/mtls/**
             filters:
               - StripPrefix=1
 
@@ -35,7 +35,7 @@ appConfig:
       path: "/edc-connector/**"
   abac:
     - method: POST
-      path: "/user-api/mtls/ephemeral-proof"
+      path: "/authApi/v1/mtls/ephemeralProof"
       disable-ephemeral-proof-check: true
     - method: POST
       path: "/edc/**"
@@ -53,7 +53,6 @@ appConfig:
     # Example of ABAC
     # - path: "/this-is-an-example"
     #   method: GET
-    #   disable-ephemeral-proof-check: true
     #   identity-attributes:
     #     - CONSUMER
     #     - DATA_PROVIDER
@@ -61,7 +60,7 @@ appConfig:
   logging:
     business:
       - method: GET
-        path: /user-api/mtls/ping
+        path: /authApi/v1/mtls/ping
         config:
           operations:
             - PING_REQUEST
