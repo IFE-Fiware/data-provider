@@ -19,7 +19,7 @@ spec:
   ignoreDifferences:
   - group: apps
     kind: Deployment
-    name: infrastructure-fe-frontend
+    name: frontend
     jsonPointers:
     - /spec/template/spec/automountServiceAccountToken
   sources:
