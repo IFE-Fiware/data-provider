@@ -21,7 +21,7 @@ spec:
     kind: Deployment
     name: frontend
     jsonPointers:
-    - /spec/template/spec/automountServiceAccountToken
+    - /spec/template/spec/containers/automountServiceAccountToken
   sources:
   - repoURL: {{ .Values.values.repo_URL }}
     targetRevision: {{ .Values.values.branch }}
