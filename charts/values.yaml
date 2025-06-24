@@ -50,8 +50,6 @@ crossplane:
     requests:
       cpu: "0"
       memory: "0"
-  valueFiles:
-    - values.yaml
 
 keycloak:
   repo_URL: https://charts.bitnami.com/bitnami

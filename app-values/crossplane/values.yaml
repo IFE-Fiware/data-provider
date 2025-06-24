@@ -1,3 +1,0 @@
-configuration:
-  packages:
-    - code.europa.eu:4567/simpl/simpl-open/development/infrastructure/infrastructure-crossplane/configuration:0.1.1
