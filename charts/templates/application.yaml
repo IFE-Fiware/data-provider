@@ -16,12 +16,6 @@ spec:
   destination:
     server: {{ .Values.cluster.address }}
     namespace: {{ .Values.cluster.namespace }}
-  ignoreDifferences:
-  - group: apps
-    kind: Deployment
-    name: frontend
-    jsonPointers:
-    - /spec/template/spec/containers/automountServiceAccountToken
   sources:
   - repoURL: {{ .Values.values.repo_URL }}
     targetRevision: {{ .Values.values.branch }}

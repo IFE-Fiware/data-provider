@@ -173,7 +173,7 @@ infrastructure_be:
 
 infrastructure_fe:
   projectID: "895"
-  targetRevision: 0.2.4
+  targetRevision: 0.2.5
   chart_name: frontend
   fullnameOverride: infrastructure-fe
   valueFiles:
