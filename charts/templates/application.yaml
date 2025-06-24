@@ -750,4 +750,9 @@ spec:
           gitea:
             username: {{ .Values.crossplane.gitea.username }}
             password: {{ .Values.crossplane.gitea.password }}
+          ovh:
+            application_key: {{ .Values.crossplane.ovh.application_key }}
+            application_secret: {{ .Values.crossplane.ovh.application_secret }}
+            consumer_key: {{ .Values.crossplane.ovh.consumer_key }}
+            endpoint: {{ .Values.crossplane.ovh.endpoint }}
   {{- end }}
