@@ -330,3 +330,9 @@ provisionerresources:
   nameOverride: infrastructure-crossplane
   valueFiles:
     - values.yaml
+
+tfcontroller:
+  repo_URL: https://flux-iac.github.io/tofu-controller
+  targetRevision: 0.15.1
+  chart_name: tf-controller
+  nameOverride: infrastructure-tofu-controller

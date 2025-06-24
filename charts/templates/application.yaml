@@ -755,4 +755,11 @@ spec:
             application_secret: {{ .Values.crossplane.ovh.application_secret }}
             consumer_key: {{ .Values.crossplane.ovh.consumer_key }}
             endpoint: {{ .Values.crossplane.ovh.endpoint }}
+  - repoURL: {{ .Values.tfcontroller.repo_URL }}
+    targetRevision: {{ .Values.tfcontroller.targetRevision }}
+    chart: {{ .Values.tfcontroller.chart_name }}
+    helm:
+      releaseName: {{ .Values.tfcontroller.nameOverride }}
+      values: |
+        fullnameOverride: {{ .Values.tfcontroller.nameOverride }}
   {{- end }}
