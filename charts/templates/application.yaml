@@ -648,38 +648,7 @@ spec:
         resources: {{- toYaml .Values.files.resources | nindent 10 }}
         {{- end }}
       releaseName: {{ .Values.files.nameOverride }}
-  {{- end }}    
-  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.simpl_cli.projectID }}/packages/helm/stable"
-    path: ''
-    targetRevision: {{ .Values.simpl_cli.targetRevision }}
-    chart: {{ .Values.simpl_cli.chart_name }}
-    helm:
-      releaseName: {{ .Values.simpl_cli.fullnameOverride }}
-      valueFiles:
-        {{- range .Values.simpl_cli.valueFiles }}
-        - $values/app-values/simpl-cli/{{ . }}
-        {{- end }}
-      values: |
-        podAnnotations:
-          vault.security.banzaicloud.io/vault-addr: {{ .Values.hashicorp.service }}
-          vault.security.banzaicloud.io/vault-role: {{ .Values.hashicorp.role }}
-        initParticipant:
-          hostT1: participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
-          authorityHostT1: authority.be.{{ .Values.namespaceTag.authority }}.{{ .Values.domainSuffix }}
-          csr:
-            cn: tls.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
-            o: {{ .Values.namespaceTag.dataprovider }}
-            ou: {{ .Values.namespaceTag.dataprovider }}
-          keycloak:
-            internalHost: "keycloak.{{ .Values.cluster.namespace }}.svc.cluster.local"
-            url: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/auth"
-            master:
-              password: vault:{{ .Values.hashicorp.secretEngine }}/data/{{ .Values.cluster.namespace }}-keycloak#admin
-            authority:
-              password: vault:{{ .Values.hashicorp.secretEngine }}/data/{{ .Values.namespaceTag.authority }}-keycloak#admin
-          microservices:
-            usersRolesUrl: https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/cli/userApi/v1/
-            authenticationProviderUrl: https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/cli/authApi/v1/
+  {{- end }}
   {{- if .Values.crossplane.enabled }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.infrastructure_be.projectID }}/packages/helm/stable"
     path: ''

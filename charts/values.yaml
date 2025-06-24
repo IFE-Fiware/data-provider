@@ -319,18 +319,16 @@ argoworkflows:
   valueFiles:
     - values.yaml
 
+fluxcd:
+  repo_URL: https://fluxcd-community.github.io/helm-charts
+  targetRevision: 2.15.0
+  chart_name: flux2
+  nameOverride: fluxcd
+
 provisionerresources:
   projectID: "912"
   targetRevision: 1.1.0-rc.2
   chart_name: infrastructure-crossplane
   nameOverride: infrastructure-crossplane
-  valueFiles:
-    - values.yaml
-
-simpl_cli:
-  projectID: "882"
-  targetRevision: 2.0.0
-  chart_name: simpl-cli
-  fullnameOverride: simpl-cli
   valueFiles:
     - values.yaml

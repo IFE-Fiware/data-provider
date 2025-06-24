@@ -112,4 +112,11 @@ spec:
                 hosts:
                   - argoworkflows.crossplane.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
         fullnameOverride: {{ .Values.argoworkflows.nameOverride }}
+  - repoURL: {{ .Values.fluxcd.repo_URL }}
+    targetRevision: {{ .Values.fluxcd.targetRevision }}
+    chart: {{ .Values.fluxcd.chart_name }}
+    helm:
+      releaseName: {{ .Values.fluxcd.nameOverride }}
+      values: |
+        fullnameOverride: {{ .Values.fluxcd.nameOverride }}
 {{- end }}
