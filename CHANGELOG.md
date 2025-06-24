@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.1.0] - 2025-06-27
 - Updated many components to implement Data Provider version 2.1.0.
+- Remove component simpl-cli
 
 
 ### Simpl Cloud gateway (Tier 1)
@@ -77,14 +78,6 @@ No changes.
 - CredentialInitializerImpl
 - Removed ingress spec from chart
 - SIMPL-11765 Remove version v0 APIs fom IAA components
-
-
-### simpl-cli
-
-#### 2.0.0 (2025-06-03)
-
-#### Changed
-- Removed participantTypes argument from authority import-ida command
 
 
 ### sd-creator-backend
