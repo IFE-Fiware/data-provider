@@ -16,6 +16,12 @@ spec:
   destination:
     server: {{ .Values.cluster.address }}
     namespace: {{ .Values.cluster.namespace }}
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    name: infrastructure-fe-frontend
+    jsonPointers:
+    - /spec/template/spec/automountServiceAccountToken
   sources:
   - repoURL: {{ .Values.values.repo_URL }}
     targetRevision: {{ .Values.values.branch }}
