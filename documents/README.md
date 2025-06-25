@@ -38,7 +38,7 @@ For this reason, manual onboarding activities are no longer necessary.
 
 | Pre-Requisites      |     Version     | Description                                                                                                                                                                                  |
 |---------------------|:---------------:|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| DNS sub-domain name |       N/A       | This domain will be used to address all services of the agent. <br/> example: `*.dataprovider01.int.simpl-europe.eu`                                                                         |  
+| DNS sub-domain name    | bitnami/external-dns:0.16.1 | This domain will be used to address all services of the agent. <br/> example: `*.dataprovider03.testint.simpl-europe.eu` <BR> Note!!! Currently version docker.io/bitnami/external-dns:0.16.1-debian-12-r should be used as externaldns. Unfortunately, using a newer version caused DNS to work incorrectly. |  
 | Kubernetes Cluster  | 1.29.x or newer | Other version *might* work but tests were performed using 1.29.x version                                                                                                                     |
 | nginx-ingress       | 1.10.x or newer | Used as ingress controller. <br/> Other version *might* work but tests were performed using 1.10.x version. <br/> Image used: `registry.k8s.io/ingress-nginx/controller:v1.10.0`          |
 | cert-manager        | 1.15.x or newer | Used for automatic cert management. <br/> Other version *might* work but tests were performed using 1.15.x version. <br/> Image used: `quay.io/jetstack/cert-manager-controller::v1.15.3`    |
@@ -53,6 +53,8 @@ The deployment is based on master helm chart which, when applied on Kubernetes c
 
 #### Create the Namespace
 
+Before creating the "Data Provider" namespace, you must create the corresponding "Common" and "Authority" namespaces, and verify that the "Data Provider" namespace can use it.
+
 As an update from previous version, all the agent namespaces now are created automatically. 
 
 #### Vault related tasks
@@ -60,13 +62,21 @@ As an update from previous version, all the agent namespaces now are created aut
 You can access vault on https://vault.**commonnamespacetag**.**domainsuffix**
 Root token can be found in common namespace, secret vault-unseal-keys, in key vault-root. 
 
+The description of using vault is in a separate document:
+
+https://code.europa.eu/simpl/simpl-open/development/agents/common_components/-/blob/feature/documentation_verification/documents/Using_Vault.md
+
+Before you proceed with the next steps related to accessing your Vault and changing its contents, please read the document above.<BR>
+<BR>
+
+
 ##### Secret engine for Signer
 
 Go to Vault UI and create an encryption key `gaia-x-key1` in secret engine `transit/simpl` with type `ed25519`.
 
 ##### Secret for Signer
 
-Create a key for Signer named "*namespace*-infra-adapter-simpl-backend" replacing the data mentioned in the table with proper values. 
+Create a key for Signer named "*dataprovider03*-infra-adapter-simpl-backend" replacing "03" in "dataprovider03" and in "common03" with the appropriate entry and the data mentioned in the table with proper values. 
 
 ```
 {
@@ -78,7 +88,7 @@ Create a key for Signer named "*namespace*-infra-adapter-simpl-backend" replacin
   "HTTP_WRITE_TIMEOUT": "10s",
   "LOG_ENCODING": "json",
   "LOG_LEVEL": "debug",
-  "VAULT_ADRESS": "https://vault.common.int.simpl-europe.eu",
+  "VAULT_ADRESS": "https://vault.common03.testint.simpl-europe.eu",
   "VAULT_TOKEN": "hvs.generatedtoken"
 }
 ```
@@ -92,7 +102,7 @@ Where you need to modify:
 
 ##### Secret for EDC
 
-Create a secret named "*namespace*-simpl-edc" replacing the data mentioned in the table with proper values. 
+Create a key for Signer named "*dataprovider03*-simpl-edc" replacing "03" in "dataprovider03" with the appropriate entry and the data mentioned in the table with proper values. 
 
 ```
 {
@@ -112,27 +122,26 @@ Where you need to modify:
 | Variable name                    |     Example         | Description              |
 | ----------------------           |     :-----:         | ---------------          |
 | contractmanager_apikey           | apikey              | api key string           |
-| edc_datasource_default_password  | dbpassstring        | take the password from *namespace*-postgres-passwords vault secret, key *namespace*-edc |
-| edc_datasource_policy_password   | dbpassstring        | take the password from *namespace*-postgres-passwords vault secret, key *namespace*-edc |
-| edc_ionos_access_key             | accesskeystring     | Access key for S3        |
+| edc_datasource_default_password  | dbpassstring        | take the password from *dataprovider03*-postgres-passwords vault secret, key *dataprovider03*-edc |
+| edc_datasource_policy_password   | dbpassstring        | take the password from *dataprovider03*-postgres-passwords vault secret, key *dataprovider03*-edc |
+| edc_ionos_access_key             | accesskeystring     | Access key for S3 - please contact IONOS to get the correct value. Currently the best way is to send an email requesting this data to Paulo Cabrita: paulo.cabrita@ionos.com |
 | edc_ionos_endpoint               | s3-eu-central-1.ionoscloud.com | S3 server url |
 | edc_ionos_endpoint_region        | de                  | Two letter country code  |
-| edc_ionos_secret_key             | secretkeystring     | Secret key for S3        |
-| edc_ionos_token                  | tokenstring         | Token for S3 access      |
+| edc_ionos_secret_key             | secretkeystring     | Secret key for S3 - please contact IONOS to get the correct value. Currently the best way is to send an email requesting this data to Paulo Cabrita: paulo.cabrita@ionos.com |
+| edc_ionos_token                  | tokenstring         | Token for S3 access - please contact IONOS to get the correct value. Currently the best way is to send an email requesting this data to Paulo Cabrita: paulo.cabrita@ionos.com |
 
 All the other necessary secrets are now created automatically with proper data.
 
 ##### Secret for Infrastructure-be
-
-Create a key for Signer named "*namespace*-infrastructure-be" replacing the data mentioned in the table with proper values. 
+Create a key for Signer named "*dataprovider03*-infrastructure-be" replacing "03" in "dataprovider03" with the appropriate entry and the data mentioned in the table with proper values. 
 
 ```
 {
   "kafka.sasl.enabled": true,
   "kafka.sasl.password": "kafkapassword",
-  "kafka.sasl.username": "dataprovider01_infrabe",
+  "kafka.sasl.username": "dataprovider03_infrabe",
   "spring.datasource.password": "dbpassword",
-  "spring.datasource.username": "dataprovider01_infrabe",
+  "spring.datasource.username": "dataprovider03_infrabe",
   "spring.mail.password": "smtppassword",
   "spring.mail.username": "no-reply@simplservices.com"
 }
@@ -142,12 +151,12 @@ Where you need to modify:
 
 | Variable name                 |     Example                | Description              |
 | ----------------------        |     :-----:                | ---------------          |
-| kafka.sasl.password           | kafkapassword              | take the password from *common-namespace*-kafka-credentials vault secret, key *namespace*_infrabe           |
-| kafka.sasl.username           | dataprovider01_infrabe     | *namespace*_infrabe      |
-| spring.datasource.password    | dbpassword                 | take the password from *namespace*-postgres-passwords vault secret, key *namespace*-infrabe |
-| spring.datasource.username    | dataprovider01_infrabe     | *namespace*_infrabe      |
-| spring.mail.password          | smtppassword               | Password for smtp server |
-| spring.mail.username          | no-reply@simplservices.com | Username for smtp server |
+| kafka.sasl.password           | kafkapassword              | take the password from *common03*-kafka-credentials vault secret, key *dataprovider03*_infrabe |
+| kafka.sasl.username           | dataprovider03_infrabe     | *namespace*_infrabe      |
+| spring.datasource.password    | dbpassword                 | take the password from *dataprovider03*-postgres-passwords vault secret, key *dataprovider03*_infrabe |
+| spring.datasource.username    | dataprovider03_infrabe     | *namespace*_infrabe      |
+| spring.mail.password          | smtppassword               | Password for smtp server - please contact IONOS to get the correct value. Currently the best way is to send an email requesting this data to Paulo Cabrita: paulo.cabrita@ionos.com |
+| spring.mail.username          | no-reply@simplservices.com | Username for smtp server - please contact IONOS to get the correct value. Currently the best way is to send an email requesting this data to Paulo Cabrita: paulo.cabrita@ionos.com |
 
 ### Deployment
 
@@ -156,13 +165,16 @@ Where you need to modify:
 You can easily deploy the agent using ArgoCD. All the values mentioned in the sections below you can input in ArgoCD deployment. The repoURL gets the package directly from code.europa.eu.
 targetRevision is the package version. 
 
-When you create it, you set up the values below (example values)
+
+In the example below, please replace the marked versions with the ones applicable to your environment.
+
+Please pay special attention to the namespace names: common03, authority03, consumer03 and dataprovider03, and also to replace the domain name testint.simpl-europe.eu and the occurrence of the testint value itself.
 
 ```
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: 'dataprovider01-deployer'           # name of the deploying app in argocd
+  name: 'dataprovider03-deployer'           # name of the deploying app in argocd
 spec:
   project: default
   source:
@@ -175,38 +187,38 @@ spec:
           branch: v2.0.1                    # branch of repo with values - for released version it should be the release branch
         project: default
         namespaceTag:
-          dataprovider: dataprovider01      # identifier of deployment and part of fqdn for this agent
-          authority: authority01            # identifier of deployment and part of fqdn for authority
-          common: common01                  # identifier of deployment and part of fqdn for common components
-        domainSuffix: int.simpl-europe.eu   # last part of fqdn
+          dataprovider: dataprovider03      # identifier of deployment and part of fqdn for this agent
+          authority: authority03            # identifier of deployment and part of fqdn for authority
+          common: common03                  # identifier of deployment and part of fqdn for common components
+        domainSuffix: testint.simpl-europe.eu   # last part of fqdn
         argocd:
-          appname: dataprovider01           # name of generated argocd app 
+          appname: dataprovider03           # name of generated argocd app 
           namespace: argocd                 # namespace of your argocd
         cluster:
           address: https://kubernetes.default.svc
-          namespace: dataprovider01         # where the app will be deployed
-          commonToolsNamespace: common      # namespace where main monitoring stack is deployed
+          namespace: dataprovider03         # where the app will be deployed
+          commonToolsNamespace: common03      # namespace where main monitoring stack is deployed
           issuer: dev-prod                  # issuer of certificates
         hashicorp:
-          service: "https://vault.common.domainsuffix"  # link to your vault ingress (apply domain suffix)
-          role: dev-int-role                # role created in vault for access
-          secretEngine: dev-int             # secret engine name created in vault
+          service: "https://vault.common03.testint.simpl-europe.eu"  # link to your vault ingress (apply domain suffix)
+          role: test-int-role                # role created in vault for access
+          secretEngine: test-int             # secret engine name created in vault
         crossplane:
           enabled: true                     # if infrastructure components should be deployed (there can be only one instance per cluster)
           kafka:
-            username: user                  # username to connect to kafka
-            password: pass                  # password to connect to kafka
+            username: user                  # name should be: namespace_infrabe e.g.: dataprovider03_infrabe
+            password: pass                  # take the password from common03-kafka-credentials vault secret, key dataprovider03_infrabe
           gitea:
             username: gitops_test           # username of gitea
-            password: pass                  # password of gitea (set it to your preference)
+            password: pass                  # password of gitea - the variable is prepared for future use. Currently, access is performed without logging in, so the variable can take on any value (set it to your preference)
           ionos:
-            token: "tokenstring"            # token to access ionos
+            token: "tokenstring"            # please contact IONOS to get the correct value - (the same one you entered in dataprovider03-simpl-edc in key: edc_ionos_token)
         monitoring:
           enabled: true                     # should monitoring be enabled
     chart: data-provider
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: dataprovider01               # where the package will be deployed
+    namespace: dataprovider03               # where the package will be deployed
 ```
 
 #### Manual deployment
@@ -220,45 +232,35 @@ There are a couple of variables you need to replace - described below. The rest 
 
 ```
 values:
-  repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git  # repo URL
-  branch: v2.0.0                    # branch of repo with values - for released version it should be the release branch
-
-project: default                    # Project to which the namespace is attached
+  branch: v2.0.1                    # branch of repo with values - for released version it should be the release branch
+project: default
 namespaceTag:
-  dataprovider: dataprovider01      # identifier of deployment and part of fqdn for this agent
-  authority: authority01            # identifier of deployment and part of fqdn for authority
-  common: common01                  # identifier of deployment and part of fqdn for common components
-domainSuffix: int.simpl-europe.eu   # last part of fqdn
-
+  dataprovider: dataprovider03      # identifier of deployment and part of fqdn for this agent
+  authority: authority03            # identifier of deployment and part of fqdn for authority
+  common: common03                  # identifier of deployment and part of fqdn for common components
+domainSuffix: testint.simpl-europe.eu   # last part of fqdn
 argocd:
-  appname: dataprovider01           # name of generated argocd app 
+  appname: dataprovider03           # name of generated argocd app 
   namespace: argocd                 # namespace of your argocd
-
-authority:
-  namespaceTag: authority1          # namespace tag of target authority
-
 cluster:
   address: https://kubernetes.default.svc
-  namespace: dataprovider01         # where the package will be deployed
-  commonToolsNamespace: common      # namespace where main monitoring stack is deployed
+  namespace: dataprovider03         # where the app will be deployed
+  commonToolsNamespace: common03    # namespace where main monitoring stack is deployed
   issuer: dev-prod                  # issuer of certificates
-
 hashicorp:
-  service: "https://vault.common.domainsuffix"  # link to your vault ingress (apply domain suffix)
-  role: dev-int-role                # role created in vault for access
-  secretEngine: dev-int             # secret engine name created in vault
-
+  service: "https://vault.common03.testint.simpl-europe.eu"  # link to your vault ingress (apply domain suffix)
+  role: test-int-role                # role created in vault for access
+  secretEngine: test-int             # secret engine name created in vault
 crossplane:
   enabled: true                     # if infrastructure components should be deployed (there can be only one instance per cluster)
   kafka:
-    username: user                  # username to connect to kafka
-    password: pass                  # password to connect to kafka
+    username: user                  # name should be: namespace_infrabe e.g.: dataprovider03_infrabe
+    password: pass                  # take the password from common03-kafka-credentials vault secret, key dataprovider03_infrabe
   gitea:
     username: gitops_test           # username of gitea
-    password: pass                  # password of gitea (set it to your preference)
+    password: pass                  #  - the variable is prepared for future use. Currently, access is performed without logging in, so the variable can take on any value (set it to your preference)
   ionos:
-    token: "tokenstring"            # token to access ionos
-
+    token: "tokenstring"            # please contact IONOS to get the correct value - (the same one you entered in dataprovider03-simpl-edc in key: edc_ionos_token)
 monitoring:
   enabled: true                     # should monitoring be enabled
 ```
@@ -271,6 +273,22 @@ Use the command prompt. Proceed to the folder where you have the Chart.yaml file
 Now you can deploy the agent:
 
 `helm install data-provider . `
+
+
+After starting the deployment synchronization process, the expected namespace will be created.
+
+
+Initially, the status observed e.g. in ArgoCD will indicate the creation of new pods:
+
+<img src="images/dataprovider_ArgoCD01.png" alt="ArgoCD01" width="600"><BR>
+
+Be patient!... Depending on the configuration, this step can take up to 30 minutes!
+
+At the end, all pods should be created correctly:
+
+<img src="images/dataprovider_ArgoCD02.png" alt="ArgoCD02" width="600"><BR>
+
+
 
 ## Additional steps
 
