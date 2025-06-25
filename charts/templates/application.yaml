@@ -260,8 +260,15 @@ spec:
                 - catalogue-ui.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
           annotations:
             cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
-        {{- if .Values.simpl_catalogue_client.resources }}
+        {{- if eq .Values.resourcePreset "low" }}
+        resources:
+          requests:
+            cpu: "0"
+            memory: "0"
+        {{- else }}
+          {{- if .Values.simpl_catalogue_client.resources }}
         resources: {{- toYaml .Values.simpl_catalogue_client.resources | nindent 10 }}
+          {{- end }}
         {{- end }}
   {{- end }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.tier1_gateway.projectID }}/packages/helm/stable"
@@ -292,8 +299,15 @@ spec:
                 - name: authentication-provider
                   internalUrl: "http://authentication-provider.{{ .Values.cluster.namespace }}.svc.cluster.local:8080/v1"
                   detailUrl: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/authApi/v1/"
-        {{- if .Values.tier1_gateway.resources }}
+        {{- if eq .Values.resourcePreset "low" }}
+        resources:
+          requests:
+            cpu: "0"
+            memory: "0"
+        {{- else }}
+          {{- if .Values.tier1_gateway.resources }}
         resources: {{- toYaml .Values.tier1_gateway.resources | nindent 10 }}
+          {{- end }}
         {{- end }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.users_roles.projectID }}/packages/helm/stable"
     path: ''
@@ -347,8 +361,15 @@ spec:
               inbox:
                 topic:
                   pattern: iaa\.{{ .Values.cluster.namespace }}\..*
-        {{- if .Values.users_roles.resources }}
+        {{- if eq .Values.resourcePreset "low" }}
+        resources:
+          requests:
+            cpu: "0"
+            memory: "0"
+        {{- else }}
+          {{- if .Values.users_roles.resources }}
         resources: {{- toYaml .Values.users_roles.resources | nindent 10 }}
+          {{- end }}
         {{- end }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.simpl_fe.projectID }}/packages/helm/stable"
     path: ''
@@ -374,8 +395,15 @@ spec:
           value: "participant"
         - name: KEYCLOAK_CLIENT_ID
           value: "frontend-cli"
-        {{- if .Values.simpl_fe.resources }}
+        {{- if eq .Values.resourcePreset "low" }}
+        resources:
+          requests:
+            cpu: "0"
+            memory: "0"
+        {{- else }}
+          {{- if .Values.simpl_fe.resources }}
         resources: {{- toYaml .Values.simpl_fe.resources | nindent 10 }}
+          {{- end }}
         {{- end }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.tier2_gateway.projectID }}/packages/helm/stable"
     path: ''
@@ -422,8 +450,15 @@ spec:
             kafka:
               topic:
                 prefix: iaa.{{ .Values.cluster.namespace }}.
-        {{- if .Values.tier2_gateway.resources }}
+        {{- if eq .Values.resourcePreset "low" }}
+        resources:
+          requests:
+            cpu: "0"
+            memory: "0"
+        {{- else }}
+          {{- if .Values.tier2_gateway.resources }}
         resources: {{- toYaml .Values.tier2_gateway.resources | nindent 10 }}
+          {{- end }}
         {{- end }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.auth_provider.projectID }}/packages/helm/stable"
     path: ''
@@ -469,8 +504,15 @@ spec:
             kafka:
               topic:
                 prefix: iaa.{{ .Values.cluster.namespace }}.
-        {{- if .Values.auth_provider.resources }}
+        {{- if eq .Values.resourcePreset "low" }}
+        resources:
+          requests:
+            cpu: "0"
+            memory: "0"
+        {{- else }}
+          {{- if .Values.auth_provider.resources }}
         resources: {{- toYaml .Values.auth_provider.resources | nindent 10 }}
+          {{- end }}
         {{- end }}
   {{- if .Values.sd_ui.enabled }}      
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.sd_ui.projectID }}/packages/helm/stable"
@@ -534,8 +576,15 @@ spec:
           role: {{ .Values.hashicorp.role }}
           service: {{ .Values.hashicorp.service }}
         secretEngine: {{ .Values.hashicorp.secretEngine }}
-        {{- if .Values.simpl_edc.resources }}
+        {{- if eq .Values.resourcePreset "low" }}
+        resources:
+          requests:
+            cpu: "0"
+            memory: "0"
+        {{- else }}
+          {{- if .Values.simpl_edc.resources }}
         resources: {{- toYaml .Values.simpl_edc.resources | nindent 10 }}
+          {{- end }}
         {{- end }}
   {{- end }}
   {{- if .Values.edc_connector_adapter.enabled }}      
@@ -558,8 +607,15 @@ spec:
             endpoint: http://collector.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}
         edcConnector:
           tier2BaseUrl: https://tls.participant.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/edc
-        {{- if .Values.edc_connector_adapter.resources }}
+        {{- if eq .Values.resourcePreset "low" }}
+        resources:
+          requests:
+            cpu: "0"
+            memory: "0"
+        {{- else }}
+          {{- if .Values.edc_connector_adapter.resources }}
         resources: {{- toYaml .Values.edc_connector_adapter.resources | nindent 10 }}
+          {{- end }}
         {{- end }}
   {{- end }}
   {{- if .Values.monitoring.enabled }}
@@ -620,9 +676,16 @@ spec:
               service: {{ .Values.hashicorp.service }}
               secretEngine: {{ .Values.hashicorp.secretEngine }}
               role: {{ .Values.hashicorp.role }}
-          {{- if .Values.contract.resources }}
+          {{- if eq .Values.resourcePreset "low" }}
+          resources:
+            requests:
+              cpu: "0"
+              memory: "0"
+          {{- else }}
+            {{- if .Values.contract.resources }}
           resources: {{- toYaml .Values.contract.resources | nindent 10 }}
-          {{- end }} 
+            {{- end }}
+          {{- end }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.stubs.projectID }}/packages/helm/stable"
     path: ''
     targetRevision: {{ .Values.stubs.targetRevision }}
@@ -645,8 +708,15 @@ spec:
       values: |
         ingress:
           hostname: files.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
-        {{- if .Values.files.resources }}
+        {{- if eq .Values.resourcePreset "low" }}
+        resources:
+          requests:
+            cpu: "0"
+            memory: "0"
+        {{- else }}
+          {{- if .Values.files.resources }}
         resources: {{- toYaml .Values.files.resources | nindent 10 }}
+          {{- end }}
         {{- end }}
       releaseName: {{ .Values.files.nameOverride }}
   {{- end }}
