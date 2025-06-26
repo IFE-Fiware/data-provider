@@ -87,7 +87,7 @@ backend:
     KAFKA_SASL_ENABLED: true
     SPRING_CLOUD_VAULT_KV_ENABLED: "true"
     SPRING_CLOUD_VAULT_KV_VERSION: "2"
-    SERVER_PORT: "80"
+    SERVER_PORT: "8080"
     MALICIOUS_PATTERN_SQLINJECTION: (?i)\\b(select|update|delete|insert|drop|alter|truncate|exec|create|union|;|--)\\b
     MALICIOUS_PATTERN_XSSA: <script>(.*?)</script>
     MALICIOUS_PATTERN_XSSB: src[\r\n]*=[\r\n]*\\\'(.*?)\\\'
