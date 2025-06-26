@@ -61,9 +61,6 @@ keycloak:
   resourcesPreset: "none"
   resources:
     requests:
-      cpu: "500m"
-      memory: "512Mi"
-    limits:
       cpu: "0"
       memory: "0"
   valueFiles:
@@ -84,9 +81,6 @@ tier1_gateway:
   chart_name: tier1-gateway
   resources:
     requests:
-      cpu: "500m"
-      memory: "512Mi"
-    limits:
       cpu: "0"
       memory: "0"
   valueFiles:
@@ -137,9 +131,6 @@ users_roles:
   chart_name: users-roles
   resources:
     requests:
-      cpu: "500m"
-      memory: "512Mi"
-    limits:
       cpu: "0"
       memory: "0"
   valueFiles:
@@ -151,9 +142,6 @@ simpl_fe:
   chart_name: simpl-fe
   resources:
     requests:
-      cpu: "500m"
-      memory: "512Mi"
-    limits:
       cpu: "0"
       memory: "0"
   valueFiles:
@@ -194,9 +182,6 @@ tier2_gateway:
   chart_name: tier2-gateway
   resources:
     requests:
-      cpu: "500m"
-      memory: "512Mi"
-    limits:
       cpu: "0"
       memory: "0"
   valueFiles:
@@ -211,9 +196,6 @@ simpl_edc:
   nameOverride: simpl-edc
   resources:
     requests:
-      cpu: "500m"
-      memory: "512Mi"
-    limits:
       cpu: "0"
       memory: "0"
   valueFiles:
@@ -229,9 +211,6 @@ edc_connector_adapter:
   nameOverride: edc-connector-adapter
   resources:
     requests:
-      cpu: "500m"
-      memory: "512Mi"
-    limits:
       cpu: "0"
       memory: "0"
   valueFiles:
@@ -244,9 +223,6 @@ simpl_catalogue_client:
   chart_name: catalogue-ui
   resources:
     requests:
-      cpu: "500m"
-      memory: "512Mi"
-    limits:
       cpu: "0"
       memory: "0"
   valueFiles:
@@ -258,9 +234,6 @@ auth_provider:
   chart_name: authentication-provider
   resources:
     requests:
-      cpu: "500m"
-      memory: "512Mi"
-    limits:
       cpu: "0"
       memory: "0"
   valueFiles:
@@ -281,9 +254,6 @@ contract:
   chart_name: simpl-contract
   resources:
     requests:
-      cpu: "500m"
-      memory: "512Mi"
-    limits:
       cpu: "0"
       memory: "0"
   valueFiles:
@@ -309,9 +279,6 @@ files:
   nameOverride: simpl-files
   resources:
     requests:
-      cpu: "500m"
-      memory: "512Mi"
-    limits:
       cpu: "0"
       memory: "0"
   valueFiles:
