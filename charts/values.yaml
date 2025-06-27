@@ -170,7 +170,7 @@ infrastructure_be:
 
 infrastructure_fe:
   projectID: "895"
-  targetRevision: 0.2.4-613.hotfix.cfd7f9ff
+  targetRevision: 0.2.6
   chart_name: frontend
   fullnameOverride: infrastructure-fe
   valueFiles:
