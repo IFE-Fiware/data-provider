@@ -1,6 +1,6 @@
 values:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git
-  branch: v2.0.0
+  branch: v2.0.3
 
 project: ${PROJECT}
 domainSuffix: ${DOMAINSUFFIX}
@@ -160,7 +160,7 @@ sd_ui:
 
 infrastructure_be:
   projectID: "896"
-  targetRevision: 0.2.8-795.hotfix.1bc15fca
+  targetRevision: 0.2.8-887.hotfix.1bc15fca
   chart_name: infrastructure-be
   fullnameOverride: infrastructure-be
   valueFiles:
