@@ -58,6 +58,7 @@ ui:
   apibaseurl: http://api:8080/
 image:
   docker_enable: false  
+  tag: 1.0.5-F-feature-simpl-13986.latest
 backend:
   ingress:
     enabled: true
