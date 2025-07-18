@@ -12,22 +12,10 @@ appConfig:
               - Path=/auth/**
             filters:
               - StripPrefix=1
-          - id: users-roles
-            uri: ${users-roles.url}
-            predicates:
-              - Path=/user-api/**
-            filters:
-              - StripPrefix=1
           - id: users-rolesV1
             uri: ${users-roles.url}
             predicates:
               - Path=/userApi/**
-            filters:
-              - StripPrefix=1
-          - id: authentication-provider
-            uri: ${authentication-provider.url}
-            predicates:
-              - Path=/auth-api/**
             filters:
               - StripPrefix=1
           - id: authentication-provider-V1
@@ -95,7 +83,7 @@ appConfig:
                   # in the following order: 
                   # client-id-name: client-role-1, client-role-1
                   # The default configuration is shown below.
-                  cli: cli-role         
+                  cli: cli-role
           - id: signer
             uri: http://signer:8080
             predicates:
@@ -106,162 +94,141 @@ appConfig:
   springdoc:
     swagger-ui:
       urls:
-        - url: /user-api/v3/api-docs
-          name: Users & Roles Service
-        - url: /auth-api/v3/api-docs
-          name: Authentication Provider Service
+        - url: /userApi/openapi/usersroles-v1.yaml
+          name: Users & Roles Service V1
+        - url: /authApi/openapi/authenticationprovider-v1.yaml
+          name: Authentication Provider Service V1
+        - url: /openapi/tier1gateway-v1.yaml
+          name: Application Info V1
 
   keycloak:
     app:
       realm: participant
-
+  
   routes:
     public-urls:
-      - method: GET
-        path: "/swagger-ui.html"
-      - method: GET
-        path: "/swagger-ui/**"
-      - method: GET
-        path: "/v3/api-docs/**"
-      - method: GET
+      - method: "GET"
         path: "/actuator/health/**"
-      - method: GET
-        path: "/actuator/info/**"
-      - method: GET
-        path: /userApi/v1/info/version
-      - method: GET
-        path: /authApi/v1/info/version
-  
+      - method: "GET"
+        path: "/authApi/v1/credentials"
+      - method: "GET"
+        path: "/authApi/v1/info/version"
+      - method: "GET"
+        path: "/userApi/v1/info/version"
     denied-urls:
-      - method: GET
-        path: "/auth-api/keypair"
-      - method: GET
+      - method: "POST"
+        path: "/authApi/v1/agent/credentials/validate"
+      - method: "GET"
+        path: "/authApi/v1/agent/ephemeralProof"
+      - method: "GET"
         path: "/authApi/v1/keypairs"
-      - path: "/user-api/mtls/**"
-      - path: "/auth-api/mtls/**"
-      - path: "/userApi/v1/mtls/**"
-      - path: "/authApi/v1/mtls/**"
-
+      - method: "POST"
+        path: "/authApi/v1/mtls/ephemeralProof"
+      - method: "GET"
+        path: "/authApi/v1/mtls/ping"
+      - method: "POST"
+        path: "/authApi/v1/sessions/credentials"
+      - method: "GET"
+        path: "/authApi/v1/sessions/identityAttributes"
     rbac:
-      - path: "/sdtooling-api/**"
-        method: GET
+      - method: "GET"
+        path: "/authApi/v1/agent/identityAttributes"
         roles:
-          - SD_PUBLISHER
-      - path: "/sdtooling-api/**"
-        method: POST
+          - "T1UAR_M"
+      - method: "GET"
+        path: "/authApi/v1/agent/identityAttributes/{credentialId}"
         roles:
-          - SD_PUBLISHER 
-      - path: "/signer/**"
-        method: GET
+          - "T1UAR_M"
+      - method: "DELETE"
+        path: "/authApi/v1/credentials"
         roles:
-          - SD_PUBLISHER
-      - path: "/signer/**"
-        method: POST
+          - "ONBOARDER_M"
+      - method: "POST"
+        path: "/authApi/v1/credentials"
         roles:
-          - SD_PUBLISHER
-      - path: "/xfsc-advsearch-be/**"
-        method: GET
-        roles:
-          - SD_PUBLISHER
-          - SD_CONSUMER
-      - path: "/xfsc-advsearch-be/**"
-        method: POST
-        roles:
-          - SD_PUBLISHER
-          - SD_CONSUMER
-      - path: "/contract-consumption/**"
-        method: GET
-        roles:
-          - SD_CONSUMER
-      - path: "/contract-consumption/**"
-        method: POST
-        roles:
-          - SD_CONSUMER
-      - path: "/user-api/agent/identity-attributes"
-        method: GET
-        roles:
-          - T1UAR_M
-      - path: "/user-api/agent/identity-attributes/*"
-        method: GET
-        roles:
-          - T1UAR_M
-      - path: "/user-api/identity-attribute/search"
-        method: GET
-        roles:
-          - T1UAR_M
-      - path: "/user-api/role/*"
-        method: GET
-        roles:
-          - T1UAR_M
-      - path: "/user-api/role"
-        method: PUT
-        roles:
-          - T1UAR_M
-      - path: "/user-api/role/*/identity-attributes"
-        method: POST
-        roles:
-          - T1UAR_M
-      - path: "/user-api/role/*/identity-attributes"
-        method: PUT
-        roles:
-          - T1UAR_M
-          - ONBOARDER_M
-      - path: "/user-api/role/delete-attribute"
-        method: DELETE
-        roles:
-          - T1UAR_M
-      - path: "/user-api/role/*"
-        method: DELETE
-        roles:
-          - T1UAR_M
-      - path: "/user-api/role/search"
-        method: GET
-        roles:
-          - T1UAR_M
-      - path: "/user-api/role/*/duplicate-identity-attribute"
-        method: POST
-        roles:
-          - T1UAR_M
-      - path: "/user-api/user/as-t1user"
-        method: POST
-        roles:
-          - T1UAR_M
-      - path: "/user-api/user/*"
-        method: GET
-        roles:
-          - T1UAR_M
-      - path: "/user-api/user/*"
-        method: PUT
-        roles:
-          - T1UAR_M
-      - path: "/user-api/user/*"
-        method: DELETE
-        roles:
-          - T1UAR_M
-      - method: POST
-        path: "/auth-api/keypair/import"
-        roles:
-          - ONBOARDER_M 
-      - path: "/auth-api/keypair/**"
-        roles:
-          - ONBOARDER_M 
-      - method: POST
-        path: "/auth-api/csr/generate"
-        roles:
-          - ONBOARDER_M 
-      - path: "/auth-api/keypair"
-        method: HEAD
-        roles:
-          - ONBOARDER_M
-      
-
-      - path: "/authApi/v1/keypairs/**"
-        roles:
-          - ONBOARDER_M 
-      - method: POST
+          - "ONBOARDER_M"
+      - method: "POST"
         path: "/authApi/v1/csr/generate"
         roles:
-          - ONBOARDER_M
+          - "ONBOARDER_M"
+      - method: "GET"
+        path: "/authApi/v1/identityAttributes"
+        roles:
+          - "T1UAR_M"
+          - "NOTARY"
+          - "IATTR_M"
+      - method: "HEAD"
+        path: "/authApi/v1/keypairs"
+        roles:
+          - "ONBOARDER_M"
+      - method: "POST"
+        path: "/authApi/v1/keypairs"
+        roles:
+          - "ONBOARDER_M"
+      - method: "POST"
+        path: "/authApi/v1/keypairs/generate"
+        roles:
+          - "ONBOARDER_M"
+      - method: "GET"
+        path: "/userApi/v1/roles"
+        roles:
+          - "T1UAR_M"
+      - method: "POST"
+        path: "/userApi/v1/roles"
+        roles:
+          - "T1UAR_M"
+      - method: "DELETE"
+        path: "/userApi/v1/roles/{roleId}"
+        roles:
+          - "T1UAR_M"
+      - method: "GET"
+        path: "/userApi/v1/roles/{roleId}"
+        roles:
+          - "T1UAR_M"
+      - method: "PUT"
+        path: "/userApi/v1/roles/{roleId}"
+        roles:
+          - "T1UAR_M"
+      - method: "DELETE"
+        path: "/userApi/v1/roles/{roleId}/identityAttributes"
+        roles:
+          - "T1UAR_M"
+      - method: "PUT"
+        path: "/userApi/v1/roles/{roleId}/identityAttributes"
+        roles:
+          - "T1UAR_M"
+      - method: "POST"
+        path: "/userApi/v1/roles/{roleId}/identityAttributes/duplicate"
+        roles:
+          - "T1UAR_M"
+      - method: "GET"
+        path: "/userApi/v1/users"
+        roles:
+          - "T1UAR_M"
+      - method: "POST"
+        path: "/userApi/v1/users/import"
+        roles:
+          - "T1UAR_M"
+      - method: "DELETE"
+        path: "/userApi/v1/users/{userId}"
+        roles:
+          - "T1UAR_M"
+      - method: "GET"
+        path: "/userApi/v1/users/{userId}"
+        roles:
+          - "T1UAR_M"
+      - method: "PUT"
+        path: "/userApi/v1/users/{userId}"
+        roles:
+          - "T1UAR_M"
+      - method: "GET"
+        path: "/userApi/v1/users/{userId}/roles"
+        roles:
+          - "T1UAR_M"
+      - method: "PUT"
+        path: "/userApi/v1/users/{userId}/roles"
+        roles:
+          - "T1UAR_M"
       - path: "/edc-connector-adapter/api/*/registration/register"
         method: GET
         roles:

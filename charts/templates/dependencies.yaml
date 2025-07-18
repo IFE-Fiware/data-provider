@@ -29,11 +29,22 @@ spec:
         - $values/app-values/crossplane/{{ . }}
         {{- end }}
       values: |
-        {{- if .Values.crossplane.resourcesCrossplane }}
-        resourcesCrossplane: {{- toYaml .Values.crossplane.resourcesCrossplane | nindent 10 }}
-        {{- end }}
-        {{- if .Values.crossplane.resourcesRBACManager }}
-        resourcesRBACManager: {{- toYaml .Values.crossplane.resourcesRBACManager | nindent 10 }}
+        {{- if eq .Values.resourcePreset "low" }}
+        resourcesCrossplane:
+          requests:
+            cpu: "0"
+            memory: "0"
+        resourcesRBACManager:
+          requests:
+            cpu: "0"
+            memory: "0"
+        {{- else }}
+          {{- if .Values.crossplane.resourcesCrossplane }}
+          resourcesCrossplane: {{- toYaml .Values.crossplane.resourcesCrossplane | nindent 10 }}
+          {{- end }}
+          {{- if .Values.crossplane.resourcesRBACManager }}
+          resourcesRBACManager: {{- toYaml .Values.crossplane.resourcesRBACManager | nindent 10 }}
+          {{- end }}
         {{- end }}
   - repoURL: {{ .Values.gitea.repo_URL }}
     targetRevision: {{ .Values.gitea.targetRevision }}
@@ -82,6 +93,49 @@ spec:
             tls: true
             ingressClassName: nginx
             pathType: ImplementationSpecific
+          {{- if eq .Values.resourcePreset "low" }}
+          resources:
+            requests:
+              cpu: "0"
+              memory: "0"
+          {{- else }}
+            {{- if .Values.argocd.resources.server }}
+          resources: {{- toYaml .Values.argocd.resources.server | nindent 12 }}
+            {{- end }}
+          {{- end }}
+        repoServer:
+          {{- if eq .Values.resourcePreset "low" }}
+          resources:
+            requests:
+              cpu: "0"
+              memory: "0"
+          {{- else }}
+            {{- if .Values.argocd.resources.repoServer }}
+          resources: {{- toYaml .Values.argocd.resources.repoServer | nindent 12 }}
+            {{- end }}
+          {{- end }}
+        redis:
+          {{- if eq .Values.resourcePreset "low" }}
+          resources:
+            requests:
+              cpu: "0"
+              memory: "0"
+          {{- else }}
+            {{- if .Values.argocd.resources.redis }}
+          resources: {{- toYaml .Values.argocd.resources.redis | nindent 12 }}
+            {{- end }}
+          {{- end }}
+        controller:
+          {{- if eq .Values.resourcePreset "low" }}
+          resources:
+            requests:
+              cpu: "0"
+              memory: "0"
+          {{- else }}
+            {{- if .Values.argocd.resources.controller }}
+          resources: {{- toYaml .Values.argocd.resources.controller | nindent 12 }}
+            {{- end }}
+          {{- end }}
         fullnameOverride: {{ .Values.argocd.nameOverride }}
   - repoURL: {{ .Values.argoevents.repo_URL }}
     targetRevision: {{ .Values.argoevents.targetRevision }}
@@ -90,6 +144,17 @@ spec:
       releaseName: {{ .Values.argoevents.nameOverride }}
       values: |
         fullnameOverride: {{ .Values.argoevents.nameOverride }}
+        controller:
+          {{- if eq .Values.resourcePreset "low" }}
+          resources:
+            requests:
+              cpu: "0"
+              memory: "0"
+          {{- else }}
+            {{- if .Values.argoevents.resources.controller }}
+          resources: {{- toYaml .Values.argoevents.resources.controller | nindent 12 }}
+            {{- end }}
+          {{- end }}
   - repoURL: {{ .Values.argoworkflows.repo_URL }}
     targetRevision: {{ .Values.argoworkflows.targetRevision }}
     chart: {{ .Values.argoworkflows.chart_name }}
@@ -111,5 +176,35 @@ spec:
               - secretName: argowf-crossplane-tld-secret
                 hosts:
                   - argoworkflows.crossplane.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+          {{- if eq .Values.resourcePreset "low" }}
+          resources:
+            requests:
+              cpu: "0"
+              memory: "0"
+          {{- else }}
+            {{- if .Values.argoworkflows.resources.server }}
+          resources: {{- toYaml .Values.argoworkflows.resources.server | nindent 12 }}
+            {{- end }}
+          {{- end }}          
+        controller:
+          {{- if eq .Values.resourcePreset "low" }}
+          resources:
+            requests:
+              cpu: "0"
+              memory: "0"
+          {{- else }}
+            {{- if .Values.argoworkflows.resources.controller }}
+          resources: {{- toYaml .Values.argoworkflows.resources.controller | nindent 12 }}
+            {{- end }}
+          {{- end }}
         fullnameOverride: {{ .Values.argoworkflows.nameOverride }}
+  - repoURL: {{ .Values.fluxcd.repo_URL }}
+    targetRevision: {{ .Values.fluxcd.targetRevision }}
+    chart: {{ .Values.fluxcd.chart_name }}
+    helm:
+      releaseName: {{ .Values.fluxcd.nameOverride }}
+      values: |
+        fullnameOverride: {{ .Values.fluxcd.nameOverride }}
+        policies:
+          create: false
 {{- end }}
