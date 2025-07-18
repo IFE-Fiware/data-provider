@@ -1,3 +1,5 @@
+agentType: dataprovider
+
 elasticsearch:
   count: 0
   

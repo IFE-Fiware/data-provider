@@ -1,9 +1,4 @@
 deployment:
-  containerApiPort: 19191
-  containerControlPort: 19192
-  containerManagementPort: 19193
-  containerProtocolPort: 19194
-  containerPublicPort: 19291
   label: provider
 
 service:
@@ -18,8 +13,4 @@ ingress:
 
 # it would be better to move those to vault in the future or use sops encryption
 env:
-  edcParticipantId: "provider"
   edcIdsId: "urn:connector:provider"
-
-postgresql:
-  username: edc
