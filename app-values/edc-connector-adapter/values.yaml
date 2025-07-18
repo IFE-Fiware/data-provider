@@ -25,7 +25,11 @@ resources:
     cpu: "1000m"
     memory: "2Gi"
 
+profile: provider
+
 edcConnector:
   # the participant id to be used as assigner in policies as expected by the EDC connector on contract negotiation
   participantId: provider
   baseUrl: http://simpl-edc-service:19193
+
+appJarPath: "/home/simpluser/app.jar"
