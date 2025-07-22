@@ -195,8 +195,6 @@ Where you need to modify:
 | spring.mail.password          | smtppassword               | Password for smtp server - please contact IONOS to get the correct value. Currently the best way is to send an email requesting this data to Paulo Cabrita: paulo.cabrita@ionos.com |
 | spring.mail.username          | no-reply@simplservices.com | Username for smtp server - please contact IONOS to get the correct value. Currently the best way is to send an email requesting this data to Paulo Cabrita: paulo.cabrita@ionos.com |
 
-All the other necessary secrets are now created automatically with proper data.
-
 ##### Secret for Infrastructure-be
 
 Create a key for Signer named "*namespace*-infrastructure-be" replacing the data mentioned in the table with proper values. 
@@ -224,6 +222,8 @@ Where you need to modify:
 | spring.mail.password          | smtppassword               | Password for smtp server |
 | spring.mail.username          | no-reply@simplservices.com | Username for smtp server |
 
+All the other necessary secrets are now created automatically with proper data.
+
 ### Deployment
 
 #### Deployment using ArgoCD
@@ -246,11 +246,11 @@ spec:
   source:
     repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
     path: '""'
-    targetRevision: 2.1.0                  # version of package
+    targetRevision: 2.1.1                  # version of package
     helm:
       values: |
         values:
-          branch: v2.1.0                    # branch of repo with values - for released version it should be the release branch
+          branch: v2.1.1                    # branch of repo with values - for released version it should be the release branch
         project: default
         namespaceTag:
           dataprovider: dataprovider03      # identifier of deployment and part of fqdn for this agent
@@ -303,7 +303,7 @@ There are a couple of variables you need to replace - described below. The rest 
 
 ```
 values:
-  branch: v2.1.0                    # branch of repo with values - for released version it should be the release branch
+  branch: v2.1.1                    # branch of repo with values - for released version it should be the release branch
 project: default
 namespaceTag:
   dataprovider: dataprovider03      # identifier of deployment and part of fqdn for this agent
