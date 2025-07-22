@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.1] - 2025-07-22
+- Update infrastructure-crossplane package to version 1.2.1.
+
 ## [2.1.0] - 2025-07-17
 - Updated many components to implement Data Provider version 2.1.0.
 - Remove component simpl-cli
@@ -61,6 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### 2.0.0 (2025-06-03)
 No changes.
 
+#### 1.5.2 (2025-05-14)
 
 ### Authentication Provider
 

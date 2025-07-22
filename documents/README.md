@@ -143,6 +143,8 @@ Create a key for Signer named "*dataprovider03*-simpl-edc" replacing "03" in "da
 }
 ```
 
+Where you need to modify:
+
 | Variable name                    |     Example         | Description              |
 | ----------------------           |     :-----:         | ---------------          |
 | contractmanager_apikey           | apikey              | api key string           |
@@ -193,6 +195,35 @@ Where you need to modify:
 | spring.mail.password          | smtppassword               | Password for smtp server - please contact IONOS to get the correct value. Currently the best way is to send an email requesting this data to Paulo Cabrita: paulo.cabrita@ionos.com |
 | spring.mail.username          | no-reply@simplservices.com | Username for smtp server - please contact IONOS to get the correct value. Currently the best way is to send an email requesting this data to Paulo Cabrita: paulo.cabrita@ionos.com |
 
+##### Secret for Infrastructure-be
+
+Create a key for Signer named "*namespace*-infrastructure-be" replacing the data mentioned in the table with proper values. 
+
+```
+{
+  "kafka.sasl.enabled": true,
+  "kafka.sasl.password": "kafkapassword",
+  "kafka.sasl.username": "dataprovider01_infrabe",
+  "spring.datasource.password": "dbpassword",
+  "spring.datasource.username": "dataprovider01_infrabe",
+  "spring.mail.password": "smtppassword",
+  "spring.mail.username": "no-reply@simplservices.com"
+}
+```
+
+Where you need to modify:
+
+| Variable name                 |     Example                | Description              |
+| ----------------------        |     :-----:                | ---------------          |
+| kafka.sasl.password           | kafkapassword              | take the password from *common-namespace*-kafka-credentials vault secret, key *namespace*_infrabe           |
+| kafka.sasl.username           | dataprovider01_infrabe     | *namespace*_infrabe      |
+| spring.datasource.password    | dbpassword                 | take the password from *namespace*-postgres-passwords vault secret, key *namespace*-infrabe |
+| spring.datasource.username    | dataprovider01_infrabe     | *namespace*_infrabe      |
+| spring.mail.password          | smtppassword               | Password for smtp server |
+| spring.mail.username          | no-reply@simplservices.com | Username for smtp server |
+
+All the other necessary secrets are now created automatically with proper data.
+
 ### Deployment
 
 #### Deployment using ArgoCD
@@ -215,11 +246,11 @@ spec:
   source:
     repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
     path: '""'
-    targetRevision: 2.1.0                  # version of package
+    targetRevision: 2.1.1                  # version of package
     helm:
       values: |
         values:
-          branch: v2.1.0                    # branch of repo with values - for released version it should be the release branch
+          branch: v2.1.1                    # branch of repo with values - for released version it should be the release branch
         project: default
         namespaceTag:
           dataprovider: dataprovider03      # identifier of deployment and part of fqdn for this agent
@@ -272,7 +303,7 @@ There are a couple of variables you need to replace - described below. The rest 
 
 ```
 values:
-  branch: v2.1.0                    # branch of repo with values - for released version it should be the release branch
+  branch: v2.1.1                    # branch of repo with values - for released version it should be the release branch
 project: default
 namespaceTag:
   dataprovider: dataprovider03      # identifier of deployment and part of fqdn for this agent
