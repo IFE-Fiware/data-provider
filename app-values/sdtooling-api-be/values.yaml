@@ -32,6 +32,10 @@ validation:
     validationApi: "/validate-ttl"
     validationJsonldApi: "/validate-jsonld"
 
+connectorAdapter:
+  service:
+    url:  http://edc-connector-adapter:8080
+
 web:
   mvc:
     cors:

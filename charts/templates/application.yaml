@@ -114,17 +114,11 @@ spec:
       values: |
         domain: {{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
         apiUrl: https://creation-wizard-api.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
-        usersRoles:
-          tier1Gateway:
-            url: https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/user-api
         federatedCatalogue:
           tier2Gateway:
             url: "https://tls.authority.{{ .Values.namespaceTag.authority }}.{{ .Values.domainSuffix }}"
         openapiConfig:
           servers: https://creation-wizard-api.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
-        connectorAdapter:
-          tier1Gateway:
-            url: https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/edc-connector-adapter
         openTelemetry:
           otlpExporter:
             endpoint: http://collector.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}
@@ -219,9 +213,6 @@ spec:
         {{- end }}
       values: |
         domain: {{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
-        usersRoles:
-          tier1Gateway:
-            url: http://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/user-api
         catalogueAdapter:
           tier2Gateway:
             url: "https://tls.authority.{{ .Values.namespaceTag.authority }}.{{ .Values.domainSuffix }}"
