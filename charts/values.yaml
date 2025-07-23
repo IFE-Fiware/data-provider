@@ -296,7 +296,7 @@ simpl_catalogue_client:
   valueFiles:
     - values.yaml
 
-auth_provider:
+auth_provider: 
   projectID: "939"
   targetRevision: 2.2.1
   chart_name: authentication-provider
