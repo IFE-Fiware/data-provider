@@ -6,4 +6,8 @@ keypair:
   algorithm: "ECDSA"
   keyLength: 256
 
-profile: "participant"
+profile: "participant" 
+
+redis: 
+  port: "6379"
+  username: "default"

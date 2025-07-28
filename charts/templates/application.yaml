@@ -502,6 +502,9 @@ spec:
         simpl:
           certificate:
             san: "tls.participant.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}"
+        redis:
+          host: "redis-master.{{ .Values.cluster.commonToolsNamespace }}.svc.cluster.local"
+          password: vault:{{ .Values.hashicorp.secretEngine }}/data/{{ .Values.cluster.commonToolsNamespace }}-redis#redis
         kafkaConfig:
           spring:
             kafka:
