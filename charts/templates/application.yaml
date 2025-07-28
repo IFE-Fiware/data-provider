@@ -498,13 +498,10 @@ spec:
         - name: KAFKA_AUTHPROVIDER
           value: "vault:{{ .Values.hashicorp.secretEngine }}/data/{{ .Values.cluster.commonToolsNamespace }}-kafka-credentials#{{ .Values.cluster.namespace }}_authprovider"
         microservices:
-          usersRolesUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
+          identityProviderUrl: http://identity-provider.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
         simpl:
           certificate:
             san: "tls.participant.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}"
-        redis:
-          host: "redis-master.{{ .Values.cluster.commonToolsNamespace }}.svc.cluster.local"
-          password: vault:{{ .Values.hashicorp.secretEngine }}/data/{{ .Values.cluster.commonToolsNamespace }}-redis#redis
         kafkaConfig:
           spring:
             kafka:
@@ -520,6 +517,11 @@ spec:
             kafka:
               topic:
                 prefix: iaa.{{ .Values.cluster.namespace }}.
+        appConfig:
+          management:
+            otlp:
+              tracing:
+                endpoint: http://collector.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}
         {{- if eq .Values.resourcePreset "low" }}
         resources:
           requests:
