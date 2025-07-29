@@ -30,10 +30,6 @@ This repo contains:
 
 ## Pre-Requisites
 
-### Onboarding 
-In the current version, the automatic onboarding process has already been implemented using: init-participant-job. 
-For this reason, manual onboarding activities are no longer necessary.
-
 ### Tools
 
 | Pre-Requisites      |     Version     | Description                                                                                                                                                                                  |
