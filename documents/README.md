@@ -361,6 +361,17 @@ At the end, all pods should be created correctly:
 <img src="images/dataprovider_ArgoCD02.png" alt="ArgoCD02" width="600"><BR>
 
 
+## Additional steps
+
+
+### Onboarding
+
+In the current version, after the deployment process is complete, a manual onboarding deployment process is required. 
+
+The steps are described in the document:
+https://code.europa.eu/simpl/simpl-open/development/iaa/documentation/-/blob/main/versioned_docs/2.2.x/ONBOARD.md
+
+
 ### Monitoring
 
 Filebeat components for monitoring are included in this release.   
