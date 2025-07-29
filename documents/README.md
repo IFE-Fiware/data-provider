@@ -361,12 +361,6 @@ At the end, all pods should be created correctly:
 <img src="images/dataprovider_ArgoCD02.png" alt="ArgoCD02" width="600"><BR>
 
 
-
-## Additional steps
-
-In the current version, the automatic onboarding process has already been implemented using: init-participant-job.
-For this reason, manual onboarding activities are no longer necessary.
-
 ### Monitoring
 
 Filebeat components for monitoring are included in this release.   
