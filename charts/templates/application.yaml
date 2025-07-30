@@ -30,6 +30,8 @@ spec:
         {{- end }}
       values: |
         fullnameOverride: {{ .Values.redis.nameOverride }}
+        auth:
+          password: vault:{{ .Values.hashicorp.secretEngine }}/data/{{ .Values.cluster.commonToolsNamespace }}-redis#redis
         master:
           {{- if .Values.redis.resourcesPreset }}
           resourcesPreset: {{ .Values.redis.resourcesPreset }}
@@ -522,7 +524,7 @@ spec:
             san: "tls.participant.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}"
         redis:
           host: "redis-master.{{ .Values.cluster.namespace }}.svc.cluster.local"
-          password: vault:{{ .Values.hashicorp.secretEngine }}/data/{{ .Values.cluster.namespace }}-redis#redis
+          password: vault:{{ .Values.hashicorp.secretEngine }}/data/{{ .Values.cluster.commonToolsNamespace }}-redis#redis
         kafkaConfig:
           spring:
             kafka:
