@@ -4,20 +4,17 @@
 * [Dataprovider Agent](#dataprovider-agent)
   * [Description](#description)
   * [Pre-Requisites](#pre-requisites)
-    * [Onboarding](#onboarding-)
     * [Tools](#tools)
-  * [Installation](#installation)
-    * [Prerequisites](#prerequisites)
-      * [Create the Namespace](#create-the-namespace)
+    * [DNS entries](#dns-entries)
+  * [Deployment](#deployment)
+    * [Preliminary tasks](#preliminary-tasks)
       * [Vault related tasks](#vault-related-tasks)
-        * [Secret engine for Signer](#secret-engine-for-signer)
-        * [Secret for EDC](#secret-for-edc)
-    * [Deployment](#deployment)
-      * [Deployment using ArgoCD](#deployment-using-argocd)
-      * [Manual deployment](#manual-deployment)
-        * [Files preparation](#files-preparation)
-        * [Deployment](#deployment-1)
+    * [Deployment using ArgoCD](#deployment-using-argocd)
+    * [Manual deployment](#manual-deployment)
+      * [Files preparation](#files-preparation)
+      * [Deployment](#deployment-1)
   * [Additional steps](#additional-steps)
+    * [Onboarding](#onboarding)
     * [Monitoring](#monitoring)
 * [Troubleshooting](#troubleshooting-)
 <!-- TOC -->
@@ -42,7 +39,9 @@ This repo contains:
 | nfs-provisioner     | 4.0.x or newer  | Backend for *Read/Write many* volumes. <br/> Other version *might* work but tests were performed using 4.0.x version. <br/> Image used: `registry.k8s.io/sig-storage/nfs-provisioner:v4.0.8` |
 | argocd              | 2.11.x or newer | Used as GitOps tool . App of apps concept. <br/> Other version *might* work but tests were performed using 2.11.x version. <br/> Image used: `quay.io/argoproj/argocd:v2.11.3`            |
 
-## DNS entries 
+### DNS entries 
+
+If you're not using external-dns, you will need to add the following dns entries manually. 
 
 | Entry Name | Entries |
 | ------------- | --------------------------------------------------------------------------------------------------- |
@@ -62,11 +61,11 @@ This repo contains:
 | simpl-ingress | participant.be.(namespace).int.simpl-europe.eu
 | xfsc-advsearch-be | xfsc-advsearch-be.(namespace).int.simpl-europe.eu
 
-## Installation
+## Deployment
 
 The deployment is based on master helm chart which, when applied on Kubernetes cluster, should deploy the Data Provider to it using ArgoCD. 
 
-### Prerequisites
+### Preliminary tasks
 
 #### Vault related tasks
 
@@ -79,7 +78,6 @@ https://code.europa.eu/simpl/simpl-open/development/agents/common_components/-/b
 
 Before you proceed with the next steps related to accessing your Vault and changing its contents, please read the document above.<BR>
 <BR>
-
 
 ##### Secret engine for Signer
 
@@ -193,36 +191,7 @@ Where you need to modify:
 
 All the other necessary secrets are now created automatically with proper data.
 
-##### Secret for Infrastructure-be
-
-Create a key for Signer named "*namespace*-infrastructure-be" replacing the data mentioned in the table with proper values. 
-
-```
-{
-  "kafka.sasl.enabled": true,
-  "kafka.sasl.password": "kafkapassword",
-  "kafka.sasl.username": "dataprovider01_infrabe",
-  "spring.datasource.password": "dbpassword",
-  "spring.datasource.username": "dataprovider01_infrabe",
-  "spring.mail.password": "smtppassword",
-  "spring.mail.username": "no-reply@simplservices.com"
-}
-```
-
-Where you need to modify:
-
-| Variable name                 |     Example                | Description              |
-| ----------------------        |     :-----:                | ---------------          |
-| kafka.sasl.password           | kafkapassword              | take the password from *common-namespace*-kafka-credentials vault secret, key *namespace*_infrabe           |
-| kafka.sasl.username           | dataprovider01_infrabe     | *namespace*_infrabe      |
-| spring.datasource.password    | dbpassword                 | take the password from *namespace*-postgres-passwords vault secret, key *namespace*-infrabe |
-| spring.datasource.username    | dataprovider01_infrabe     | *namespace*_infrabe      |
-| spring.mail.password          | smtppassword               | Password for smtp server |
-| spring.mail.username          | no-reply@simplservices.com | Username for smtp server |
-
-### Deployment
-
-#### Deployment using ArgoCD
+### Deployment using ArgoCD
 
 You can easily deploy the agent using ArgoCD. All the values mentioned in the sections below you can input in ArgoCD deployment. The repoURL gets the package directly from code.europa.eu.
 targetRevision is the package version. 
@@ -288,11 +257,11 @@ spec:
     namespace: dataprovider03               # where the package will be deployed
 ```
 
-#### Manual deployment
-
-##### Files preparation
+### Manual deployment
 
 Another way for deployment, is to unpack the released package to a folder on a host where you have kubectl and helm available and configured. 
+
+#### Files preparation
 
 There is basically one file that you need to modify - values.yaml. 
 There are a couple of variables you need to replace - described below. The rest you don't need to change.
@@ -337,7 +306,7 @@ monitoring:
   enabled: true                     # should monitoring be enabled
 ```
 
-##### Deployment
+#### Deployment
 
 After you have prepared the values file, you can start the deployment. 
 Use the command prompt. Proceed to the folder where you have the Chart.yaml file and execute the following command. The dot at the end is crucial - it points to current folder to look for the chart. 
