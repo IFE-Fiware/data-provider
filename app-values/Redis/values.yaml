@@ -1,6 +1,7 @@
 replica:
   replicaCount: 0
 master:
+  kind: Deployment
   serviceAccount: 
     create: true
     name: redis-master-service-account
