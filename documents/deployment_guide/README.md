@@ -13,6 +13,7 @@
     * [Manual deployment](#manual-deployment)
       * [Files preparation](#files-preparation)
       * [Deployment](#deployment-1)
+    * [Verification of deployment](#verification-of-deployment)
   * [Additional steps](#additional-steps)
     * [Onboarding](#onboarding)
     * [Monitoring](#monitoring)
@@ -315,9 +316,9 @@ Now you can deploy the agent:
 
 `helm install data-provider . `
 
+After starting the deployment synchronization process, the expected applications in ArgoCD will be created.
 
-After starting the deployment synchronization process, the expected namespace will be created.
-
+### Verification of deployment
 
 Initially, the status observed e.g. in ArgoCD will indicate the creation of new pods:
 
