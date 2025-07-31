@@ -4,7 +4,7 @@ DEPLOYMENT_IMAGE_PULL_POLICY: Always
 REPOSITORY: "code.europa.eu:4567/simpl/simpl-open/development/gaia-x-edc/poc-gaia-edc/simpl-backend"
 TAG: "latest"
 
-secretConfigPath: "{{ .Values.hashicorp.secretEngine }}/{{ .Release.Namespace }}-infra-adapter-simpl-backend"
+secretConfigPath: "{{ .Values.hashicorp.secretEngine }}/{{ .Values.cluster.namespace }}-infra-adapter-simpl-backend"
 
 ingress:
   host: adapter-infra.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
