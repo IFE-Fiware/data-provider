@@ -15,3 +15,7 @@ architecture: standalone
 secretAnnotations:
   vault.security.banzaicloud.io/vault-path: "kubernetes"
   vault.security.banzaicloud.io/vault-skip-verify: "true"
+
+auth:
+  existingSecret: redis-secrets
+  existingSecretPasswordKey: redis
