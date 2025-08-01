@@ -315,7 +315,7 @@ spec:
           service: "https://vault.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
           role: {{ .Values.hashicorp.role }}
           secretEngine: {{ .Values.hashicorp.secretEngine }}
-          secretConfigPath: "{{ .Values.hashicorp.secretEngine }}/{{ .Values.cluster.namespace }}-infra-adapter-simpl-backend"
+        secretConfigPath: "{{ .Values.hashicorp.secretEngine }}/{{ .Values.cluster.namespace }}-infra-adapter-simpl-backend"
   {{- end }}    
   {{- if .Values.simpl_catalogue_client.enabled }}    
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.simpl_catalogue_client.projectID }}/packages/helm/stable"
