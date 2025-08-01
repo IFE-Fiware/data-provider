@@ -53,7 +53,7 @@ authenticationProvider:
     url: http://authentication-provider:8080
 
 openTelemetry:
-  disabled: false
+  disabled: true
 
 # federated catalog application (fc-service)
 federatedCatalogue:
