@@ -127,5 +127,7 @@ spec:
       values: |
         fullnameOverride: {{ .Values.externalSecrets.nameOverride }}
         webhook:
-          enabled: false
+          service:
+            enabled: false
+
 {{- end }}
