@@ -345,3 +345,5 @@ externalSecrets:
   targetRevision: 0.18.1
   chart_name: external-secrets
   nameOverride: infrastructure-external-secrets
+  valueFiles:
+    - values.yaml
