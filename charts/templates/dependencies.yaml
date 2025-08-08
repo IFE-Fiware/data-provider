@@ -119,4 +119,11 @@ spec:
       releaseName: {{ .Values.fluxcd.nameOverride }}
       values: |
         fullnameOverride: {{ .Values.fluxcd.nameOverride }}
+  - repoURL: {{ .Values.externalSecrets.repo_URL }}
+    targetRevision: {{ .Values.externalSecrets.targetRevision }}
+    chart: {{ .Values.externalSecrets.chart_name }}
+    helm:
+      releaseName: {{ .Values.externalSecrets.nameOverride }}
+      values: |
+        fullnameOverride: {{ .Values.externalSecrets.nameOverride }}
 {{- end }}

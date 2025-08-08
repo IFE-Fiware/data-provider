@@ -339,3 +339,9 @@ tfcontroller:
   targetRevision: 0.15.1
   chart_name: tf-controller
   nameOverride: infrastructure-tofu-controller
+
+externalSecrets:
+  repo_URL: https://charts.external-secrets.io
+  targetRevision: 0.18.1
+  chart_name: external-secrets
+  nameOverride: infrastructure-external-secrets
