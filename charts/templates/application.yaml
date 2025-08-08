@@ -811,6 +811,7 @@ spec:
           vault.security.banzaicloud.io/vault-role: {{ .Values.hashicorp.role }}
         fullnameOverride: {{ .Values.provisionerresources.nameOverride }}
         kafkaEndpoint: kafka.{{ .Values.cluster.commonToolsNamespace }}.svc.cluster.local:9092
+        vaultServer: https://vault.common01.dev-sandbox-ionos.simpl-europe.eu
         giteaUrl: gitea-http.{{ .Values.cluster.namespace }}.svc.cluster.local:3000
         secrets:
           ionos:

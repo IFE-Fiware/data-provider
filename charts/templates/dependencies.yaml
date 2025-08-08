@@ -126,5 +126,4 @@ spec:
       releaseName: {{ .Values.externalSecrets.nameOverride }}
       values: |
         fullnameOverride: {{ .Values.externalSecrets.nameOverride }}
-        vaultServer: https://vault.common01.dev-sandbox-ionos.simpl-europe.eu
 {{- end }}

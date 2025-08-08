@@ -1,4 +1,3 @@
 configuration:
   packages:
     - code.europa.eu:4567/simpl/simpl-open/development/infrastructure/infrastructure-crossplane/configuration:2.0.0
-vaultServer: https://vault.common01.dev-sandbox-ionos.simpl-europe.eu
