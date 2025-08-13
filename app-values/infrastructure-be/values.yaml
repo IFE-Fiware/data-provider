@@ -58,7 +58,6 @@ ui:
   apibaseurl: http://api:8080/
 image:
   docker_enable: false  
-  tag: 1.0.6-F-feature-simpl-14698.latest
 backend:
   ingress:
     enabled: true
@@ -72,7 +71,7 @@ backend:
       path: /
       port: http
   image:
-    tag: 1.0.6-F-feature-simpl-14698.latest
+    tag: 1.0.7-SNAPSHOT.latest
   env:
     SPRING_JPA_HIBERNATE_DDL_AUTO: none
     SPRING_JPA_SHOW_SQL: "false"
@@ -107,4 +106,4 @@ backend:
     KAFKA_PROVISIONING_RESPONSES_TOPIC_NAME: provisioned
     KAFKA_DECOMMISSIONING_REQUESTS_TOPIC_NAME: to-decommission
     KAFKA_DECOMMISSIONING_RESPONSES_TOPIC_NAME: decommissioned
-    REQUEST_MATCHERS_PERMITTED: /status/**,/swagger-ui.html,/swagger-ui/**,/v3/api-docs/**,/scripts/trigger
+    REQUEST_MATCHERS_PERMITTED: /status/ 1.0.6-F-feature-simpl-14698.latest**,/swagger-ui.html,/swagger-ui/**,/v3/api-docs/**,/scripts/trigger
