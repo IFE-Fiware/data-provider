@@ -1,44 +1,49 @@
 # Dataprovider Agent
 
 <!-- TOC -->
-* [Dataprovider Agent](#dataprovider-agent)
-  * [Description](#description)
-  * [Pre-Requisites](#pre-requisites)
-    * [Onboarding](#onboarding-)
-    * [Tools](#tools)
-  * [Installation](#installation)
-    * [Prerequisites](#prerequisites)
-      * [Create the Namespace](#create-the-namespace)
-      * [Vault related tasks](#vault-related-tasks)
-        * [Secret engine for Signer](#secret-engine-for-signer)
-        * [Secret for EDC](#secret-for-edc)
-    * [Deployment](#deployment)
-      * [Deployment using ArgoCD](#deployment-using-argocd)
-      * [Manual deployment](#manual-deployment)
-        * [Files preparation](#files-preparation)
-        * [Deployment](#deployment-1)
-  * [Additional steps](#additional-steps)
-    * [Monitoring](#monitoring)
-* [Troubleshooting](#troubleshooting-)
-<!-- TOC -->
+- [Dataprovider Agent](#dataprovider-agent)
+  - [Description](#description)
+  - [Pre-Requisites](#pre-requisites)
+    - [Onboarding](#onboarding)
+    - [Tools](#tools)
+  - [DNS entries](#dns-entries)
+  - [Installation](#installation)
+    - [Prerequisites](#prerequisites)
+      - [Vault related tasks](#vault-related-tasks)
+        - [Secret engine for Signer](#secret-engine-for-signer)
+        - [Secret for Signer](#secret-for-signer)
+        - [Secret for EDC](#secret-for-edc)
+        - [Secret for Infrastructure-be](#secret-for-infrastructure-be)
+        - [Secret for Infrastructure-be](#secret-for-infrastructure-be)
+    - [Deployment](#deployment)
+      - [Deployment using ArgoCD](#deployment-using-argocd)
+      - [Manual deployment](#manual-deployment)
+        - [Files preparation](#files-preparation)
+        - [Deployment](#deployment)
+  - [Additional steps](#additional-steps)
+    - [Monitoring](#monitoring)
+  - [Troubleshooting](#troubleshooting)
+<!-- /TOC -->
 
 ## Description
 
 This repo contains:
-- a master helm chart allowing to deploy a **Dataprovider** agent using a single command.
+
+- a master helm chart allowing to deploy a *Dataprovider* agent using a single command.
 - templates of values.yaml files used inside *Integration* environment under `app-values` folder
 
 ## Pre-Requisites
 
-### Onboarding 
-In the current version, the automatic onboarding process has already been implemented using: init-participant-job. 
+### Onboarding
+
+In the current version, the automatic onboarding process has already been implemented using: init-participant-job.
 For this reason, manual onboarding activities are no longer necessary.
 
 ### Tools
 
-| Pre-Requisites      |     Version     | Description                                                                                                                                                                                  |
-|---------------------|:---------------:|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| DNS sub-domain name    |       N/A       | This domain will be used to address all services of the agent. <br/> example: `*.dataprovider03.testint.simpl-europe.eu` | 
+| Pre-Requisites      |     Version     | Description  |
+|:-------------------:|:---------------:|:------------:|
+| DNS sub-domain name    |       N/A       | This domain will be used to address all services of the agent. <br/> example: `*.dataprovider03.testint.simpl-europe.eu` |
 | external-dns    | bitnami/external-dns:0.16.1 | Currently version docker.io/bitnami/external-dns:0.16.1-debian-12-r should be used as externaldns. Unfortunately, using a newer version caused DNS to work incorrectly. |  
 | Kubernetes Cluster  | 1.29.x or newer | Other version *might* work but tests were performed using 1.29.x version                                                                                                                     |
 | nginx-ingress       | 1.10.x or newer | Used as ingress controller. <br/> Other version *might* work but tests were performed using 1.10.x version. <br/> Image used: `registry.k8s.io/ingress-nginx/controller:v1.10.0`          |
@@ -46,44 +51,42 @@ For this reason, manual onboarding activities are no longer necessary.
 | nfs-provisioner     | 4.0.x or newer  | Backend for *Read/Write many* volumes. <br/> Other version *might* work but tests were performed using 4.0.x version. <br/> Image used: `registry.k8s.io/sig-storage/nfs-provisioner:v4.0.8` |
 | argocd              | 2.11.x or newer | Used as GitOps tool . App of apps concept. <br/> Other version *might* work but tests were performed using 2.11.x version. <br/> Image used: `quay.io/argoproj/argocd:v2.11.3`            |
 
-## DNS entries 
+## DNS entries
 
 | Entry Name | Entries |
 | ------------- | --------------------------------------------------------------------------------------------------- |
-| catalogue-ui | catalogue-ui.(namespace).int.simpl-europe.eu 
-| edc-connector-adapter | edc-connector-adapter.(namespace).int.simpl-europe.eu
-| gitea-http| gitea.crossplane.(namespace).int.simpl-europe.eu
-| infrastructure-argo-cd-server | argoui.crossplane.(namespace).int.simpl-europe.eu
-| infrastructure-argo-workflows-server | argoworkflows.crossplane.(namespace).int.simpl-europe.eu
-| infrastructure-be-infrastructure-be | infrastructure-be.(namespace).int.simpl-europe.eu
-| infrastructure-fe-frontend | infrastructure-fe.(namespace).int.simpl-europe.eu  
-| sd-creation-wizard-api | creation-wizard-api.(namespace).int.simpl-europe.eu
-| sd-ui | sd-ui.(namespace).int.simpl-europe.eu
-| signer| signer.(namespace).int.simpl-europe.eu
-| simpl-edc-ingress | edc.(namespace).int.simpl-europe.eu/management<br>edc.(namespace).int.simpl-europe.eu/api<br>edc.(namespace).int.simpl-europe.eu/protocol<br>edc.(namespace).int.simpl-europe.eu/public<br>  edc.(namespace).int.simpl-europe.eu/control  
-| simpl-fe-ingress | participant.fe.(namespace).int.simpl-europe.eu/users-roles<br>  participant.fe.(namespace).int.simpl-europe.eu/participant-utility  
-| simpl-files | files.(namespace).int.simpl-europe.eu 
-| simpl-ingress | participant.be.(namespace).int.simpl-europe.eu
-| xfsc-advsearch-be | xfsc-advsearch-be.(namespace).int.simpl-europe.eu
+| catalogue-ui | catalogue-ui.(namespace).int.simpl-europe.eu |
+| edc-connector-adapter | edc-connector-adapter.(namespace).int.simpl-europe.eu |
+| gitea-http| gitea.crossplane.(namespace).int.simpl-europe.eu |
+| infrastructure-argo-cd-server | argoui.crossplane.(namespace).int.simpl-europe.eu |
+| infrastructure-argo-workflows-server | argoworkflows.crossplane.(namespace).int.simpl-europe.eu |
+| infrastructure-be-infrastructure-be | infrastructure-be.(namespace).int.simpl-europe.eu |
+| infrastructure-fe-frontend | infrastructure-fe.(namespace).int.simpl-europe.eu |
+| sd-creation-wizard-api | creation-wizard-api.(namespace).int.simpl-europe.eu |
+| sd-ui | sd-ui.(namespace).int.simpl-europe.eu |
+| signer| signer.(namespace).int.simpl-europe.eu |
+| simpl-edc-ingress | edc.(namespace).int.simpl-europe.eu/management<br>edc.(namespace).int.simpl-europe.eu/api<br>edc.(namespace).int.simpl-europe.eu/protocol<br>edc.(namespace).int.simpl-europe.eu/public<br>  edc.(namespace).int.simpl-europe.eu/control |
+| simpl-fe-ingress | participant.fe.(namespace).int.simpl-europe.eu/users-roles<br>  participant.fe.(namespace).int.simpl-europe.eu/participant-utility |
+| simpl-files | files.(namespace).int.simpl-europe.eu |
+| simpl-ingress | participant.be.(namespace).int.simpl-europe.eu |
+| xfsc-advsearch-be | xfsc-advsearch-be.(namespace).int.simpl-europe.eu |
 
 ## Installation
 
-The deployment is based on master helm chart which, when applied on Kubernetes cluster, should deploy the Data Provider to it using ArgoCD. 
+The deployment is based on master helm chart which, when applied on Kubernetes cluster, should deploy the Data Provider to it using ArgoCD.
 
 ### Prerequisites
 
 #### Vault related tasks
 
-You can access vault on https://vault.**commonnamespacetag**.**domainsuffix**
-Root token can be found in common namespace, secret vault-unseal-keys, in key vault-root. 
+You can access vault on <https://vault.**commonnamespacetag**.**domainsuffix**>
+Root token can be found in common namespace, secret vault-unseal-keys, in key vault-root.
 
 The description of using vault is in a separate document:
 
-https://code.europa.eu/simpl/simpl-open/development/agents/common_components/-/blob/feature/documentation_verification/documents/Using_Vault.md
+<https://code.europa.eu/simpl/simpl-open/development/agents/common_components/-/blob/feature/documentation_verification/documents/Using_Vault.md>
 
 Before you proceed with the next steps related to accessing your Vault and changing its contents, please read the document above.<BR>
-<BR>
-
 
 ##### Secret engine for Signer
 
@@ -91,9 +94,9 @@ Go to Vault UI and create an encryption key `gaia-x-key1` in secret engine `tran
 
 ##### Secret for Signer
 
-Create a key for Signer named "*dataprovider03*-infra-adapter-simpl-backend" replacing "03" in "dataprovider03" and in "common03" with the appropriate entry and the data mentioned in the table with proper values. 
+Create a key for Signer named "*dataprovider03*-infra-adapter-simpl-backend" replacing "03" in "dataprovider03" and in "common03" with the appropriate entry and the data mentioned in the table with proper values.
 
-```
+```JSON
 {
   "ENGINE_PATH": "/opt/plugins/hashicorp-vault-provider.so",
   "HTTP_HOST": "",
@@ -110,16 +113,16 @@ Create a key for Signer named "*dataprovider03*-infra-adapter-simpl-backend" rep
 
 Where you need to modify:
 
-| Variable name                 |     Example         | Description     |
-| ----------------------        |     :-----:         | --------------- |
-| VAULT_ADDRESS            | http://vault.commonnamespace.domainsuffix | Vault ingress address  |
+| Variable name            |     Example         | Description     |
+| :----------------------: |     :-----:         | :---------------: |
+| VAULT_ADDRESS            | <http://vault.commonnamespace.domainsuffix> | Vault ingress address  |
 | VAULT_TOKEN              | hvs.generatedtoken | Token to access the Vault  |
 
 ##### Secret for EDC
 
-Create a key for Signer named "*dataprovider03*-simpl-edc" replacing "03" in "dataprovider03" with the appropriate entry and the data mentioned in the table with proper values. 
+Create a key for Signer named "*dataprovider03*-simpl-edc" replacing "03" in "dataprovider03" with the appropriate entry and the data mentioned in the table with proper values.
 
-```
+```JSON
 {
   "contractmanager_apikey": "apikey",
   "edc_datasource_default_password": "edc",
@@ -150,13 +153,13 @@ Where you need to modify:
 | contractmanager_apikey           | apikey              | api key string           |
 | edc_datasource_default_password  | dbpassstring        | take the password from *dataprovider03*-postgres-passwords vault secret, key *dataprovider03*-edc |
 | edc_datasource_policy_password   | dbpassstring        | take the password from *dataprovider03*-postgres-passwords vault secret, key *dataprovider03*-edc |
-| edc_ionos_access_key             | accesskeystring     | Access key for S3 - please contact IONOS to get the correct value. Currently the best way is to send an email requesting this data to Paulo Cabrita: paulo.cabrita@ionos.com |
+| edc_ionos_access_key             | accesskeystring     | Access key for S3 - please contact IONOS to get the correct value. Currently the best way is to send an email requesting this data to Paulo Cabrita: <paulo.cabrita@ionos.com> |
 | edc_ionos_endpoint               | s3-eu-central-1.ionoscloud.com | S3 server url |
 | edc_ionos_endpoint_region        | de                  | Two letter country code  |
-| edc_ionos_secret_key             | secretkeystring     | Secret key for S3 - please contact IONOS to get the correct value. Currently the best way is to send an email requesting this data to Paulo Cabrita: paulo.cabrita@ionos.com |
-| edc_ionos_token                  | tokenstring         | Token for S3 access - please contact IONOS to get the correct value. Currently the best way is to send an email requesting this data to Paulo Cabrita: paulo.cabrita@ionos.com |
+| edc_ionos_secret_key             | secretkeystring     | Secret key for S3 - please contact IONOS to get the correct value. Currently the best way is to send an email requesting this data to Paulo Cabrita: <paulo.cabrita@ionos.com> |
+| edc_ionos_token                  | tokenstring         | Token for S3 access - please contact IONOS to get the correct value. Currently the best way is to send an email requesting this data to Paulo Cabrita: <paulo.cabrita@ionos.com> |
 | otel_experimental_log_level      | debug  | log level of otel |
-| otel_exporter_otlp_endpoint      | http://collector.commonns.domainsuffix  | replace commonns and domainsuffix with your common namespace and domain suffix |
+| otel_exporter_otlp_endpoint      | <http://collector.commonns.domainsuffix>  | replace commonns and domainsuffix with your common namespace and domain suffix |
 | otel_exporter_otlp_protocol      | http/protobuf       | default value |
 | otel_instrumentation_http_url_connection_enabled | false  | enable http url connection logging for otel |
 | otel_instrumentation_jdbc_enabled | false              | enable jdbc logging for otel |
@@ -170,9 +173,10 @@ Where you need to modify:
 All the other necessary secrets are now created automatically with proper data.
 
 ##### Secret for Infrastructure-be
-Create a key for Signer named "*dataprovider03*-infrastructure-be" replacing "03" in "dataprovider03" with the appropriate entry and the data mentioned in the table with proper values. 
 
-```
+Create a key for Signer named "*dataprovider03*-infrastructure-be" replacing "03" in "dataprovider03" with the appropriate entry and the data mentioned in the table with proper values.
+
+```JSON
 {
   "kafka.sasl.enabled": true,
   "kafka.sasl.password": "kafkapassword",
@@ -192,14 +196,14 @@ Where you need to modify:
 | kafka.sasl.username           | dataprovider03_infrabe     | *namespace*_infrabe      |
 | spring.datasource.password    | dbpassword                 | take the password from *dataprovider03*-postgres-passwords vault secret, key *dataprovider03*_infrabe |
 | spring.datasource.username    | dataprovider03_infrabe     | *namespace*_infrabe      |
-| spring.mail.password          | smtppassword               | Password for smtp server - please contact IONOS to get the correct value. Currently the best way is to send an email requesting this data to Paulo Cabrita: paulo.cabrita@ionos.com |
-| spring.mail.username          | no-reply@simplservices.com | Username for smtp server - please contact IONOS to get the correct value. Currently the best way is to send an email requesting this data to Paulo Cabrita: paulo.cabrita@ionos.com |
+| spring.mail.password          | smtppassword               | Password for smtp server - please contact IONOS to get the correct value. Currently the best way is to send an email requesting this data to Paulo Cabrita: <paulo.cabrita@ionos.com> |
+| <spring.mail.username>          | <no-reply@simplservices.com> | Username for smtp server - please contact IONOS to get the correct value. Currently the best way is to send an email requesting this data to Paulo Cabrita: <paulo.cabrita@ionos.com> |
 
 ##### Secret for Infrastructure-be
 
-Create a key for Signer named "*namespace*-infrastructure-be" replacing the data mentioned in the table with proper values. 
+Create a key for Signer named "*namespace*-infrastructure-be" replacing the data mentioned in the table with proper values.
 
-```
+```JSON
 {
   "kafka.sasl.enabled": true,
   "kafka.sasl.password": "kafkapassword",
@@ -220,7 +224,7 @@ Where you need to modify:
 | spring.datasource.password    | dbpassword                 | take the password from *namespace*-postgres-passwords vault secret, key *namespace*-infrabe |
 | spring.datasource.username    | dataprovider01_infrabe     | *namespace*_infrabe      |
 | spring.mail.password          | smtppassword               | Password for smtp server |
-| spring.mail.username          | no-reply@simplservices.com | Username for smtp server |
+| spring.mail.username          | <no-reply@simplservices.com> | Username for smtp server |
 
 All the other necessary secrets are now created automatically with proper data.
 
@@ -229,14 +233,13 @@ All the other necessary secrets are now created automatically with proper data.
 #### Deployment using ArgoCD
 
 You can easily deploy the agent using ArgoCD. All the values mentioned in the sections below you can input in ArgoCD deployment. The repoURL gets the package directly from code.europa.eu.
-targetRevision is the package version. 
-
+targetRevision is the package version.
 
 In the example below, please replace the marked versions with the ones applicable to your environment.
 
 Please pay special attention to the namespace names: common03, authority03, consumer03 and dataprovider03, and also to replace the domain name testint.simpl-europe.eu and the occurrence of the testint value itself.
 
-```
+```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -296,12 +299,12 @@ spec:
 
 ##### Files preparation
 
-Another way for deployment, is to unpack the released package to a folder on a host where you have kubectl and helm available and configured. 
+Another way for deployment, is to unpack the released package to a folder on a host where you have kubectl and helm available and configured.
 
-There is basically one file that you need to modify - values.yaml. 
+There is basically one file that you need to modify - values.yaml.
 There are a couple of variables you need to replace - described below. The rest you don't need to change.
 
-```
+```yaml
 values:
   branch: v2.1.2                    # branch of repo with values - for released version it should be the release branch
 project: default
@@ -343,16 +346,14 @@ monitoring:
 
 ##### Deployment
 
-After you have prepared the values file, you can start the deployment. 
-Use the command prompt. Proceed to the folder where you have the Chart.yaml file and execute the following command. The dot at the end is crucial - it points to current folder to look for the chart. 
+After you have prepared the values file, you can start the deployment.
+Use the command prompt. Proceed to the folder where you have the Chart.yaml file and execute the following command. The dot at the end is crucial - it points to current folder to look for the chart.
 
 Now you can deploy the agent:
 
-`helm install data-provider . `
-
+`helm install data-provider .`
 
 After starting the deployment synchronization process, the expected namespace will be created.
-
 
 Initially, the status observed e.g. in ArgoCD will indicate the creation of new pods:
 
@@ -364,8 +365,6 @@ At the end, all pods should be created correctly:
 
 <img src="images/dataprovider_ArgoCD02.png" alt="ArgoCD02" width="600"><BR>
 
-
-
 ## Additional steps
 
 In the current version, the automatic onboarding process has already been implemented using: init-participant-job.
@@ -373,10 +372,11 @@ For this reason, manual onboarding activities are no longer necessary.
 
 ### Monitoring
 
-Filebeat components for monitoring are included in this release.   
+Filebeat components for monitoring are included in this release.
 Their deployment can be disabled by switching the value monitoring.enabled to false.
 
-# Troubleshooting
+## Troubleshooting
+
 If you encounter issues during deployment, check the following:
 
 - Ensure that ArgoCD is properly set up and running.
