@@ -219,7 +219,7 @@ simpl_fe:
 sd_ui:
   enabled: true
   projectID: "923"
-  targetRevision: 1.2.1
+  targetRevision: 1.2.3
   chart_name: sd-ui
   resources:
     requests:
