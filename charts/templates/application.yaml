@@ -23,16 +23,16 @@ spec:
   - repoURL: {{ .Values.keycloak.repo_URL }}
     targetRevision: {{ .Values.keycloak.targetRevision }}
     chart: {{ .Values.keycloak.chart_name }}
-    image:
-      repository: bitnamilegacy/keycloak
-    security:
-      allowInsecureImages: true
     helm:
       valueFiles:
         {{- range .Values.keycloak.valueFiles }}
         - $values/app-values/Keycloak/{{ . }}
         {{- end }}
       values: |
+        image:
+          repository: bitnamilegacy/keycloak
+        security:
+          allowInsecureImages: true
         fullnameOverride: {{ .Values.keycloak.nameOverride }}
         apiUrl: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}"
         podAnnotations:
