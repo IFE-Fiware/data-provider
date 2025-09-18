@@ -23,6 +23,10 @@ spec:
   - repoURL: {{ .Values.keycloak.repo_URL }}
     targetRevision: {{ .Values.keycloak.targetRevision }}
     chart: {{ .Values.keycloak.chart_name }}
+    image:
+      repository: bitnamilegacy/keycloak
+    security:
+      allowInsecureImages: true
     helm:
       valueFiles:
         {{- range .Values.keycloak.valueFiles }}
