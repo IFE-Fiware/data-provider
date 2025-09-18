@@ -475,7 +475,7 @@ fluxcd:
 
 provisionerresources:
   projectID: "912"
-  targetRevision: 1.2.1
+  targetRevision: 1.2.3
   chart_name: infrastructure-crossplane
   nameOverride: infrastructure-crossplane
   resources:
