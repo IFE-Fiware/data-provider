@@ -65,7 +65,7 @@ crossplane:
     - values.yaml
 
 keycloak:
-  repo_URL: https://charts.bitnami.com/bitnami
+  repo_URL: 'https://charts.bitnami.com/bitnami'
   chart_name: keycloak
   targetRevision: 22.2.5
   nameOverride: keycloak
@@ -475,7 +475,7 @@ fluxcd:
 
 provisionerresources:
   projectID: "912"
-  targetRevision: 1.2.1
+  targetRevision: 1.2.3
   chart_name: infrastructure-crossplane
   nameOverride: infrastructure-crossplane
   resources:
