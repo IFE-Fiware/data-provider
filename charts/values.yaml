@@ -65,7 +65,7 @@ crossplane:
     - values.yaml
 
 keycloak:
-  repo_URL: 'https://charts.bitnami.com/bitnami'
+  repo_URL: https://charts.bitnami.com/bitnami
   chart_name: keycloak
   targetRevision: 22.2.5
   nameOverride: keycloak
