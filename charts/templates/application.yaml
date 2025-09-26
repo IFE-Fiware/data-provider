@@ -34,9 +34,9 @@ spec:
         security:
           allowInsecureImages: true
         fullnameOverride: {{ .Values.keycloak.nameOverride }}
-        apiUrl: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}"
+        apiUrl: "https://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}"
         podAnnotations:
-          vault.security.banzaicloud.io/vault-addr: "https://vault.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
+          vault.security.banzaicloud.io/vault-addr: "https://vault-{{ .Values.namespaceTag.common }}-{{ .Values.domainSuffix }}"
           vault.security.banzaicloud.io/vault-role: {{ .Values.hashicorp.role }}
         auth:
           adminPassword: vault:{{ .Values.hashicorp.secretEngine }}/data/{{ .Values.cluster.namespace }}-keycloak#admin
@@ -47,13 +47,13 @@ spec:
           password: vault:{{ .Values.hashicorp.secretEngine }}/data/{{ .Values.cluster.namespace }}-postgres-passwords#{{ .Values.cluster.namespace }}-keycloak
         extraEnvVars:
         - name: KC_HOSTNAME_ADMIN
-          value: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/auth"
+          value: "https://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/auth"
         - name: KC_HOSTNAME
-          value: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/auth"
+          value: "https://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/auth"
         - name: USERS_ROLES_BASE_URL
           value: "http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080"
         - name: KEYCLOAK_BASE_URL
-          value: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/auth"
+          value: "https://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/auth"
         - name: AUTHENTICATION_PROVIDER_BASE_URL
           value: "http://authentication-provider.{{ .Values.cluster.namespace }}.svc.cluster.local:8080"
         - name: REALM
@@ -81,7 +81,7 @@ spec:
           env:
             - name: REDIRECT_URIS
               value: |-
-                [ "https://participant.fe.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/*","https://catalogue-ui.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/*","https://sd-ui.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/*" ]
+                [ "https://participant-fe-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/*","https://catalogue-ui-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/*","https://sd-ui-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/*" ]
             - name: REALM_NAME
               value: realm
             - name: URL
@@ -116,61 +116,61 @@ spec:
         - $values/app-values/sdtooling-api-be/{{ . }}
         {{- end }}
       values: |
-        domain: {{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
-        apiUrl: https://creation-wizard-api.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+        domain: {{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
+        apiUrl: https://creation-wizard-api-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
         usersRoles:
           tier1Gateway:
-            url: https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/user-api
+            url: https://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/user-api
         federatedCatalogue:
           tier2Gateway:
-            url: "https://tls.authority.{{ .Values.namespaceTag.authority }}.{{ .Values.domainSuffix }}"
+            url: "https://tls.authority-{{ .Values.namespaceTag.authority }}-{{ .Values.domainSuffix }}"
         openapiConfig:
-          servers: https://creation-wizard-api.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+          servers: https://creation-wizard-api-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
         connectorAdapter:
           tier1Gateway:
-            url: https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/edc-connector-adapter
+            url: https://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/edc-connector-adapter
         openTelemetry:
           otlpExporter:
-            endpoint: http://collector.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}
+            endpoint: http://collector-{{ .Values.namespaceTag.common }}-{{ .Values.domainSuffix }}
         hash:
           config:
             algorithm: "SHA256"
             templates: '[
                           {
                             "key": "Contract Template 1",
-                            "value": "https://files.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/static/contract/ContractTemplate1.json"
+                            "value": "https://files-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/static/contract/ContractTemplate1.json"
                           },
                           {
                             "key": "Contract Template 2",
-                            "value": "https://files.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/static/contract/ContractTemplate2.json"
+                            "value": "https://files-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/static/contract/ContractTemplate2.json"
                           },
                           {
                             "key": "Contract Template 3",
-                            "value": "https://files.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/static/contract/ContractTemplate3.json"
+                            "value": "https://files-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/static/contract/ContractTemplate3.json"
                           },
                           {
                             "key": "Billing Schema 1",
-                            "value": "https://files.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/static/pdf/BillingSchema1.pdf"
+                            "value": "https://files-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/static/pdf/BillingSchema1.pdf"
                           },
                           {
                             "key": "Billing Schema 2",
-                            "value": "https://files.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/static/pdf/BillingSchema2.pdf"
+                            "value": "https://files-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/static/pdf/BillingSchema2.pdf"
                           },
                           {
                             "key": "Billing Schema 3",
-                            "value": "https://files.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/static/pdf/BillingSchema1.pdf"
+                            "value": "https://files-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/static/pdf/BillingSchema1.pdf"
                           },
                           {
                             "key": "Sla Agreements 1",
-                            "value": "https://files.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/static/pdf/SLAAgreement1.pdf"
+                            "value": "https://files-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/static/pdf/SLAAgreement1.pdf"
                           },
                           {
                             "key": "Sla Agreements 2",
-                            "value": "https://files.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/static/pdf/SLAAgreement2.pdf"
+                            "value": "https://files-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/static/pdf/SLAAgreement2.pdf"
                           },
                           {
                             "key": "Sla Agreements 3",
-                            "value": "https://files.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/static/pdf/SLAAgreement1.pdf"
+                            "value": "https://files-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/static/pdf/SLAAgreement1.pdf"
                           }
                         ]'
         {{- if eq .Values.resourcePreset "low" }}
@@ -194,7 +194,7 @@ spec:
       values: |
         openTelemetry:
           otlpExporter:
-            endpoint: http://collector.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}
+            endpoint: http://collector-{{ .Values.namespaceTag.common }}-{{ .Values.domainSuffix }}
         {{- if eq .Values.resourcePreset "low" }}
         resources:
           requests:
@@ -222,16 +222,16 @@ spec:
         - $values/app-values/xfsc-advsearch-be/{{ . }}
         {{- end }}
       values: |
-        domain: {{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+        domain: {{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
         usersRoles:
           tier1Gateway:
-            url: http://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/user-api
+            url: http://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/user-api
         catalogueAdapter:
           tier2Gateway:
-            url: "https://tls.authority.{{ .Values.namespaceTag.authority }}.{{ .Values.domainSuffix }}"
+            url: "https://tls.authority-{{ .Values.namespaceTag.authority }}-{{ .Values.domainSuffix }}"
         federatedCatalogue:
           tier2Gateway:
-            url: "https://tls.authority.{{ .Values.namespaceTag.authority }}.{{ .Values.domainSuffix }}"
+            url: "https://tls.authority-{{ .Values.namespaceTag.authority }}-{{ .Values.domainSuffix }}"
         {{- if eq .Values.resourcePreset "low" }}
         resources:
           requests:
@@ -258,11 +258,11 @@ spec:
         serviceAccount:
           name: "{{ .Values.signer.serviceAccountName }}"
         ingress:
-          frontendDomain: signer.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+          frontendDomain: signer-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
           annotations:
             cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
         hashicorp:
-          service: "https://vault.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
+          service: "https://vault-{{ .Values.namespaceTag.common }}-{{ .Values.domainSuffix }}"
           role: {{ .Values.hashicorp.role }}
           secretEngine: {{ .Values.hashicorp.secretEngine }}
   {{- end }}    
@@ -278,20 +278,20 @@ spec:
         {{- end }}
       values: |
         env:
-          PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}"
-          PUBLIC_FC_DATA_URL: "https://xsfc-server-service.{{ .Values.namespaceTag.authority }}.{{ .Values.domainSuffix }}"
-          PUBLIC_SEARCH_API_URL: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/xfsc-advsearch-be"
-          PUBLIC_CONTRACT_CONSUMPTION_API_URL: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/contract-consumption"
+          PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}"
+          PUBLIC_FC_DATA_URL: "https://xsfc-server-service-{{ .Values.namespaceTag.authority }}-{{ .Values.domainSuffix }}"
+          PUBLIC_SEARCH_API_URL: "https://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/xfsc-advsearch-be"
+          PUBLIC_CONTRACT_CONSUMPTION_API_URL: "https://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/contract-consumption"
         ingress:
           hosts:
-            - host: catalogue-ui.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+            - host: catalogue-ui-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
               paths:
               - path: /
                 pathType: ImplementationSpecific
           tls:
             - secretName: catalogue-ui-tld-secret
               hosts:
-                - catalogue-ui.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+                - catalogue-ui-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
           annotations:
             cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
         {{- if eq .Values.resourcePreset "low" }}
@@ -315,9 +315,9 @@ spec:
         - $values/app-values/tier1-gateway/{{ . }}
         {{- end }}
       values: |
-        hostT1: participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}  
+        hostT1: participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}  
         cors:
-          allowOrigin: https://participant.fe.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:3000
+          allowOrigin: https://participant.fe-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:3000
         ingress:
           issuer: {{ .Values.cluster.issuer }}
         keycloakUrl: http://keycloak.{{ .Values.cluster.namespace }}.svc.cluster.local
@@ -329,10 +329,10 @@ spec:
               microservices:
                 - name: users-roles
                   internalUrl: "http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080/v1"
-                  detailUrl: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/userApi/v1/"
+                  detailUrl: "https://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/userApi/v1/"
                 - name: authentication-provider
                   internalUrl: "http://authentication-provider.{{ .Values.cluster.namespace }}.svc.cluster.local:8080/v1"
-                  detailUrl: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/authApi/v1/"
+                  detailUrl: "https://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/authApi/v1/"
         {{- if eq .Values.resourcePreset "low" }}
         resources:
           requests:
@@ -354,10 +354,10 @@ spec:
         {{- end }}
       values: |
         podAnnotations:
-          vault.security.banzaicloud.io/vault-addr: "https://vault.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
+          vault.security.banzaicloud.io/vault-addr: "https://vault-{{ .Values.namespaceTag.common }}-{{ .Values.domainSuffix }}"
           vault.security.banzaicloud.io/vault-role: {{ .Values.hashicorp.role }}
-        hostT1: participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
-        authorityHostT2: tls.authority.{{ .Values.namespaceTag.authority }}.{{ .Values.domainSuffix }}
+        hostT1: participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
+        authorityHostT2: tls-authority-{{ .Values.namespaceTag.authority }}-{{ .Values.domainSuffix }}
         global:
           ingress:
             issuer: {{ .Values.cluster.issuer }}
@@ -417,14 +417,14 @@ spec:
       values: |
         ingress:
           issuer: {{ .Values.cluster.issuer }}
-        hostFe: participant.fe.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+        hostFe: participant-fe-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
         cors:
-          allowOrigin: https://participant.fe.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }},https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:4203,http://localhost:3000
+          allowOrigin: https://participant-fe-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }},https://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:4203,http://localhost:3000
         env:
         - name: API_URL
-          value: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}"
+          value: "https://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}"
         - name: KEYCLOAK_URL
-          value: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/auth"
+          value: "https://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/auth"
         - name: KEYCLOAK_REALM
           value: "participant"
         - name: KEYCLOAK_CLIENT_ID
@@ -450,14 +450,14 @@ spec:
         {{- end }}
       values: |
         podAnnotations:
-          vault.security.banzaicloud.io/vault-addr: "https://vault.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
+          vault.security.banzaicloud.io/vault-addr: "https://vault-{{ .Values.namespaceTag.common }}-{{ .Values.domainSuffix }}"
           vault.security.banzaicloud.io/vault-role: {{ .Values.hashicorp.role }}
         env:
         - name: KAFKA_TIER2GW
           value: "vault:{{ .Values.hashicorp.secretEngine }}/data/{{ .Values.cluster.commonToolsNamespace }}-kafka-credentials#{{ .Values.cluster.namespace }}_tier2gw"
         global:
           cors:
-            allowOrigin: https://authority.fe.{{ .Values.namespaceTag.authority }}.{{ .Values.domainSuffix }},https://authority.be.{{ .Values.namespaceTag.authority }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:3000
+            allowOrigin: https://authority-fe-{{ .Values.namespaceTag.authority }}-{{ .Values.domainSuffix }},https://authority-be-{{ .Values.namespaceTag.authority }}-{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:3000
         microservices:
           usersRolesUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
           keycloakUrl: http://keycloak.{{ .Values.cluster.namespace }}.svc.cluster.local
@@ -467,8 +467,8 @@ spec:
           password: vault:{{ .Values.hashicorp.secretEngine }}/data/{{ .Values.cluster.commonToolsNamespace }}-redis#redis
         kafka:
           bootstrap-servers: kafka.{{ .Values.cluster.commonToolsNamespace }}.svc.cluster.local:9092   
-        hostT2: "tls.participant.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}"
-        authorityUrlT1: "https://authority.be.{{ .Values.namespaceTag.authority }}.{{ .Values.domainSuffix }}"
+        hostT2: "tls-participant-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}"
+        authorityUrlT1: "https://authority-be-{{ .Values.namespaceTag.authority }}-{{ .Values.domainSuffix }}"
         kafkaConfig:
           spring:
             kafka:
@@ -505,9 +505,9 @@ spec:
         {{- end }}
       values: |
         podAnnotations:
-          vault.security.banzaicloud.io/vault-addr: "https://vault.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
+          vault.security.banzaicloud.io/vault-addr: "https://vault-{{ .Values.namespaceTag.common }}-{{ .Values.domainSuffix }}"
           vault.security.banzaicloud.io/vault-role: {{ .Values.hashicorp.role }}
-        urlAuthorityT2: "https://tls.authority.{{ .Values.namespaceTag.authority }}.{{ .Values.domainSuffix }}"
+        urlAuthorityT2: "https://tls-authority-{{ .Values.namespaceTag.authority }}-{{ .Values.domainSuffix }}"
         db:
           url: "jdbc:postgresql://pg-cluster.{{ .Values.cluster.commonToolsNamespace }}.svc.cluster.local:5432/{{ .Values.cluster.namespace }}_authenticationprovider"
           username: {{ .Values.namespaceTag.dataprovider }}_authenticationprovider
@@ -519,7 +519,7 @@ spec:
           usersRolesUrl: http://users-roles.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
         simpl:
           certificate:
-            san: "tls.participant.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}"
+            san: "tls-participant-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}"
         redis:
           host: "redis-master.{{ .Values.cluster.commonToolsNamespace }}.svc.cluster.local"
           password: vault:{{ .Values.hashicorp.secretEngine }}/data/{{ .Values.cluster.commonToolsNamespace }}-redis#redis
@@ -561,22 +561,22 @@ spec:
       values: |
         ingress:
           hosts:
-            - host: sd-ui.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+            - host: sd-ui-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
               paths:
               - path: /
                 pathType: ImplementationSpecific
           tls:
             - secretName: sd-ui-tld-secret
               hosts:
-                - sd-ui.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+                - sd-ui-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
           annotations:
             cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
         env:
-          PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}"
+          PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}"
           PUBLIC_AUTH_KEYCLOAK_REALM: "participant"
           PUBLIC_AUTH_KEYCLOAK_CLIENT_ID: "frontend-cli"
-          PUBLIC_CREATION_WIZARD_API_URL: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/sdtooling-api"
-          PUBLIC_SIGNER_URL: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/signer"
+          PUBLIC_CREATION_WIZARD_API_URL: "https://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/sdtooling-api"
+          PUBLIC_SIGNER_URL: "https://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/signer"
         {{- if eq .Values.resourcePreset "low" }}
         resources:
           requests:
@@ -601,11 +601,11 @@ spec:
         {{- end }}
       values: |
         ingress:
-          host: edc.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+          host: edc-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
           clusterIssuer: {{ .Values.cluster.issuer }}
         deployment:
           host: {{ .Values.simpl_edc.nameOverride }}-service
-          callbackAddress: "https://tls.participant.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/edc"
+          callbackAddress: "https://tls-participant-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/edc"
         env:
           datasourceurl: "jdbc:postgresql://pg-cluster.{{ .Values.cluster.commonToolsNamespace }}.svc.cluster.local:5432/{{ .Values.cluster.namespace }}_edc"
           edcParticipantId: {{ .Values.cluster.namespace }}
@@ -613,7 +613,7 @@ spec:
           username: {{ .Values.cluster.namespace }}_edc
         hashicorp:
           role: {{ .Values.hashicorp.role }}
-          service: "https://vault.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
+          service: "https://vault-{{ .Values.namespaceTag.common }}-{{ .Values.domainSuffix }}"
         secretEngine: {{ .Values.hashicorp.secretEngine }}
         {{- if eq .Values.resourcePreset "low" }}
         resources:
@@ -638,14 +638,14 @@ spec:
         - $values/app-values/edc-connector-adapter/{{ . }}
         {{- end }}
       values: |
-        domain: {{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+        domain: {{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
         openapiConfig:
-          servers: https://edc-connector-adapter.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+          servers: https://edc-connector-adapter-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
         openTelemetry:
           otlpExporter:
-            endpoint: http://collector.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}
+            endpoint: http://collector-{{ .Values.namespaceTag.common }}-{{ .Values.domainSuffix }}
         edcConnector:
-          tier2BaseUrl: https://tls.participant.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/edc
+          tier2BaseUrl: https://tls-participant-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/edc
           participantId: {{ .Values.cluster.namespace }}
         {{- if eq .Values.resourcePreset "low" }}
         resources:
@@ -710,7 +710,7 @@ spec:
               statusUpdate: status-update-{{ .Values.cluster.namespace }}
           vault:
             hashicorp:
-              service: "https://vault.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
+              service: "https://vault-{{ .Values.namespaceTag.common }}-{{ .Values.domainSuffix }}"
               secretEngine: {{ .Values.hashicorp.secretEngine }}
               role: {{ .Values.hashicorp.role }}
         {{- if eq .Values.resourcePreset "low" }}
@@ -744,7 +744,7 @@ spec:
         {{- end }}
       values: |
         ingress:
-          hostname: files.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+          hostname: files-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
         {{- if eq .Values.resourcePreset "low" }}
         resources:
           requests:
@@ -772,15 +772,15 @@ spec:
         namespace: {{ .Values.cluster.namespace }}
         backend:
           podAnnotations:
-            vault.security.banzaicloud.io/vault-addr: "https://vault.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
+            vault.security.banzaicloud.io/vault-addr: "https://vault-{{ .Values.namespaceTag.common }}-{{ .Values.domainSuffix }}"
             vault.security.banzaicloud.io/vault-role: {{ .Values.hashicorp.role }}
             vault.security.banzaicloud.io/vault-ignore-missing-secrets: "true"
           env:
-            ALLOWED_ORIGINS: http://localhost:3001,https://{{ .Values.infrastructure_fe.fullnameOverride }}.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+            ALLOWED_ORIGINS: http://localhost:3001,https://{{ .Values.infrastructure_fe.fullnameOverride }}-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
             VAULT_TOKEN: vault:login
             SPRING_CLOUD_VAULT_TOKEN: "${VAULT_TOKEN}"
-            SPRING_CLOUD_VAULT_URI: "https://vault.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
-            SPRING_CLOUD_VAULT_URL: "https://vault.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}/v1/{{ .Values.hashicorp.secretEngine }}/data/users/"
+            SPRING_CLOUD_VAULT_URI: "https://vault-{{ .Values.namespaceTag.common }}-{{ .Values.domainSuffix }}"
+            SPRING_CLOUD_VAULT_URL: "https://vault-{{ .Values.namespaceTag.common }}-{{ .Values.domainSuffix }}/v1/{{ .Values.hashicorp.secretEngine }}/data/users/"
             SPRING_DATASOURCE_URL: jdbc:postgresql://pg-cluster.{{ .Values.cluster.commonToolsNamespace }}.svc.cluster.local:5432/{{ .Values.cluster.namespace }}_infrabe
             SPRING_FLYWAY_URL: jdbc:postgresql://pg-cluster.{{ .Values.cluster.commonToolsNamespace }}.svc.cluster.local:5432/{{ .Values.cluster.namespace }}_infrabe
             SPRING_FLYWAY_USER: {{ .Values.cluster.namespace }}_infrabe
@@ -788,20 +788,20 @@ spec:
             SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka.{{ .Values.cluster.commonToolsNamespace }}.svc.cluster.local:9092
             SPRING_CONFIG_IMPORT: "${SPRING_CONFIG_IMPORT_PREFIX}://{{ .Values.hashicorp.secretEngine }}/{{ .Values.cluster.namespace }}-infrastructure-be"
             SPRING_CONFIG_IMPORT_PREFIX: "vault"
-            SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/auth/realms/participant
+            SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/auth/realms/participant
             GITEA_URL: "http://gitea-http.{{ .Values.cluster.namespace }}.svc.cluster.local:3000/api/v1"
             GITEA_USER: {{ .Values.crossplane.gitea.username }}
             GITEA_PASSWORD: {{ .Values.crossplane.gitea.password }}
           ingress:
             hosts:
-              - host: {{ .Values.infrastructure_be.fullnameOverride }}.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+              - host: {{ .Values.infrastructure_be.fullnameOverride }}-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
                 paths:
                 - path: /
                   pathType: ImplementationSpecific
             tls:
               - secretName: {{ .Values.infrastructure_be.fullnameOverride }}-tld-secret
                 hosts:
-                  - {{ .Values.infrastructure_be.fullnameOverride }}.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+                  - {{ .Values.infrastructure_be.fullnameOverride }}-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
             annotations:
               cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
           {{- if eq .Values.resourcePreset "low" }}
@@ -827,20 +827,20 @@ spec:
       values: |
         namespace: {{ .Values.cluster.namespace }}
         env:
-          VITE_API_BASE_URL: "https://{{ .Values.infrastructure_be.fullnameOverride }}.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/api/infrastructureProvisioning/v1"
-          VITE_PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}"
+          VITE_API_BASE_URL: "https://{{ .Values.infrastructure_be.fullnameOverride }}-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/api/infrastructureProvisioning/v1"
+          VITE_PUBLIC_AUTH_KEYCLOAK_SERVER_URL: "https://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}"
           VITE_PUBLIC_AUTH_KEYCLOAK_REALM: "participant"
           VITE_PUBLIC_AUTH_KEYCLOAK_CLIENT_ID: "frontend-cli"
         ingress:
           hosts:
-            - host: {{ .Values.infrastructure_fe.fullnameOverride }}.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+            - host: {{ .Values.infrastructure_fe.fullnameOverride }}-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
               paths:
               - path: /
                 pathType: ImplementationSpecific
           tls:
             - secretName: {{ .Values.infrastructure_fe.fullnameOverride }}-tld-secret
               hosts:
-                - {{ .Values.infrastructure_fe.fullnameOverride }}.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+                - {{ .Values.infrastructure_fe.fullnameOverride }}-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
           annotations:
             cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.provisionerresources.projectID }}/packages/helm/stable"
@@ -854,7 +854,7 @@ spec:
         {{- end }}
       values: |
         podAnnotations:
-          vault.security.banzaicloud.io/vault-addr: "https://vault.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
+          vault.security.banzaicloud.io/vault-addr: "https://vault-{{ .Values.namespaceTag.common }}-{{ .Values.domainSuffix }}"
           vault.security.banzaicloud.io/vault-role: {{ .Values.hashicorp.role }}
         fullnameOverride: {{ .Values.provisionerresources.nameOverride }}
         kafkaEndpoint: kafka.{{ .Values.cluster.commonToolsNamespace }}.svc.cluster.local:9092
