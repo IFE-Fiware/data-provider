@@ -146,6 +146,7 @@ xfsc_advsearch_be:
   enabled:  true
   projectID: "891"
   targetRevision: 1.11.1-IFE
+  targetRevOrig: 1.11.1
   chart_name: xfsc-advsearch
   resources:
     requests:
