@@ -246,6 +246,7 @@ spec:
         image:
           repository: code.europa.eu:4567/simpl/simpl-open/development/xfsc_advsearch_be/xfsc_advsearch_be
           tag: {{ .Values.xfsc_advsearch_be.targetRevOrig }}
+        schemaPvcClass: rook-cephfs
   #    releaseName: {{ .Values.xfsc_advsearch_be.nameOverride }}
   {{- end }}    
   {{- if .Values.signer.enabled }}
