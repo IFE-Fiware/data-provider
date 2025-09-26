@@ -212,10 +212,11 @@ spec:
       releaseName: {{ .Values.sdtooling_validation_api_be.nameOverride }}
   {{- end }}    
   {{- if .Values.xfsc_advsearch_be.enabled }}
-  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.xfsc_advsearch_be.projectID }}/packages/helm/stable"
-    path: ''
+  # "https://code.europa.eu/api/v4/projects/{{ .Values.xfsc_advsearch_be.projectID }}/packages/helm/stable"
+  - repoURL: "https://github.com/IFE-Fiware/xfsc_advsearch_be.git"
+    path: 'charts'
     targetRevision: {{ .Values.xfsc_advsearch_be.targetRevision }}
-    chart: {{ .Values.xfsc_advsearch_be.chart_name }}
+  #  chart: {{ .Values.xfsc_advsearch_be.chart_name }}
     helm:
       valueFiles:
         {{- range .Values.xfsc_advsearch_be.valueFiles }}
@@ -242,7 +243,7 @@ spec:
         resources: {{- toYaml .Values.xfsc_advsearch_be.resources | nindent 10 }}
           {{- end }}
         {{- end }}
-      releaseName: {{ .Values.xfsc_advsearch_be.nameOverride }}
+  #    releaseName: {{ .Values.xfsc_advsearch_be.nameOverride }}
   {{- end }}    
   {{- if .Values.signer.enabled }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.signer.projectID }}/packages/helm/stable"
