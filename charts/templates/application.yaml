@@ -123,7 +123,7 @@ spec:
             url: https://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/user-api
         federatedCatalogue:
           tier2Gateway:
-            url: "https://tls.authority-{{ .Values.namespaceTag.authority }}-{{ .Values.domainSuffix }}"
+            url: "https://tls-authority-{{ .Values.namespaceTag.authority }}-{{ .Values.domainSuffix }}"
         openapiConfig:
           servers: https://creation-wizard-api-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
         connectorAdapter:
@@ -228,10 +228,10 @@ spec:
             url: http://participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}/user-api
         catalogueAdapter:
           tier2Gateway:
-            url: "https://tls.authority-{{ .Values.namespaceTag.authority }}-{{ .Values.domainSuffix }}"
+            url: "https://tls-authority-{{ .Values.namespaceTag.authority }}-{{ .Values.domainSuffix }}"
         federatedCatalogue:
           tier2Gateway:
-            url: "https://tls.authority-{{ .Values.namespaceTag.authority }}-{{ .Values.domainSuffix }}"
+            url: "https://tls-authority-{{ .Values.namespaceTag.authority }}-{{ .Values.domainSuffix }}"
         {{- if eq .Values.resourcePreset "low" }}
         resources:
           requests:
