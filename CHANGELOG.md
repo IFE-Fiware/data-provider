@@ -4,271 +4,250 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.1.4] - 2025-09-26
-
-- Authentication provider v2.0.2
-
-## [2.1.3] - 2025-09-22
-
-- bitnamilegacy related fixes
-
-## [2.1.2] - 2025-08-21
-- Update simpl-edc package to version 1.0.10.
-
-## [2.1.1] - 2025-07-22
-- Update infrastructure-crossplane package to version 1.2.1.
-
-## [2.1.0] - 2025-07-17
-- Updated many components to implement Data Provider version 2.1.0.
-- Remove component simpl-cli
+## [2.3.0] - 2025-10-10
+- Updated many components to implement Consumer version 2.3.0.
+- Add component Redis.
+- Add component Tier2-Proxy.
 
 
 ### Simpl Cloud gateway (Tier 1)
 
-#### 2.0.0 (2025-06-03)
+#### 2.4.0 (2025-09-08)
 
 #### Added
-- Added Configuration Properties section
-- Added the API Documentation section (merge request)
+- SIMPL-14971
+-
+#### Changed
+- SIMPL-15701
 
 
 ### Users Roles
 
-#### 2.0.0 (2025-06-03)
+#### 2.4.0 (2025-09-08)
 
 #### Added
-- Drop table identity attribute
-- Added Configuration Properties section
-- Added API Documentation section
-- Maven goal to automatically add openapi from simpl-api-iaa
-- Search roles by multiple names
+- SIMPL-14971
 
-#### Changed
-- Removed deprecated API
-- Removed ingress spec from chart
-- Removed keycloak.client-to-realm-role-migration properties
-- SIMPL-11765 Remove version v0 APIs fom IAA components
+#### Fixed
+- SIMPL-16771
 
 
 ### SIMPL FE
 
-#### 2.0.1 (2025-06-05)
-
-#### Changed
-- Fixed the display of assigned identity attributes and those for the user
-
-#### 2.0.0 (2025-06-03)
+#### 2.4.0 (2025-09-08)
 
 #### Added
-- SIMPL-10530
-- SIMPL-10533
-- SIMPL-11766
-- SIMPL-8228
-- SIMPL-8227
+- SIMPL-15662
+- SIMPL-15665
+- SIMPL-12865
+- SIMPL-15656
+- SIMPL-15655
 
-#### Changed
-- SIMPL-8338
+#### Fixed
+- SIMPL-15726
+- SIMPL-16121
+- SIMPL-15909
+- SIMPL-15909
 
 
 ### TLS Gateway (Tier 2)
 
-#### 2.0.0 (2025-06-03)
-No changes.
+#### 2.4.0 (2025-09-08)
 
-#### 1.5.2 (2025-05-14)
+#### Added
+- SIMPL-14971
+
+#### Fixed
+- SIMPL-10191
+
+
+### Tier 2 Proxy
+
+#### 1.0.1 (2025-08-06)
+
+#### Fixed
+- Fixed base docker image
+
 
 ### Authentication Provider
 
-#### 2.0.0 (2025-06-03)
+#### 2.4.2 (2025-09-26)
+
+#### Fixed
+- Identity Attributes of local copy get creationTimestamp and updateTimestamp from authority synchronization flow
+- SIMPL-13018
+
+#### 2.4.1 (2025-09-18)
+No changes.
+
+#### 2.4.0 (2025-09-08)
 
 #### Added
-- Maven goal to automatically add openapi from simpl-api-iaa
-- SIMPL-12367 Integrate the reviewed APIs into the Keycloak Authenticator extension
-- Added Configuration Properties section
-- Added the API Documentation section
-
-#### Changed
-- Removed microservice.users-roles.url property
-- Removed deprecated API
-- CredentialInitializerImpl
-- Removed ingress spec from chart
-- SIMPL-11765 Remove version v0 APIs fom IAA components
+- Added unique constraint on private_key.keypair_id column
+- SIMPL-14971
+- SIMPL-12990
 
 
 ### sd-creator-backend
 
-#### 1.12.2 (2025-07-03)
+#### 1.15.2 (2025-09-15)
+
+#### Fixed
+- SIMPL-16767
 
 #### Changed
-- SIMPL-14932
-- 
-#### 1.12.1 (2025-06-30)
+- simpl-data1-common upgraded to 1.4.1 to enable request uri tracing in
 
-#### Changed
-- SIMPL-13505
+#### 1.15.1 (2025-09-09)
+No changes.
 
-#### 1.12.0 (2025-06-19)
+#### 1.15.0 (2025-09-04)
 
 #### Added
-- SIMPL-13521 Added ArgoCD manifests
+- SIMPL-17313
+- SIMPL-15584
+- SIMPL-15289
 
 #### Changed
-- error responses aligned to belgif problem model
-- aligned to simpl-data1-common to version 1.1.0 to use belgif Problem
-- SIMPL-2766 Deleted unused settings
+- SIMPL-17453
+- SIMPL-8416
+- SIMPL-2775
+
+
+### sd-creator-frontend
+
+#### 1.2.3 (2025-09-02)
+
+#### Fixed
+- SIMPL-17423
 
 
 ### sdtooling-validation-api-be
 
-#### 1.10.0 (2025-05-29)
+#### 1.14.0 (2025-09-04)
 
 #### Added
-- SIMPL-12098
-- SIMPL-12291
-- SIMPL-12999
+- SIMPL-17313
 
 
 ### xsfc-advsearch-be
 
-#### 1.11.1 (2025-06-30)
+#### 1.14.1 (2025-09-04)
+No changes.
 
-#### Changed
-- SIMPL-13505
-
-#### 1.11.0 (2025-06-19)
+#### 1.14.0 (2025-09-20)
 
 #### Added
-- SIMPL-13521 Added ArgoCD manifests.
+- SIMPL-17313
 
-#### Changed
-- SIMPL-14205
-- error responses aligned to belgif problem model
-- spring upgraded from 3.4.4 to 3.4.5 to fix tomcat security issue on
+#### Fixed
+- SIMPL-17434
 
 
 ### edc connector adapter
 
-#### 1.3.0 (2025-06-19)
+#### 1.6.0 (2025-09-04)
 
 #### Added
-- added new key in values.yaml to specify a different service name in open
-- SIMPL-13521 Added ArgoCD manifests.
-
-#### Changed
-- error responses aligned to belgif problem model
-- aligned to simpl-data1-common version 1.1.0 to support belgif problem
+- SIMPL-17313
 
 #### Fixed
-- fixed RegistationControlle register() error handling for missing
+- SIMPL-8258
 
 
 ### simpl-edc
 
-#### 1.0.7 (2025-07-04)
-
-#### Added
-- SIMPL-14638 added logger
+#### 1.0.11 (2025-09-05)
 
 #### Changed
-- SIMPL-14638 changed auth provider url
-- SIMPL-14638 solved sonar issues
-- SIMPL-14638 removed creds
-- SIMPL-14638 update SIMPL-EDC with new version of the simpl-http library
-- SIMPL-14638 updated connector-core to 1.1.5
+- SIMPL-14812 fix sonar issues
 
 
 ### simpl-catalogue-client
 
-#### 1.2.1 (2025-05-09)
+#### 1.2.6 (2025-09-30)
+No changes.
+
+#### 1.2.5 (2025-08-04)
 
 #### Added
-- Classes to elements to aid testing
-- Unit tests to increase code coverage to 80%
+- SIMPL-14811
+
+#### Changed
+- SIMPL-14790
+
+#### Fixed
+- SIMPL-10725
 
 
 ### simpl-files
 
-#### 1.0.0 (2025-05-08)
+#### 1.1.0 (2025-08-06)
 
 #### Changed
-- Improved Dockerfile for use simpluser
+- SIMPL-16125
 
 
 ### infrastructure-be
 
-#### 1.0.4 (2025-06-16)
-
-#### Fixed
-- Fixed container port issue
-
-#### 1.0.3 (2025-06-16)
+#### 1.0.7 (2025-09-03)
 
 #### Added
-- SIMPL-13370
+- SIMPL-16167
+- SIMPL-16422
+- SIMPL-16420
+- SIMPL-16169
+- SIMPL-16369
+- SIMPL-16588
+- SIMPL-16765
+- SIMPL-16167
+- SIMPL-16165
 
 #### Changed
-- SIMPL-14134
-- SIMPL-13510
-- SIMPL-13370
-- Changed authentication and project version upgrade
-- SIMPL-13625
-- SIMPL-12943
-- SIMPL-12946
-- SIMPL-12943
+- SIMPL-16167
+- SIMPL-17095
+- SIMPL-15623
+- SIMPL-16167
 
 #### Fixed
-- SIMPL-14134
-- SIMPL-13370
-- SIMPL-13625
-
-#### 1.0.2 (2025-06-02)
-
-#### Changed
-- Changed authentication and project version upgrade
+- SIMPL-16165
 
 
 ### infrastructure-fe
 
-#### 0.2.6 (2025-06-18)
-No changes.
-
-#### 0.2.5 (2025-06-18)
+#### 1.0.0 (2025-09-04)
 
 #### Added
-- SIMPL-1289
-- SIMPL-11343
+- SIMPL-17022
+- SIMPL-17091
+- SIMPL-16761
+- SIMPL-16179
 
 #### Changed
-- SIMPL-1289
-- SIMPL-13370
-
-#### Fixed
-- SIMPL-1289
-
-#### 0.2.4 (2025-05-27)
-
-#### Added
-- SIMPL-12091
-
-#### Changed
-- SIMPL-12091
+- SIMPL-17091
+- SIMPL-17022
+- SIMPL-17025
+- SIMPL-16179
 
 
 ### infrastructure-crossplane
 
-#### 1.2.0 (2025-06-24)
-
-#### Added
-- SIMPL-12229
+#### 1.2.3 (2025-09-16)
+No changes.
 
 
 ### Filebeat
 
-#### 0.1.15 (2025-06-05)
+#### 0.1.18 (2025-09-04)
+No changes.
+
+
+### Contract Manager
+
+#### 2.0.9 (2025-10-02)
+No changes.
+
+#### 2.0.6 (2025-09-03)
 
 #### Changed
-- Edited dashboard for heartbeat
-- SIMPL-13099
-- SIMPL-12666 Removed unused fields
-- Changed configuration because of change in business pods names.
-- SIMPL-12666 Remove unused fields
+- SIMPL-15093
