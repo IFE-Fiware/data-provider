@@ -207,4 +207,11 @@ spec:
         fullnameOverride: {{ .Values.fluxcd.nameOverride }}
         policies:
           create: false
+  - repoURL: {{ .Values.eso.repo_URL }}
+    targetRevision: {{ .Values.eso.targetRevision }}
+    chart: {{ .Values.eso.chart_name }}
+    helm:
+      releaseName: {{ .Values.eso.nameOverride }}
+      values: |
+        fullnameOverride: {{ .Values.eso.nameOverride }}
 {{- end }}
