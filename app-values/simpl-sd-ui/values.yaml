@@ -93,3 +93,8 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+env:
+  PUBLIC_AUTH_KEYCLOAK_REALM: "participant"
+  PUBLIC_AUTH_KEYCLOAK_CLIENT_ID: "frontend-cli"
+  PUBLIC_CREATION_WIZARD_API_VERSION: ""

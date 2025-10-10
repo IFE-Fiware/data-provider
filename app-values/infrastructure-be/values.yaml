@@ -2,60 +2,6 @@ postgres:
   enabled: false
 kafka:
   enabled: false
-service:
-  type: ClusterIP
-  port: 80
-scriptdb:
-  db: scripts-db
-  user: ionos-script
-  password: IonSs_240711
-  volumeSize: 10G
-  storageClassName: csi-cinder-high-speed
-giteadb:
-  db: gitea-db
-  user: ionos-gitea
-  password: IonSg_240711
-  volumeSize: 10G
-  storageClassName: csi-cinder-high-speed
-gitea:
-  user:
-    uid: "'1000'"
-    gid: "'1000'"
-  security:
-    installLock: "'true'"
-  db:
-    type: postgres
-    host: gitea-db:5432
-    name: gitea-db
-    user: ionos-gitea
-    password: IonSg_240711
-  volumeSize: 10G
-  storageClassName: csi-cinder-high-speed
-api:
-  postgres:
-    host: scripts-db
-  spring:
-    datasource:
-      username: ionos-script
-      password: IonSs_240711
-    jpa:
-      hibernateddlauto: update
-      showsql: "'false'"
-      defer:
-        datasource:
-          initialization: "'true'"
-      properties:
-        hibernate:
-          dialect: org.hibernate.dialect.PostgreSQLDialect
-    sql:
-      initmode: always
-  gitea:
-    url: http://gitea:3000/api/v1
-    user: ionos-gitea
-    password: ionos-gitea-pwd
-    mail: ionos@ionos.com
-ui:
-  apibaseurl: http://api:8080/
 image:
   docker_enable: false  
 backend:
@@ -100,8 +46,4 @@ backend:
     MALICIOUS_PATTERN_XSSI: 'vbscript:'
     MALICIOUS_PATTERN_XSSJ: onload(.*?)=
     MALICIOUS_PATTERN_SHELL: \\b(ls|cat|echo|rm|cd|cp|mv|wget|curl)\\b
-    KAFKA_PROVISIONING_REQUESTS_TOPIC_NAME: to-provision
-    KAFKA_PROVISIONING_RESPONSES_TOPIC_NAME: provisioned
-    KAFKA_DECOMMISSIONING_REQUESTS_TOPIC_NAME: to-decommission
-    KAFKA_DECOMMISSIONING_RESPONSES_TOPIC_NAME: decommissioned
     REQUEST_MATCHERS_PERMITTED: /status/**,/swagger-ui.html,/swagger-ui/**,/v3/api-docs/**,/scripts/trigger
