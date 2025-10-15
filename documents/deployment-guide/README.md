@@ -86,14 +86,15 @@ Before you proceed with the next steps related to accessing your Vault and chang
 
 ##### Secret for Infrastructure-be
 
-Edit the key for Infrastructure-be named "*dataprovider01*-infrastructure-be" where the first part reflects the namespace of your dataprovider. Only ionos smtp server is supported at the moment so you need to provide the password and username for it. 
+Edit the key for Infrastructure-be named "*dataprovider01*-infrastructure-be" where the first part reflects the namespace of your dataprovider. Only ionos smtp server is supported at the moment so you need to provide the password and username for it. Please contact IONOS to get the correct values. Currently the best way is to send an email requesting this data to Paulo Cabrita: paulo.cabrita@ionos.com
 
-You need to modify:
+You need to modify or add:
 
-| Variable name                 |     Example                | Description              |
-| ----------------------        |     :-----:                | ---------------          |
-| spring.mail.password          | smtppassword               | Password for smtp server |
-| spring.mail.username          | no-reply@simplservices.com | Username for smtp server |
+| Variable name                   |     Example                | Description                   |
+| ----------------------          |     :-----:                | ---------------               |
+| infrastructure.api.config.value | Bearer tok_uid-string      | Token from ionos for infra-be |
+| spring.mail.password            | smtppassword               | Password for smtp server      |
+| spring.mail.username            | no-reply@simplservices.com | Username for smtp server      |
 
 ##### Secret for simpl-edc
 
@@ -130,11 +131,11 @@ spec:
   source:
     repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
     path: '""'
-    targetRevision: 2.3.0                   # version of package
+    targetRevision: 2.3.1                   # version of package
     helm:
       values: |
         values:
-          branch: v2.3.0                    # branch of repo with values - for released version it should be the release branch
+          branch: v2.3.1                    # branch of repo with values - for released version it should be the release branch
         project: default
         namespaceTag:
           dataprovider: dataprovider01      # identifier of deployment and part of fqdn for this agent
@@ -187,7 +188,7 @@ There are a couple of variables you need to replace - described below. The rest 
 
 ```yaml
 values:
-  branch: v2.3.0                    # branch of repo with values - for released version it should be the release branch
+  branch: v2.3.1                    # branch of repo with values - for released version it should be the release branch
 project: default
 namespaceTag:
   dataprovider: dataprovider01      # identifier of deployment and part of fqdn for this agent
