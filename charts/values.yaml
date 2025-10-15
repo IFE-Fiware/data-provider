@@ -1,6 +1,6 @@
 values:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git
-  branch: v2.3.0
+  branch: v2.3.1
 
 project: ${PROJECT}
 domainSuffix: ${DOMAINSUFFIX}
@@ -174,7 +174,7 @@ sdtooling_validation_api_be:
 xfsc_advsearch_be:
   enabled:  true
   projectID: "891"
-  targetRevision: 1.14.1
+  targetRevision: 1.14.2
   chart_name: xfsc-advsearch
   resources:
     requests:
@@ -219,7 +219,7 @@ simpl_fe:
 sd_ui:
   enabled: true
   projectID: "923"
-  targetRevision: 1.2.3
+  targetRevision: 1.2.4
   chart_name: sd-ui
   resources:
     requests:
@@ -325,7 +325,7 @@ edc_connector_adapter:
 simpl_catalogue_client:
   enabled: true
   projectID: "937"
-  targetRevision: 1.2.6
+  targetRevision: 1.2.7
   chart_name: catalogue-ui
   resources:
     requests:
