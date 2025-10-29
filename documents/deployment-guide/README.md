@@ -8,20 +8,20 @@
     - [DNS entries](#dns-entries)
   - [Deployment](#deployment)
     - [Preliminary tasks](#preliminary-tasks)
-      - [Vault related tasks](#vault-related-tasks)
+      - [OpenBao related tasks](#openbao-related-tasks)
         - [Secret for Infrastructure-be](#secret-for-infrastructure-be)
-        - [Secret for Simpl-edc](#secret-for-simpl-edc)
+        - [Secret for simpl-edc](#secret-for-simpl-edc)
     - [Deployment using ArgoCD](#deployment-using-argocd)
     - [Manual deployment](#manual-deployment)
       - [Files preparation](#files-preparation)
-      - [Deployment](#deployment-1)
+      - [Deployment Command to execute](#deployment-command-to-execute)
     - [Verification of deployment](#verification-of-deployment)
   - [Additional steps and remarks](#additional-steps-and-remarks)
     - [Onboarding](#onboarding)
     - [Tier2-proxy status](#tier2-proxy-status)
     - [Monitoring](#monitoring)
-  - [Troubleshooting](#troubleshooting-)
-<!-- TOC -->
+  - [Troubleshooting](#troubleshooting)
+<!-- /TOC -->
 
 ## Description
 
@@ -44,7 +44,7 @@ This repo contains:
 | nfs-provisioner     | 4.0.x or newer  | Backend for *Read/Write many* volumes. <br/> Other version *might* work but tests were performed using 4.0.x version. <br/> Image used: `registry.k8s.io/sig-storage/nfs-provisioner:v4.0.8` |
 | argocd              | 2.11.x or newer | Used as GitOps tool . App of apps concept. <br/> Other version *might* work but tests were performed using 2.11.x version. <br/> Image used: `quay.io/argoproj/argocd:v2.11.3`            |
 
-### DNS entries 
+### DNS entries
 
 If you're not using external-dns, you will need to add the following dns entries manually.
 
@@ -57,7 +57,7 @@ If you're not using external-dns, you will need to add the following dns entries
 | infrastructure-argo-workflows-server | argoworkflows.crossplane.(namespaceTag).(domainSuffix) |
 | infrastructure-be-infrastructure-be | infrastructure-be.(namespaceTag).(domainSuffix) |
 | infrastructure-fe-frontend | infrastructure-fe.(namespaceTag).(domainSuffix) |
-| redis-commander		     | redis-commander.(namespaceTag).(domainSuffix) |
+| redis-commander     | redis-commander.(namespaceTag).(domainSuffix) |
 | sd-creation-wizard-api | creation-wizard-api.(namespaceTag).(domainSuffix) |
 | sd-ui                  | sd-ui.(namespaceTag).(domainSuffix) |
 | signer                 | signer.(namespaceTag).(domainSuffix) |
@@ -73,32 +73,32 @@ The deployment is based on master helm chart which, when applied on Kubernetes c
 
 ### Preliminary tasks
 
-#### Vault related tasks
+#### OpenBao related tasks
 
-You can access vault on <https://secrets.**commonnamespacetag**.**domainSuffix**>
+You can access OpenBao on <https://secrets.**commonnamespacetag**.**domainSuffix**>
 Root token can be found in common namespace, secret secrets-root-token, in key token.
 
-The description of using vault is in a separate document:
+The description of using OpenBao is in a separate document:
 
-https://code.europa.eu/simpl/simpl-open/development/agents/common_components/-/blob/main/documents/user-manual/Using_Vault.md
+<https://code.europa.eu/simpl/simpl-open/development/agents/common_components/-/blob/main/documents/user-manual/Using_OpenBao.md>
 
-Before you proceed with the next steps related to accessing your Vault and changing its contents, please read the document above.<BR>
+Before you proceed with the next steps related to accessing your OpenBao and changing its contents, please read the document above.<BR>
 
 ##### Secret for Infrastructure-be
 
-Edit the key for Infrastructure-be named "*dataprovider01*-infrastructure-be" where the first part reflects the namespace of your dataprovider. Only ionos smtp server is supported at the moment so you need to provide the password and username for it. Please contact IONOS to get the correct values. Currently the best way is to send an email requesting this data to Paulo Cabrita: paulo.cabrita@ionos.com
+Edit the key for Infrastructure-be named "*dataprovider01*-infrastructure-be" where the first part reflects the namespace of your dataprovider. Only ionos smtp server is supported at the moment so you need to provide the password and username for it. Please contact IONOS to get the correct values. Currently the best way is to send an email requesting this data to Paulo Cabrita: <paulo.cabrita@ionos.com>
 
 You need to modify or add:
 
-| Variable name                   |     Example                | Description                   |
-| ----------------------          |     :-----:                | ---------------               |
-| infrastructure.api.config.value | Bearer tok_uid-string      | Token from ionos for infra-be |
-| spring.mail.password            | smtppassword               | Password for smtp server      |
-| spring.mail.username            | no-reply@simplservices.com | Username for smtp server      |
+| Variable name                   |     Example                  | Description                   |
+| ----------------------          |     :-----:                  | ---------------               |
+| infrastructure.api.config.value | Bearer tok_uid-string        | Token from ionos for infra-be |
+| spring.mail.password            | smtppassword                 | Password for smtp server      |
+| spring.mail.username            | <no-reply@simplservices.com> | Username for smtp server      |
 
 ##### Secret for simpl-edc
 
-Edit the key for Infrastructure-be named "*dataprovider01*-simpl-edc" where the first part reflects the namespace of your dataprovider. Please contact IONOS to get the correct values. Currently the best way is to send an email requesting this data to Paulo Cabrita: paulo.cabrita@ionos.com
+Edit the key for Infrastructure-be named "*dataprovider01*-simpl-edc" where the first part reflects the namespace of your dataprovider. Please contact IONOS to get the correct values. Currently the best way is to send an email requesting this data to Paulo Cabrita: <paulo.cabrita@ionos.com>
 
 You need to modify:
 
@@ -152,13 +152,13 @@ spec:
           commonToolsNamespace: common01    # namespace where main monitoring stack is deployed
           issuer: dev-prod                  # issuer of certificates
         secrets:
-          role: example-role                # role created in vault for access
-          secretEngine: example             # secret engine name created in vault
+          role: example-role                # role created in OpenBao for access
+          secretEngine: example             # secret engine name created in OpenBao
         crossplane:
           enabled: true                     # if infrastructure components should be deployed (there can be only one instance per cluster)
           kafka:
             username: user                  # name should be: namespace_infrabe e.g.: dataprovider01_infrabe
-            password: pass                  # take the password from common01-kafka-credentials vault secret, key dataprovider01_infrabe
+            password: pass                  # take the password from common01-kafka-credentials OpenBao secret, key dataprovider01_infrabe
           gitea:
             username: gitops_test           # username of gitea
             password: pass                  # password of gitea - the variable is prepared for future use. Currently, access is performed without logging in, so the variable can take on any value (set it to your preference)
@@ -205,13 +205,13 @@ cluster:
   commonToolsNamespace: common01    # namespace where main monitoring stack is deployed
   issuer: dev-prod                  # issuer of certificates
 secrets:
-  role: example-role                # role created in vault for access
-  secretEngine: example             # secret engine name created in vault
+  role: example-role                # role created in OpenBao for access
+  secretEngine: example             # secret engine name created in OpenBao
 crossplane:
   enabled: true                     # if infrastructure components should be deployed (there can be only one instance per cluster)
   kafka:
     username: dataprovider01_infrabe # name should be: namespace_infrabe e.g.: dataprovider01_infrabe
-    password: pass                  # take the password from common01-kafka-credentials vault secret, key dataprovider01_infrabe
+    password: pass                  # take the password from common01-kafka-credentials OpenBao secret, key dataprovider01_infrabe
   gitea:
     username: gitops_test           # username of gitea
     password: pass                  #  - the variable is prepared for future use. Currently, access is performed without logging in, so the variable can take on any value (set it to your preference)
@@ -226,10 +226,10 @@ monitoring:
   enabled: true                     # should monitoring be enabled
 ```
 
-#### Deployment
+#### Deployment Command to execute
 
-After you have prepared the values file, you can start the deployment. 
-Use the command prompt. Proceed to the folder where you have the Chart.yaml file and execute the following command. The dot at the end is crucial - it points to current folder to look for the chart. 
+After you have prepared the values file, you can start the deployment.
+Use the command prompt. Proceed to the folder where you have the Chart.yaml file and execute the following command. The dot at the end is crucial - it points to current folder to look for the chart.
 
 Now you can deploy the agent:
 
@@ -253,10 +253,11 @@ At the end, all pods should be created correctly:
 
 ### Onboarding
 
-After the deployment process is complete, a manual onboarding process of the participant is required. 
+After the deployment process is complete, a manual onboarding process of the participant is required.
 
 The steps are described in the document:
-https://code.europa.eu/simpl/simpl-open/development/iaa/documentation/-/blob/main/versioned_docs/2.4.x/user-manual/ONBOARD.md
+
+<https://code.europa.eu/simpl/simpl-open/development/iaa/documentation/-/blob/main/versioned_docs/2.4.x/user-manual/ONBOARD.md>
 
 ### Tier2-proxy status
 
