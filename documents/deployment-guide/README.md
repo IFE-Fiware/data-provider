@@ -131,11 +131,11 @@ spec:
   source:
     repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
     path: '""'
-    targetRevision: 2.3.3                   # version of package
+    targetRevision: 2.3.4                   # version of package
     helm:
       values: |
         values:
-          branch: v2.3.3                    # branch of repo with values - for released version it should be the release branch
+          branch: v2.3.4                    # branch of repo with values - for released version it should be the release branch
         project: default
         namespaceTag:
           dataprovider: dataprovider01      # identifier of deployment and part of fqdn for this agent
@@ -188,7 +188,7 @@ There are a couple of variables you need to replace - described below. The rest 
 
 ```yaml
 values:
-  branch: v2.3.3                    # branch of repo with values - for released version it should be the release branch
+  branch: v2.3.4                    # branch of repo with values - for released version it should be the release branch
 project: default
 namespaceTag:
   dataprovider: dataprovider01      # identifier of deployment and part of fqdn for this agent
