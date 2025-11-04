@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.5] - 2025-11-04
+
+- Fixed ClusterIssuer for SDTooling-API-BE, EDC-Connector-Adapter and XFSC-AdvSearch-BE ingresses (SIMPL-15891)
+- Moved infrastructure-crossplane and tofu controller to dependencies (SIMPL-19845)
+
 ## [2.3.4] - 2025-10-31
 
 - Replaced HashiCorp Vault by OpenBao
@@ -95,12 +100,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### 2.4.2 (2025-09-26)
 
 #### Fixed
-
 - Identity Attributes of local copy get creationTimestamp and updateTimestamp from authority synchronization flow
 - SIMPL-13018
 
 #### 2.4.1 (2025-09-18)
-
 No changes.
 
 #### 2.4.0 (2025-09-08)
@@ -196,7 +199,6 @@ No changes.
 ### simpl-catalogue-client
 
 #### 1.2.6 (2025-09-30)
-
 No changes.
 
 #### 1.2.5 (2025-08-04)
@@ -226,7 +228,6 @@ No changes.
 #### 1.0.7 (2025-09-03)
 
 #### Added
-
 - SIMPL-16167
 - SIMPL-16422
 - SIMPL-16420
@@ -238,7 +239,6 @@ No changes.
 - SIMPL-16165
 
 #### Changed
-
 - SIMPL-16167
 - SIMPL-17095
 - SIMPL-15623
@@ -253,7 +253,6 @@ No changes.
 #### 1.0.0 (2025-09-04)
 
 #### Added
-
 - SIMPL-17022
 - SIMPL-17091
 - SIMPL-16761
@@ -287,5 +286,4 @@ No changes.
 #### 2.0.6 (2025-09-03)
 
 #### Changed
-
 - SIMPL-15093
