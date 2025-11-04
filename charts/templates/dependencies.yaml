@@ -214,4 +214,42 @@ spec:
       releaseName: {{ .Values.eso.nameOverride }}
       values: |
         fullnameOverride: {{ .Values.eso.nameOverride }}
+  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.provisionerresources.projectID }}/packages/helm/stable"
+    targetRevision: {{ .Values.provisionerresources.targetRevision }}
+    chart: {{ .Values.provisionerresources.chart_name }}
+    helm:
+      releaseName: {{ .Values.provisionerresources.nameOverride }}
+      valueFiles:
+        {{- range .Values.provisionerresources.valueFiles }}
+        - $values/app-values/provisioner-resources/{{ . }}
+        {{- end }}
+      values: |
+        podAnnotations:
+          vault.security.banzaicloud.io/vault-addr: "https://secrets.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
+          vault.security.banzaicloud.io/vault-role: {{ .Values.secrets.role }}
+        fullnameOverride: {{ .Values.provisionerresources.nameOverride }}
+        kafkaEndpoint: kafka.{{ .Values.cluster.commonToolsNamespace }}.svc.cluster.local:9092
+        giteaUrl: gitea-http.{{ .Values.cluster.namespace }}.svc.cluster.local:3000
+        vaultServer: "https://secrets.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
+        secrets:
+          ionos:
+            token: {{ .Values.crossplane.ionos.token }}
+          kafka:
+            username: {{ .Values.crossplane.kafka.username }}
+            password: {{ .Values.crossplane.kafka.password }}
+          gitea:
+            username: {{ .Values.crossplane.gitea.username }}
+            password: {{ .Values.crossplane.gitea.password }}
+          ovh:
+            application_key: {{ .Values.crossplane.ovh.application_key }}
+            application_secret: {{ .Values.crossplane.ovh.application_secret }}
+            consumer_key: {{ .Values.crossplane.ovh.consumer_key }}
+            endpoint: {{ .Values.crossplane.ovh.endpoint }}
+  - repoURL: {{ .Values.tfcontroller.repo_URL }}
+    targetRevision: {{ .Values.tfcontroller.targetRevision }}
+    chart: {{ .Values.tfcontroller.chart_name }}
+    helm:
+      releaseName: {{ .Values.tfcontroller.nameOverride }}
+      values: |
+        fullnameOverride: {{ .Values.tfcontroller.nameOverride }}
 {{- end }}
