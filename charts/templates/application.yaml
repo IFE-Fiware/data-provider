@@ -833,6 +833,7 @@ spec:
       values: |
         ingress:
           hostname: files.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+          clusterIssuer: {{ .Values.cluster.issuer }}
         {{- if eq .Values.resourcePreset "low" }}
         resources:
           requests:
