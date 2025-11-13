@@ -43,12 +43,26 @@ appConfig:
     public-urls:
       - method: "GET"
         path: "/actuator/health/**"
+      - method: GET
+        path: "/sdtooling-api/swagger-ui/**"
+      - method: GET
+        path: "/sdtooling-api/api-docs/**"
+      - method: GET
+        path: "/sdtooling-api/status"
     rbac:
       - path: "/edc-connector-adapter/api/*/registration/register"
         method: GET
         roles:
           - SD_PUBLISHER
       - path: "/edc-connector-adapter/api/*/configuration/participant"
+        method: POST
+        roles:
+          - SD_PUBLISHER
+      - path: "/sdtooling-api/**"
+        method: GET
+        roles:
+          - SD_PUBLISHER
+      - path: "/sdtooling-api/**"
         method: POST
         roles:
           - SD_PUBLISHER
