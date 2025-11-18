@@ -37,7 +37,7 @@ This repo contains:
 | Pre-Requisites      |     Version     | Description  |
 |:-------------------:|:---------------:|:------------:|
 | DNS sub-domain name    |       N/A       | This domain will be used to address all services of the agent. <br/> example: `*.dataprovider01.example.com` |
-| external-dns    | bitnami/external-dns:0.16.1 | Currently version docker.io/bitnami/external-dns:0.16.1-debian-12-r should be used as externaldns. Unfortunately, using a newer version caused DNS to work incorrectly. |  
+| external-dns    | 0.16.1 or newer | Used for DNS entries creation. <br/> Other version *might* work but tests were performed using 0.16.1-debian-12-r6 version. <br/> Image used: `docker.io/bitnamilegacy/external-dns:0.16.1-debian-12-r6` |  
 | Kubernetes Cluster  | 1.29.x or newer | Other version *might* work but tests were performed using 1.29.x version                                                                                                                     |
 | nginx-ingress       | 1.10.x or newer | Used as ingress controller. <br/> Other version *might* work but tests were performed using 1.10.x version. <br/> Image used: `registry.k8s.io/ingress-nginx/controller:v1.10.0`          |
 | cert-manager        | 1.15.x or newer | Used for automatic cert management. <br/> Other version *might* work but tests were performed using 1.15.x version. <br/> Image used: `quay.io/jetstack/cert-manager-controller:v1.15.3`    |
@@ -51,21 +51,17 @@ If you're not using external-dns, you will need to add the following dns entries
 | Entry Name | Entries |
 | ------------- | --------------------------------------------------------------------------------------------------- |
 | catalogue-ui           | catalogue-ui.(namespaceTag).(domainSuffix) |
-| edc-connector-adapter  | edc-connector-adapter.(namespaceTag).(domainSuffix) |
 | gitea-http             | gitea.crossplane.(namespaceTag).(domainSuffix) |
 | infrastructure-argo-cd-server | argoui.crossplane.(namespaceTag).(domainSuffix) |
 | infrastructure-argo-workflows-server | argoworkflows.crossplane.(namespaceTag).(domainSuffix) |
-| infrastructure-be-infrastructure-be | infrastructure-be.(namespaceTag).(domainSuffix) |
+| infrastructure-be | infrastructure-be.(namespaceTag).(domainSuffix) |
 | infrastructure-fe-frontend | infrastructure-fe.(namespaceTag).(domainSuffix) |
 | redis-commander     | redis-commander.(namespaceTag).(domainSuffix) |
-| sd-creation-wizard-api | creation-wizard-api.(namespaceTag).(domainSuffix) |
 | sd-ui                  | sd-ui.(namespaceTag).(domainSuffix) |
-| signer                 | signer.(namespaceTag).(domainSuffix) |
-| simpl-edc-ingress      | edc.(namespaceTag).(domainSuffix)/management<br>edc.(namespaceTag).(domainSuffix)/api<br>edc.(namespaceTag).(domainSuffix)/protocol<br>edc.(namespaceTag).(domainSuffix)/public<br>  edc.(namespaceTag).(domainSuffix)/control |
 | simpl-fe-ingress       | participant.fe.(namespaceTag).(domainSuffix)/users-roles<br>  participant.fe.(namespaceTag).(domainSuffix)/participant-utility |
 | simpl-files            | files.(namespaceTag).(domainSuffix) |
 | simpl-ingress          | participant.be.(namespaceTag).(domainSuffix) |
-| xfsc-advsearch-be      | xfsc-advsearch-be.(namespaceTag).(domainSuffix) |
+| tier2-gateway          | tls.participant.(namespaceTag).(domainSuffix) |
 
 ## Deployment
 
@@ -88,13 +84,33 @@ Before you proceed with the next steps related to accessing your OpenBao and cha
 
 Edit the key for Infrastructure-be named "*dataprovider01*-infrastructure-be" where the first part reflects the namespace of your dataprovider. Only ionos smtp server is supported at the moment so you need to provide the password and username for it. Please contact IONOS to get the correct values. Currently the best way is to send an email requesting this data to Paulo Cabrita: <paulo.cabrita@ionos.com>
 
-You need to modify or add:
+You can only request the token after the provider is deployed, so after you've changed the values in the secret, you need to restart the infrastructure-be pod. 
+To get the value for gitea.token, you can execute the following command. Replace the values in brackets with variables from your Dataprovider deployment.
 
-| Variable name                   |     Example                  | Description                   |
-| ----------------------          |     :-----:                  | ---------------               |
-| infrastructure.api.config.value | Bearer tok_uid-string        | Token from ionos for infra-be |
-| spring.mail.password            | smtppassword                 | Password for smtp server      |
-| spring.mail.username            | <no-reply@simplservices.com> | Username for smtp server      |
+```bash
+curl -X POST "https://gitea.crossplane.(namespaceTag).(domainSuffix)/api/v1/users/(gitea.username)/tokens" \
+  -u (gitea.username):(gitea.password) \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "token-name",
+    "scopes": ["all"]
+  }'
+```
+
+After the command is processed you will get a result like this:
+```bash
+{"id":3,"name":"token-name","sha1":"(giteatoken)","token_last_eight":"example","scopes":null}
+```
+Put in the secret below the value of the "sha1" key. 
+
+In the secret, you need to modify or add:
+
+| Variable name                   |     Example                | Description                   |
+| ----------------------          |     :-----:                | ---------------               |
+| gitea.token                     | giteatoken                 | Token to access gitea         |
+| infrastructure.api.config.value | Bearer tok_uid-string      | Token from ionos for infra-be |
+| spring.mail.password            | smtppassword               | Password for smtp server      |
+| spring.mail.username            | <no-reply@simplservices.com> | Username for smtp server    |
 
 ##### Secret for simpl-edc
 
@@ -131,11 +147,11 @@ spec:
   source:
     repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
     path: '""'
-    targetRevision: 2.3.7                   # version of package
+    targetRevision: 2.4.0                   # version of package
     helm:
       values: |
         values:
-          branch: v2.3.7                    # branch of repo with values - for released version it should be the release branch
+          branch: v2.4.0                    # branch of repo with values - for released version it should be the release branch
         project: default
         namespaceTag:
           dataprovider: dataprovider01      # identifier of deployment and part of fqdn for this agent
@@ -161,14 +177,7 @@ spec:
             password: pass                  # take the password from common01-kafka-credentials OpenBao secret, key dataprovider01_infrabe
           gitea:
             username: gitops_test           # username of gitea
-            password: pass                  # password of gitea - the variable is prepared for future use. Currently, access is performed without logging in, so the variable can take on any value (set it to your preference)
-          ionos:
-            token: "tokenstring"            # please contact IONOS to get the correct value - (the same one you entered in dataprovider01-simpl-edc in key: edc_ionos_token)
-          ovh:
-            application_key: appkey         # ovh credentials - application key
-            application_secret: appsecret   # ovh credentials - application secret
-            consumer_key: conskey           # ovh credentials - consumer key
-            endpoint: endpoint              # ovh credentials - endpoint
+            password: pass                  # password of gitea - the variable can take on any value (set it to your preference)
         monitoring:
           enabled: true                     # should monitoring be enabled
     chart: data-provider
@@ -188,7 +197,7 @@ There are a couple of variables you need to replace - described below. The rest 
 
 ```yaml
 values:
-  branch: v2.3.7                    # branch of repo with values - for released version it should be the release branch
+  branch: v2.4.0                    # branch of repo with values - for released version it should be the release branch
 project: default
 namespaceTag:
   dataprovider: dataprovider01      # identifier of deployment and part of fqdn for this agent
@@ -214,14 +223,7 @@ crossplane:
     password: pass                  # take the password from common01-kafka-credentials OpenBao secret, key dataprovider01_infrabe
   gitea:
     username: gitops_test           # username of gitea
-    password: pass                  #  - the variable is prepared for future use. Currently, access is performed without logging in, so the variable can take on any value (set it to your preference)
-  ionos:
-    token: "tokenstring"            # please contact IONOS to get the correct value - (the same one you entered in dataprovider01-simpl-edc in key: edc_ionos_token)
-  ovh:
-    application_key: appkey         # ovh credentials - application key
-    application_secret: appsecret   # ovh credentials - application secret
-    consumer_key: conskey           # ovh credentials - consumer key
-    endpoint: endpoint              # ovh credentials - endpoint
+    password: pass                  # password of gitea - the variable can take on any value (set it to your preference)
 monitoring:
   enabled: true                     # should monitoring be enabled
 ```
@@ -256,8 +258,7 @@ At the end, all pods should be created correctly:
 After the deployment process is complete, a manual onboarding process of the participant is required.
 
 The steps are described in the document:
-
-<https://code.europa.eu/simpl/simpl-open/development/iaa/documentation/-/blob/main/versioned_docs/2.4.x/user-manual/ONBOARD.md>
+https://code.europa.eu/simpl/simpl-open/development/iaa/documentation/-/blob/main/versioned_docs/2.5.x/user-manual/ONBOARD.md
 
 ### Tier2-proxy status
 

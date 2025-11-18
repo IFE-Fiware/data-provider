@@ -40,6 +40,12 @@ appConfig:
           - Path=/infra-be/**
         filters:
           - StripPrefix=1
+      - id: edc-management
+        uri: http://simpl-edc-service:19193
+        predicates:
+          - Path=/edc/**
+        filters:
+          - StripPrefix=1
     public-urls:
       - method: "GET"
         path: "/actuator/health/**"
