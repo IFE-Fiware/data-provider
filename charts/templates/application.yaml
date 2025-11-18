@@ -90,10 +90,6 @@ spec:
         - $values/app-values/Keycloak/{{ . }}
         {{- end }}
       values: |
-        image:
-          repository: bitnamilegacy/keycloak
-        security:
-          allowInsecureImages: true
         fullnameOverride: {{ .Values.keycloak.nameOverride }}
         apiUrl: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}"
         podAnnotations:
@@ -129,7 +125,7 @@ spec:
             - name: ARTIFACT
               value: keycloak-authenticator
             - name: URL
-              value: https://code.europa.eu/api/v4/projects/915/packages/maven/com/aruba/simpl/keycloak-authenticator/2.1.0/keycloak-authenticator-2.1.0.jar
+              value: https://code.europa.eu/api/v4/projects/915/packages/maven/com/aruba/simpl/keycloak-authenticator/2.2.0/keycloak-authenticator-2.2.0.jar
           args:
             - |
               curl -o /custom-spi/${ARTIFACT}.jar ${URL};
@@ -142,7 +138,7 @@ spec:
           env:
             - name: REDIRECT_URIS
               value: |-
-                [ "https://participant.fe.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/*","https://catalogue-ui.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/*","https://sd-ui.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/*" ]
+                [ "https://participant.fe.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/*","https://catalogue-ui.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/*","https://sd-ui.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/*","https://infrastructure-fe.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/*" ]
             - name: REALM_NAME
               value: realm
             - name: URL
@@ -177,10 +173,9 @@ spec:
         - $values/app-values/sdtooling-api-be/{{ . }}
         {{- end }}
       values: |
-        domain: {{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
         ingress:
           clusterIssuer: {{ .Values.cluster.issuer }}
-        apiUrl: https://creation-wizard-api.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+        domain: {{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
         catalogueAdapter:
           tier2Gateway:
             url: "https://tls.authority.{{ .Values.namespaceTag.authority }}.{{ .Values.domainSuffix }}"
@@ -188,7 +183,7 @@ spec:
           tier2Gateway:
             url: "https://tls.authority.{{ .Values.namespaceTag.authority }}.{{ .Values.domainSuffix }}"
         openapiConfig:
-          servers: https://creation-wizard-api.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+          servers: https://sd-creation-wizard-api
         openTelemetry:
           otlpExporter:
             endpoint: http://collector.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}
@@ -282,9 +277,9 @@ spec:
         - $values/app-values/xfsc-advsearch-be/{{ . }}
         {{- end }}
       values: |
-        domain: {{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
         ingress:
           clusterIssuer: {{ .Values.cluster.issuer }}
+        domain: {{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
         catalogueAdapter:
           tier2Gateway:
             url: "https://tls.authority.{{ .Values.namespaceTag.authority }}.{{ .Values.domainSuffix }}"
@@ -684,10 +679,6 @@ spec:
         - $values/app-values/simpl-edc/{{ . }}
         {{- end }}
       values: |
-        ingress:
-          enabled: true
-          host: edc.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
-          clusterIssuer: {{ .Values.cluster.issuer }}
         deployment:
           host: {{ .Values.simpl_edc.nameOverride }}-service
           callbackAddress: "https://tls.participant.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/edc"
@@ -723,6 +714,8 @@ spec:
         - $values/app-values/edc-connector-adapter/{{ . }}
         {{- end }}
       values: |
+        ingress:
+          clusterIssuer: {{ .Values.cluster.issuer }}
         domain: {{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
         ingress:
           clusterIssuer: {{ .Values.cluster.issuer }}
@@ -858,6 +851,7 @@ spec:
         - $values/app-values/infrastructure-be/{{ . }}
         {{- end }}
       values: |
+        fullnameOverride: {{ .Values.infrastructure_be.fullnameOverride }}
         namespace: {{ .Values.cluster.namespace }}
         backend:
           podAnnotations:
@@ -867,9 +861,9 @@ spec:
           env:
             ALLOWED_ORIGINS: http://localhost:3001,https://{{ .Values.infrastructure_fe.fullnameOverride }}.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
             VAULT_TOKEN: vault:login
-            SPRING_CLOUD_VAULT_TOKEN: "${VAULT_TOKEN}"
+            SPRING_CLOUD_VAULT_TOKEN: vault:{{ .Values.secrets.secretEngine }}/data/{{ .Values.cluster.namespace }}-infrastructure-be#vault.token
             SPRING_CLOUD_VAULT_URI: "https://secrets.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
-            SPRING_CLOUD_VAULT_URL: "https://secrets.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}/v1/{{ .Values.secrets.secretEngine }}/data/users/"
+            SPRING_CLOUD_VAULT_URL: "https://secrets.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}/v1/secret"
             SPRING_DATASOURCE_URL: jdbc:postgresql://pg-cluster.{{ .Values.cluster.commonToolsNamespace }}.svc.cluster.local:5432/{{ .Values.cluster.namespace }}_infrabe
             SPRING_FLYWAY_URL: jdbc:postgresql://pg-cluster.{{ .Values.cluster.commonToolsNamespace }}.svc.cluster.local:5432/{{ .Values.cluster.namespace }}_infrabe
             SPRING_FLYWAY_USER: {{ .Values.cluster.namespace }}_infrabe

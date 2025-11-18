@@ -10,20 +10,6 @@ openTelemetry:
   disabled: false
   # used to identify the environment
   environment: int
-  otlpExporter:
-    # protocol used by the OTLP exporter (http/protobuf or grpc)
-    protocol: http/protobuf
-  # context propagation type
-  propagators: tracecontext
-
-# resources configuration
-resources:
-  requests:
-    cpu: "0m"
-    memory: "0Gi"
-  limits:
-    cpu: "1000m"
-    memory: "2Gi"
 
 profile: provider
 
@@ -33,3 +19,6 @@ edcConnector:
   baseUrl: http://simpl-edc-service:19193
 
 appJarPath: "/home/simpluser/app.jar"
+
+ingress:
+  enabled: false
