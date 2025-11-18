@@ -1,5 +1,6 @@
 image:
-  repository: bitnamilegacy/redis
+  repository: redis
+  tag: 7.2
 
 replica:
   replicaCount: 0
