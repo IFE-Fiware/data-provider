@@ -10,6 +10,7 @@ ingress:
     secretName: adapter-infra-simpl-backend-tls
   annotations:
     acme.cert-manager.io/http01-edit-in-place: "false"
+  enabled: false
 
 deployment:
   label: infra-deployment

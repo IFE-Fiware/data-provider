@@ -29,6 +29,9 @@ spec:
         - $values/app-values/crossplane/{{ . }}
         {{- end }}
       values: |
+        configuration:
+          packages:
+            - code.europa.eu:4567/simpl/simpl-open/development/infrastructure/infrastructure-crossplane/configuration:{{ .Values.provisionerresources.targetRevision }}
         {{- if eq .Values.resourcePreset "low" }}
         resourcesCrossplane:
           requests:
@@ -232,19 +235,12 @@ spec:
         giteaUrl: gitea-http.{{ .Values.cluster.namespace }}.svc.cluster.local:3000
         vaultServer: "https://secrets.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
         secrets:
-          ionos:
-            token: {{ .Values.crossplane.ionos.token }}
           kafka:
             username: {{ .Values.crossplane.kafka.username }}
             password: {{ .Values.crossplane.kafka.password }}
           gitea:
             username: {{ .Values.crossplane.gitea.username }}
             password: {{ .Values.crossplane.gitea.password }}
-          ovh:
-            application_key: {{ .Values.crossplane.ovh.application_key }}
-            application_secret: {{ .Values.crossplane.ovh.application_secret }}
-            consumer_key: {{ .Values.crossplane.ovh.consumer_key }}
-            endpoint: {{ .Values.crossplane.ovh.endpoint }}
   - repoURL: {{ .Values.tfcontroller.repo_URL }}
     targetRevision: {{ .Values.tfcontroller.targetRevision }}
     chart: {{ .Values.tfcontroller.chart_name }}
@@ -252,4 +248,5 @@ spec:
       releaseName: {{ .Values.tfcontroller.nameOverride }}
       values: |
         fullnameOverride: {{ .Values.tfcontroller.nameOverride }}
+        eventsAddress: http://notification-controller.{{ .Values.cluster.namespace }}.svc.cluster.local./
 {{- end }}

@@ -1,6 +1,6 @@
 values:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git
-  branch: v2.3.7
+  branch: v2.4.0
 
 project: ${PROJECT}
 domainSuffix: ${DOMAINSUFFIX}
@@ -15,9 +15,6 @@ resourcePreset: default
 argocd:
   appname: ${NAMESPACE}
   namespace: argocd
-
-authority:
-  namespaceTag: ${AUTHNAMESPACETAG}
 
 cluster:
   address: https://kubernetes.default.svc
@@ -35,18 +32,11 @@ crossplane:
   targetRevision: 1.16.2
   chart_name: crossplane
   kafka:
-    username: user
-    password: pass
+    username: ${CROSSPLANEKAFKAUSER}
+    password: ${CROSSPLANEKAFKAPASS}
   gitea:
-    username: user
-    password: pass
-  ionos:
-    token: "tokenstring"
-  ovh:
-    application_key: appkey
-    application_secret: appsecret
-    consumer_key: conskey
-    endpoint: endpoint
+    username: ${CROSSPLANEGITEAUSER}
+    password: ${CROSSPLANEGITEAPASS}
   resourcesCrossplane:
     requests:
       cpu: "500m"
@@ -61,8 +51,6 @@ crossplane:
     limits:
       cpu: "500m"
       memory: "1Gi"
-  valueFiles:
-    - values.yaml
 
 redis:
   repo_URL: 'https://charts.bitnami.com/bitnami'
@@ -78,7 +66,7 @@ redis:
     - values.yaml
 
 redis_commander:
-  enabled: true
+  enabled: false
   repo_URL: 'https://github.com/joeferner/redis-commander.git'
   targetRevision: master
   nameOverride: redis-commander
@@ -127,7 +115,7 @@ signer:
 
 tier1_gateway:
   projectID: "772"
-  targetRevision: 2.4.0
+  targetRevision: 2.5.0
   chart_name: tier1-gateway
   resources:
     requests:
@@ -142,7 +130,7 @@ tier1_gateway:
 sdtooling_api_be:
   enabled: true
   projectID: "778"
-  targetRevision: 1.15.2
+  targetRevision: 1.16.1
   chart_name: sd-creation-wizard
   resources:
     requests:
@@ -174,7 +162,7 @@ sdtooling_validation_api_be:
 xfsc_advsearch_be:
   enabled:  true
   projectID: "891"
-  targetRevision: 1.14.2
+  targetRevision: 1.15.0
   chart_name: xfsc-advsearch
   resources:
     requests:
@@ -189,7 +177,7 @@ xfsc_advsearch_be:
 
 users_roles:
   projectID: "771"
-  targetRevision: 2.4.0
+  targetRevision: 2.5.1
   chart_name: users-roles
   resources:
     requests:
@@ -203,7 +191,7 @@ users_roles:
 
 simpl_fe:
   projectID: "769"
-  targetRevision: 2.4.0
+  targetRevision: 2.5.0
   chart_name: simpl-fe
   resources:
     requests:
@@ -219,7 +207,7 @@ simpl_fe:
 sd_ui:
   enabled: true
   projectID: "923"
-  targetRevision: 1.2.4
+  targetRevision: 1.4.1
   chart_name: sd-ui
   resources:
     requests:
@@ -233,7 +221,7 @@ sd_ui:
 
 infrastructure_be:
   projectID: "896"
-  targetRevision: 1.0.11
+  targetRevision: 1.0.13
   chart_name: infrastructure-be
   fullnameOverride: infrastructure-be
   resources:
@@ -248,7 +236,7 @@ infrastructure_be:
 
 infrastructure_fe:
   projectID: "895"
-  targetRevision: 1.0.6
+  targetRevision: 1.1.0
   chart_name: frontend
   fullnameOverride: infrastructure-fe
   resources:
@@ -263,7 +251,7 @@ infrastructure_fe:
 
 tier2_gateway:
   projectID: "860"
-  targetRevision: 2.4.0
+  targetRevision: 2.5.0
   chart_name: tier2-gateway
   resources:
     requests:
@@ -309,7 +297,7 @@ simpl_edc:
 edc_connector_adapter:
   enabled:  true
   projectID: "1091"
-  targetRevision: 1.6.0
+  targetRevision: 1.7.0
   chart_name: edc-connector-adapter
   nameOverride: edc-connector-adapter
   resources:
@@ -325,7 +313,7 @@ edc_connector_adapter:
 simpl_catalogue_client:
   enabled: true
   projectID: "937"
-  targetRevision: 1.2.7
+  targetRevision: 2.0.0
   chart_name: catalogue-ui
   resources:
     requests:
@@ -339,7 +327,7 @@ simpl_catalogue_client:
 
 auth_provider: 
   projectID: "939"
-  targetRevision: 2.4.2
+  targetRevision: 2.5.2
   chart_name: authentication-provider
   resources:
     requests:
@@ -354,7 +342,7 @@ auth_provider:
 monitoring:
   enabled: true
   projectID: "828"
-  targetRevision: 0.1.20
+  targetRevision: 0.2.0
   chart_name: eck-monitoring
   fullnameOverride: elastic
   resources:
@@ -516,7 +504,7 @@ fluxcd:
 
 provisionerresources:
   projectID: "912"
-  targetRevision: 1.2.3
+  targetRevision: 2.1.1
   chart_name: infrastructure-crossplane
   nameOverride: infrastructure-crossplane
   resources:

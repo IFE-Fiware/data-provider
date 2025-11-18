@@ -8,3 +8,5 @@ ingress:
   className: nginx
 serviceAccount:
   name: infrastructure-fe-sa
+service:
+  targetport: 80
