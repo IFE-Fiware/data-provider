@@ -142,16 +142,17 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: 'dataprovider01-deployer'           # name of the deploying app in argocd
+  namespace: argocd                         # namespace of your argocd
 spec:
   project: default
   source:
     repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
     path: '""'
-    targetRevision: 2.4.0                   # version of package
+    targetRevision: 2.4.1                   # version of package
     helm:
       values: |
         values:
-          branch: v2.4.0                    # branch of repo with values - for released version it should be the release branch
+          branch: v2.4.1                    # branch of repo with values - for released version it should be the release branch
         project: default
         namespaceTag:
           dataprovider: dataprovider01      # identifier of deployment and part of fqdn for this agent
@@ -197,7 +198,7 @@ There are a couple of variables you need to replace - described below. The rest 
 
 ```yaml
 values:
-  branch: v2.4.0                    # branch of repo with values - for released version it should be the release branch
+  branch: v2.4.1                    # branch of repo with values - for released version it should be the release branch
 project: default
 namespaceTag:
   dataprovider: dataprovider01      # identifier of deployment and part of fqdn for this agent
