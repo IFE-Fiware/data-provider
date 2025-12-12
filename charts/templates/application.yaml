@@ -296,6 +296,7 @@ spec:
         resources: {{- toYaml .Values.xfsc_advsearch_be.resources | nindent 10 }}
           {{- end }}
         {{- end }}
+        schemaPvcClass: {{ .Values.xfsc_advsearch_be.schemaPvcClass }}
       releaseName: {{ .Values.xfsc_advsearch_be.nameOverride }}
   {{- end }}    
   {{- if .Values.signer.enabled }}

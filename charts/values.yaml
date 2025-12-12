@@ -164,6 +164,7 @@ xfsc_advsearch_be:
   projectID: "891"
   targetRevision: v1.15.0-IFE
   chart_name: xfsc-advsearch
+  schemaPvcClass: rook-cephfs
   resources:
     requests:
       cpu: "500m"
