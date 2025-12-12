@@ -163,6 +163,7 @@ xfsc_advsearch_be:
   enabled:  true
   projectID: "891"
   targetRevision: v1.15.0-IFE
+  targetRevOrig: 1.15.0
   chart_name: xfsc-advsearch
   schemaPvcClass: rook-cephfs
   resources:
