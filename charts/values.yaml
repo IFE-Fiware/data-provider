@@ -1,5 +1,5 @@
 values:
-  repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git
+  repo_URL: https://github.com/IFE-Fiware/data-provider.git
   branch: v2.4.1
 
 project: ${PROJECT}
@@ -162,7 +162,7 @@ sdtooling_validation_api_be:
 xfsc_advsearch_be:
   enabled:  true
   projectID: "891"
-  targetRevision: 1.15.0-IFE
+  targetRevision: v1.15.0-IFE
   chart_name: xfsc-advsearch
   resources:
     requests:
