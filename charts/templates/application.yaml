@@ -726,6 +726,7 @@ spec:
         openapiConfig:
           servers: https://edc-connector-adapter-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
         openTelemetry:
+          disabled: true
           otlpExporter:
             endpoint: http://collector-{{ .Values.namespaceTag.common }}-{{ .Values.domainSuffix }}
         edcConnector:
