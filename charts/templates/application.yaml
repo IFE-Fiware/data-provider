@@ -417,7 +417,7 @@ spec:
           vault.security.banzaicloud.io/vault-addr: "https://secrets-{{ .Values.namespaceTag.common }}-{{ .Values.domainSuffix }}"
           vault.security.banzaicloud.io/vault-role: {{ .Values.secrets.role }}
         hostT1: participant-be-{{ .Values.namespaceTag.dataprovider }}-{{ .Values.domainSuffix }}
-        authorityHostT2: tls-authority-{{ .Values.namespaceTag.authority }}-{{ .Values.domainSuffix }}
+        authorityHostT2: tls-authority-{{ .Values.domainSuffix }}
         global:
           ingress:
             issuer: {{ .Values.cluster.issuer }}
