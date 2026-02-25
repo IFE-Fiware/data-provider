@@ -142,7 +142,7 @@ spec:
             - name: REALM_NAME
               value: realm
             - name: URL
-              value: https://code.europa.eu/simpl/simpl-open/development/iaa/charts/-/raw/develop/samples/keycloak-realms/2.0.0/participant-realm-export.json?ref_type=heads
+              value: https://code.europa.eu/simpl/simpl-open/development/iaa/charts/-/raw/develop/samples/keycloak-realms/2.1.0/participant-realm-export.json?ref_type=heads
           args:
             - |
               curl ${URL} | envsubst '$REDIRECT_URIS' > /config/${REALM_NAME}.json;
@@ -458,19 +458,19 @@ spec:
         resources: {{- toYaml .Values.users_roles.resources | nindent 10 }}
           {{- end }}
         {{- end }}
-  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.simpl_fe.projectID }}/packages/helm/stable"
+  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.users_roles_fe.projectID }}/packages/helm/stable"
     path: ''
-    targetRevision: {{ .Values.simpl_fe.targetRevision }}
-    chart: {{ .Values.simpl_fe.chart_name }}
+    targetRevision: {{ .Values.users_roles_fe.targetRevision }}
+    chart: {{ .Values.users_roles_fe.chart_name }}
     helm:
       valueFiles:
-        {{- range .Values.simpl_fe.valueFiles }}
-        - $values/app-values/Simpl-fe/{{ . }}
+        {{- range .Values.users_roles_fe.valueFiles }}
+        - $values/app-values/users-roles-fe/{{ . }}
         {{- end }}
       values: |
+        hostFe: participant.fe.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
         ingress:
           issuer: {{ .Values.cluster.issuer }}
-        hostFe: participant.fe.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
         cors:
           allowOrigin: https://participant.fe.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }},https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:4203,http://localhost:3000
         env:
@@ -479,7 +479,7 @@ spec:
         - name: KEYCLOAK_URL
           value: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/auth"
         - name: KEYCLOAK_REALM
-          value: "participant"
+          value: "participant" 
         - name: KEYCLOAK_CLIENT_ID
           value: "frontend-cli"
         {{- if eq .Values.resourcePreset "low" }}
@@ -488,8 +488,8 @@ spec:
             cpu: "0"
             memory: "0"
         {{- else }}
-          {{- if .Values.simpl_fe.resources }}
-        resources: {{- toYaml .Values.simpl_fe.resources | nindent 10 }}
+          {{- if .Values.users_roles_fe.resources }}
+        resources: {{- toYaml .Values.users_roles_fe.resources | nindent 10 }}
           {{- end }}
         {{- end }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.tier2_gateway.projectID }}/packages/helm/stable"
@@ -579,11 +579,27 @@ spec:
         podAnnotations:
           vault.security.banzaicloud.io/vault-addr: "https://secrets.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
           vault.security.banzaicloud.io/vault-role: {{ .Values.secrets.role }}
-        urlAuthorityT2: "https://tls.authority.{{ .Values.namespaceTag.authority }}.{{ .Values.domainSuffix }}"
-        db:
-          url: "jdbc:postgresql://pg-cluster.{{ .Values.cluster.commonToolsNamespace }}.svc.cluster.local:5432/{{ .Values.cluster.namespace }}_authenticationprovider"
-          username: {{ .Values.namespaceTag.dataprovider }}_authenticationprovider
-          password: vault:{{ .Values.secrets.secretEngine }}/data/{{ .Values.cluster.namespace }}-postgres-passwords#{{ .Values.cluster.namespace }}-authenticationprovider
+        appConfig:
+          management:
+            otlp:
+              tracing:
+                endpoint: http://collector.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}
+          spring:
+            datasource:
+              url: "jdbc:postgresql://pg-cluster.{{ .Values.cluster.commonToolsNamespace }}.svc.cluster.local:5432/{{ .Values.cluster.namespace }}_authenticationprovider"
+              username: {{ .Values.namespaceTag.dataprovider }}_authenticationprovider
+            data:
+              redis:
+                host: "redis-master.{{ .Values.cluster.namespace }}.svc.cluster.local"
+          microservice:
+            identity-provider:
+              url: http://identity-provider.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
+          client:
+            authority:
+              url: "https://tls.authority.{{ .Values.namespaceTag.authority }}.{{ .Values.domainSuffix }}"
+          simpl:
+            certificate:
+              san: "tls.participant.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}"
         env:
         - name: KAFKA_AUTHPROVIDER
           value: "vault:{{ .Values.secrets.secretEngine }}/data/{{ .Values.cluster.commonToolsNamespace }}-kafka-credentials#{{ .Values.cluster.namespace }}_authprovider"
@@ -592,13 +608,8 @@ spec:
             secretKeyRef:
               name: redis-secrets
               key: redis
-        microservices:
-          identityProviderUrl: http://identity-provider.{{ .Values.cluster.namespace }}.svc.cluster.local:8080
-        simpl:
-          certificate:
-            san: "tls.participant.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}"
-        redis:
-          host: "redis-master.{{ .Values.cluster.namespace }}.svc.cluster.local"
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "vault:{{ .Values.secrets.secretEngine }}/data/{{ .Values.cluster.namespace }}-postgres-passwords#{{ .Values.cluster.namespace }}-authenticationprovider"
         kafkaConfig:
           spring:
             kafka:
@@ -627,6 +638,40 @@ spec:
         {{- else }}
           {{- if .Values.auth_provider.resources }}
         resources: {{- toYaml .Values.auth_provider.resources | nindent 10 }}
+          {{- end }}
+        {{- end }}
+  - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.auth_provider_fe.projectID }}/packages/helm/stable"
+    path: ''
+    targetRevision: {{ .Values.auth_provider_fe.targetRevision }}
+    chart: {{ .Values.auth_provider_fe.chart_name }}
+    helm:
+      valueFiles:
+        {{- range .Values.auth_provider_fe.valueFiles }}
+        - $values/app-values/auth-provider-fe/{{ . }}
+        {{- end }}
+      values: |
+        hostFe: participant.fe.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+        ingress:
+          issuer: {{ .Values.cluster.issuer }}
+        cors:
+          allowOrigin: https://participant.fe.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }},https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }},http://localhost:4202,http://localhost:4203,http://localhost:3000
+        env:
+        - name: API_URL
+          value: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}"
+        - name: KEYCLOAK_URL
+          value: "https://participant.be.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}/auth"
+        - name: KEYCLOAK_REALM
+          value: "participant" 
+        - name: KEYCLOAK_CLIENT_ID
+          value: "frontend-cli"
+        {{- if eq .Values.resourcePreset "low" }}
+        resources:
+          requests:
+            cpu: "0"
+            memory: "0"
+        {{- else }}
+          {{- if .Values.auth_provider_fe.resources }}
+        resources: {{- toYaml .Values.auth_provider_fe.resources | nindent 10 }}
           {{- end }}
         {{- end }}
   {{- if .Values.sd_ui.enabled }}      
@@ -783,7 +828,7 @@ spec:
             user: {{ .Values.cluster.namespace }}_contract
           kafka:
             bootstrapServer: http://kafka.{{ .Values.cluster.commonToolsNamespace }}.svc.cluster.local:9092
-            clientUser: {{ .Values.cluster.namespace }}-contract
+            clientUser: {{ .Values.cluster.namespace }}_contract
             topics:
               signContractRequest: sign-contract-req-{{ .Values.cluster.namespace }}
               signContractResponse: sign-contract-resp-{{ .Values.cluster.namespace }}
@@ -839,6 +884,117 @@ spec:
         {{- end }}
       releaseName: {{ .Values.files.nameOverride }}
   {{- end }}
+  - repoURL: https://code.europa.eu/api/v4/projects/{{ .Values.dagster.projectID }}/packages/helm/stable
+    targetRevision: {{ .Values.dagster.targetRevision }}
+    chart: {{ .Values.dagster.chart_name }}
+    helm:
+      skipSchemaValidation: true
+      valueFiles:
+        {{- range .Values.dagster.valueFiles }}
+        - $values/app-values/dagster/{{ . }}
+        {{- end }}
+      values: |
+        dagster:
+          dagster-user-deployments:
+            deployments:
+              - name: field-level-pseudo-anonymisation
+                annotations:
+                  vault.security.banzaicloud.io/vault-addr: "https://secrets.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
+                  vault.security.banzaicloud.io/vault-role: {{ .Values.secrets.role }}
+                location_name: field_level_pseudo_anonymisation
+                enabled: true
+                enableSubchart: true
+                codeServerArgs:
+                  - "--host"
+                  - "0.0.0.0"
+                  - "--port"
+                  - "4000"
+                  - "--python-file"
+                  - "src/field_level_pseudo_anonymisation/repository.py"
+                image:
+                  pullPolicy: IfNotPresent
+                  repository: code.europa.eu:4567/simpl/simpl-open/development/data-services/field-level-pseudo-anonymisation
+                  tag: {{ .Values.dagster.field_level_pseudo_anonymisation.version }}
+                port: 4000
+                resources:
+                  {{- if eq .Values.resourcePreset "low" }}
+                  requests:
+                    cpu: "0"
+                    memory: "0"
+                  {{- else }}
+                    {{- if .Values.dagster.field_level_pseudo_anonymisation.resources.requests }}
+                  requests: {{- toYaml .Values.dagster.field_level_pseudo_anonymisation.resources.requests | nindent 20 }}
+                    {{- end }}
+                  {{- end }}
+                  limits: {{- toYaml .Values.dagster.field_level_pseudo_anonymisation.resources.limits | nindent 20 }}
+                livenessProbe:
+                  enabled: true
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+                readinessProbe:
+                  enabled: true
+                  periodSeconds: 10
+                  timeoutSeconds: 3
+                  failureThreshold: 3
+              - name: dataframe-level-anonymisation
+                annotations:
+                  vault.security.banzaicloud.io/vault-addr: "https://secrets.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
+                  vault.security.banzaicloud.io/vault-role: {{ .Values.secrets.role }}
+                location_name: dataframe_level_anonymisation
+                enabled: true
+                enableSubchart: true
+                codeServerArgs:
+                  - "--host"
+                  - "0.0.0.0"
+                  - "--port"
+                  - "4000"
+                  - "--python-file"
+                  - "src/dataframe_level_anonymisation/repository.py"
+                image:
+                  pullPolicy: IfNotPresent
+                  repository: code.europa.eu:4567/simpl/simpl-open/development/data-services/dataframe-level-anonymisation
+                  tag: {{ .Values.dagster.dataframe_level_anonymisation.version }}
+                port: 4000
+                resources:
+                  {{- if eq .Values.resourcePreset "low" }}
+                  requests:
+                    cpu: "0"
+                    memory: "0"
+                  {{- else }}
+                    {{- if .Values.dagster.dataframe_level_anonymisation.resources.requests }}
+                  requests: {{- toYaml .Values.dagster.dataframe_level_anonymisation.resources.requests | nindent 20 }}
+                    {{- end }}
+                  {{- end }}
+                  limits: {{- toYaml .Values.dagster.dataframe_level_anonymisation.resources.limits | nindent 20 }}
+                livenessProbe:
+                  enabled: true
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+                readinessProbe:
+                  enabled: true
+                  periodSeconds: 10
+                  timeoutSeconds: 3
+                  failureThreshold: 3
+          dagsterDaemon:
+            annotations:
+              vault.security.banzaicloud.io/vault-addr: "https://secrets.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
+              vault.security.banzaicloud.io/vault-role: {{ .Values.secrets.role }}
+          postgresql:
+            postgresqlHost: "pg-cluster.{{ .Values.cluster.commonToolsNamespace }}.svc.cluster.local"
+            postgresqlUsername: "{{ .Values.cluster.namespace }}_dagster"
+            postgresqlPassword: vault:{{ .Values.secrets.secretEngine }}/data/{{ .Values.cluster.namespace }}-postgres-passwords#{{ .Values.cluster.namespace }}-dagster
+            postgresqlDatabase: "{{ .Values.cluster.namespace }}_dagster"
+          ingress:
+            annotations:
+              cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
+            dagsterWebserver:
+              host: dagster.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+          dagsterWebserver:
+            annotations:
+              vault.security.banzaicloud.io/vault-addr: "https://secrets.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
+              vault.security.banzaicloud.io/vault-role: {{ .Values.secrets.role }}
   {{- if .Values.crossplane.enabled }}
   - repoURL: "https://code.europa.eu/api/v4/projects/{{ .Values.infrastructure_be.projectID }}/packages/helm/stable"
     path: ''
@@ -859,7 +1015,7 @@ spec:
             vault.security.banzaicloud.io/vault-role: {{ .Values.secrets.role }}
             vault.security.banzaicloud.io/vault-ignore-missing-secrets: "true"
           env:
-            ALLOWED_ORIGINS: http://localhost:3001,https://{{ .Values.infrastructure_fe.fullnameOverride }}.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
+            ALLOWED_ORIGINS: http://localhost:3001,https://{{ .Values.infrastructure_fe.fullnameOverride }}.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }},https://sd-ui.{{ .Values.namespaceTag.dataprovider }}.{{ .Values.domainSuffix }}
             VAULT_TOKEN: vault:login
             SPRING_CLOUD_VAULT_TOKEN: vault:{{ .Values.secrets.secretEngine }}/data/{{ .Values.cluster.namespace }}-infrastructure-be#vault.token
             SPRING_CLOUD_VAULT_URI: "https://secrets.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}"
@@ -876,6 +1032,8 @@ spec:
             GITEA_USER: {{ .Values.crossplane.gitea.username }}
             GITEA_PASSWORD: {{ .Values.crossplane.gitea.password }}
             OTEL_EXPORTER_OTLP_ENDPOINT: http://collector.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}
+            OTEL_SERVICE_NAME: "infrastructure-be"
+            OTEL_LOGS_EXPORTER: "none"
           ingress:
             enabled: true
             hosts:
