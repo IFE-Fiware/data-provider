@@ -625,11 +625,6 @@ spec:
             kafka:
               topic:
                 prefix: iaa.{{ .Values.cluster.namespace }}.
-        appConfig:
-          management:
-            otlp:
-              tracing:
-                endpoint: http://collector.{{ .Values.namespaceTag.common }}.{{ .Values.domainSuffix }}
         {{- if eq .Values.resourcePreset "low" }}
         resources:
           requests:
