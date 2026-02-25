@@ -14,14 +14,6 @@ appConfig:
         filters:
           - StripPrefix=1
 
-    logging:
-      business:
-        - method: GET
-          path: /authApi/v1/mtls/ping
-          config:
-            operations:
-              - PING_REQUEST
-
     public-urls:
       - method: GET
         path: "/edc/**"
@@ -32,9 +24,6 @@ appConfig:
       - method: POST
         path: "/edc-connector-adapter/**"
     abac:
-      - method: POST
-        path: "/authApi/v1/mtls/ephemeralProof"
-        disable-ephemeral-proof-check: true
       - method: POST
         path: "/edc/**"
         disable-ephemeral-proof-check: true

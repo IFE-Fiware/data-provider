@@ -4,261 +4,257 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.4.1] - 2025-12-02
-- Fixed SIMPL-21567 bug.
-
-## [2.4.0] - 2025-11-15
-- Updated many components to implement Consumer version 2.4.0.
+## [3.0.0] - 2026-02-25
+- Updated many components to implement Data Provider version 3.0.0.
+- SIMPL FE component separated into multiple FE components.
 
 
-### Simpl Cloud gateway (Tier 1)
+## Tier 1 Gateway
 
-#### 2.5.0 (2025-09-29)
+#### 2.8.0 (2025-12-02)
 
 #### Added
-- Added new routes for Security Attributes Provider
+- SIMPL-19396
+- Configured RBAC for Users Roles V2 API's
 
 #### Fixed
-- Https constraints applied in Content Security Policy only when https origins are present
+- Business logger handling missing email claim
+
+#### Changes
+- Updated BusinessLogger to new common logging library
 
 
-### Users Roles
+### Users & Roles BE
 
-#### 2.5.1 (2025-10-16)
-
-#### Fixed
-- Identity Attributes validation now handles correctly identity attributes not assigned to participant, not assignable to roles and disabled.
-
-#### 2.5.0 (2025-09-29)
-
-#### Fixed
-- SIMPL-12860
-- SIMPL-16081
-
-
-### SIMPL FE
-
-#### 2.5.0 (2025-09-29)
+#### 2.8.0 (2025-12-01)
 
 #### Added
-- SIMPL-14573
-- SIMPL-16741
-- SIMPL-16738
-- SIMPL-16739
-- SIMPL-16740
+- SIMPL-19892
+- SIMPL-19899
+- SIMPL-19894
+- SIMPL-19900
+- SIMPL-19895
+- SIMPL-19897
+- SIMPL-19398
+- SIMPL-19893
 
-#### Fixed
-- SIMPL-16738
-
-
-### TLS Gateway (Tier 2)
-
-#### 2.5.0 (2025-09-29)
-
-#### Added
-- Added new routes for Security Attributes Provider
-
-#### Fixed
-- SIMPL-14604
+#### Changes
+- SIMPL-19398
+- SIMPL-19893
 
 
-### Tier 2 Proxy
+### Users & Roles FE
 
-#### 1.0.1 (2025-08-06)
-
-#### Fixed
-- Fixed base docker image
-
-
-### Authentication Provider
-
-#### 2.5.2 (2025-10-17)
-
-#### Fixed
-- Removed bitnami legacy image from helm chart
-
-#### 2.5.1 (2025-10-07)
-
-#### Fixed
-- Attempt identity attributes update after storing the ephemeral proof
-- Avoid storing already expired ephemeral proofs
-
-#### 2.5.0 (2025-09-29)
-
-#### Added
-- SIMPL-17522
-- SIMPL-17529
-- SIMPL-17530
-- SIMPL-17492
-- SIMPL-17517
-- SIMPL-17516
-
-#### Fixed
-- SIMPL-16621
-
-
-### sd-creator-backend
-
-#### 1.16.1 (2025-11-05)
-
-#### Fixed
-- SIMPL-20138
-
-#### 1.16.0 (2025-09-26)
-
-#### Added
-- SIMPL-15622
-- SIMPL-16767
-
-#### Fixed
-- fixed request logging issue
-
-#### Changed
-- SIMPL-16767
-
-
-### sd-creator-frontend
-
-#### 1.4.1 (2025-11-03)
-
-#### Fixed
-- SIMPL-20114
-
-
-### sdtooling-validation-api-be
-
-#### 1.14.0 (2025-09-04)
-
-#### Added
-- SIMPL-17313
-
-
-### xsfc-advsearch-be
-
-#### 1.15.0 (2025-09-26)
-
-#### Added
-- SIMPL-14978
-
-#### Fixed
-- fixed request logging issue
-
-#### Changed
-- simpl-data1-common updated to 1.5.0
-- SIMPL-17497
-
-
-### edc connector adapter
-
-#### 1.7.0 (2025-09-26)
+#### 2.8.0 (2025-12-01)
 No changes.
 
 
-### simpl-edc
+### Tier 2 Gateway
 
-#### 1.0.11 (2025-09-05)
+#### 2.8.0 (2025-12-02)
+
+#### Added
+- SIMPL_19397
+
+#### Fixed
+- Business logger handling missing email claim
 
 #### Changed
-- SIMPL-14812 fix sonar issues
+- Updated BusinessLogger to new common logging library
 
 
-### simpl-catalogue-client
+## Tier 2 Proxy
 
-#### 2.0.0 (2025-09-29)
+#### 1.2.1 (2025-12-04)
+
+#### Fixed
+- Fixed Helm Chart version
+
+#### 1.2.0 (2025-12-02)
+
+#### Added
+- SIMPL-19508
+
+
+### Authentication Provider BE
+
+#### 2.8.0 (2025-12-02)
+
+#### Added
+- SIMPL-18664
+
+#### Fixed
+- SIMPL-20267
+
+
+### Authentication Provider FE
+
+#### 2.8.0 (2025-12-01)
+
+#### Added
+- SIMPL-19506
+- SIMPL-18694
+
+
+### SD Creator BE
+
+#### 1.19.0 (2025-11-28)
+
+#### Added
+- SIMPL-18370
+
+#### Fixed
+- SIMPL-20962
+- SIMPL-15786
+- SIMPL-16831
+- SIMPL-19440
+- SIMPL-18630
+- SIMPL-17715
+
+
+### SD Creator FE
+
+#### 1.5.0 (2025-12-01)
+
+#### Added
+- SIMPL-2295
+- SIMPL-10289
+
+
+### SD Creation Wizard BE
+
+#### 1.17.0 (2025-11-28)
+
+#### Fixed
+- SIMPL-18630
+
+
+### XFSC Advsearch BE
+
+#### 1.18.0 (2025-11-28)
+
+#### Changed
+- aligned to commons 1.8.0 to use new LogUtil
+
+
+### EDC Connector Adapter
+
+#### 1.10.1 (2025-11-28)
+
+#### Changed
+- SIMPL-20687
+
+#### 1.10.0 (2025-11-24)
+
+#### Fixed
+- SIMPL-20284
+- SIMPL-20226
+- SIMPL-9033
+- SIMPL-18632
+
+
+### Simpl EDC
+
+#### 1.0.15 (2025-12-01)
+
+#### Changed
+- SIMPL-20001
+- SIMPL-20102
+
+
+### Catalogue Client FE
+
+#### 2.2.0 (2025-12-02)
 No changes.
 
 
-### simpl-files
+### Simpl Files
 
-#### 1.1.0 (2025-08-06)
+#### 1.2.0 (2025-11-05)
+
+#### Fixed
+- SIMPL-20108
+- SIMPL-19116
 
 #### Changed
+- SIMPL-18339
 - SIMPL-16125
 
 
-### infrastructure-be
+### Infrastructure BE
 
-#### 1.0.12 (2025-11-04)
+#### 1.3.1 (2025-12-19)
 
 #### Added
-- SIMPL-17406
-- SIMPL-18457
-- SIMPL-18321
-- SIMPL-17398
-- SIMPL-18996
-- SIMPL-18326
-- SIMPL-17427
-- SIMPL-18269
-- SIMPL-18022
-- SIMPL-16171
-- SIMPL-17408
-- SIMPL-17996
-- SIMPL-16167
+- SIMPL-19980
+- SIMPL-19979
+- SIMPL-19444
 
 #### Fixed
-- SIMPL-20223
-- SIMPL-14405
-- SIMPL-13986
-- SIMPL-14134
-- SIMPL-13370
+- SIMPL-20119
 
 #### Changed
-- SIMPL-18698
-- SIMPL-17949
-- SIMPL-13096
-- SIMPL-17350
-- SIMPL-17946
-- SIMPL-16167
-- SIMPL-14767
-- SIMPL-15538
+- SIMPL-13381
+- SIMPL-20323
+- SIMPL-20331
+- SIMPL-20345
 
 
-### infrastructure-fe
+### Infrastructure FE
 
-#### 1.1.0 (2025-10-21)
+#### 1.2.0 (2025-11-27)
 
 #### Added
+- SIMPL-19979
+- SIMPL-19982
+- SIMPL-19981
+- SIMPL-19978
+- SIMPL-20457
+- SIMPL-19713
 - SIMPL-18325
 - SIMPL-17399
-- SIMPL-18320
+- SIMPL-18325
 - SIMPL-18319
-- SIMPL-18313
-- SIMPL-18315
 - SIMPL-17405
-- SIMPL-18230
 
 #### Fixed
-- Fix details label
-- SIMPL-17405
-- fixed cloudProvisionerTemplateId for not call when is ovh
-- SIMPL-18320
+- Fixed list provisioner Displaying all in dropdown
+- SIMPL-19954
+- SIMPL-19691
+- SIMPL-19698
+- SIMPL-20323
+- SIMPL-17403
 
 #### Changed
-- SIMPL-18325
+- SIMPL-19954
+- SIMPL-19982
+- SIMPL-19713
+- SIMPL-20457
 - SIMPL-17405
 - SIMPL-18315
+- SIMPL-13616
+- SIMPL-11314
 
 
-### infrastructure-crossplane
+### Infrastructure Crossplane
 
-#### 2.1.1 (2025-09-24)
+#### 2.1.2 (2025-11-28)
 
 #### Fixed
-- SIMPL-17566
+- Prevent message duplication for argo workflows
+- SIMPL-18784
+- SIMPL-19977
 
 
 ### Filebeat
 
-#### 0.1.19 (2025-09-26)
+#### 0.3.1 (2025-11-28)
 
 #### Fixed
-- SIMPL-18667 Fix cluster health alert
-
-#### Changed
-- SIMPL-18665 Create ILM policy for filebeat
+- SIMPL-21094
 
 
-### Contract Manager
+### Contract Manager BE
 
-#### 2.0.9 (2025-10-02)
+#### 2.5.0 (2025-11-28)
 No changes.
