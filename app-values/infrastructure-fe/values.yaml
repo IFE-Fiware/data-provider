@@ -7,6 +7,6 @@ ingress:
   enabled: true
   className: nginx
 serviceAccount:
-  name: infrastructure-fe-sa
+  name: infrastructure-fe
 service:
   targetport: 80
