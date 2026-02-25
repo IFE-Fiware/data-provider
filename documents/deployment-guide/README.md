@@ -21,6 +21,7 @@
     - [Tier2-proxy status](#tier2-proxy-status)
     - [Monitoring](#monitoring)
   - [Troubleshooting](#troubleshooting)
+  - [FAQ](#faq)
 <!-- /TOC -->
 
 ## Description
@@ -58,7 +59,8 @@ If you're not using external-dns, you will need to add the following dns entries
 | infrastructure-fe-frontend | infrastructure-fe.(namespaceTag).(domainSuffix) |
 | redis-commander     | redis-commander.(namespaceTag).(domainSuffix) |
 | sd-ui                  | sd-ui.(namespaceTag).(domainSuffix) |
-| simpl-fe-ingress       | participant.fe.(namespaceTag).(domainSuffix)/users-roles<br>  participant.fe.(namespaceTag).(domainSuffix)/participant-utility |
+| simpl-fe-authentication-provider | participant.fe.(namespaceTag).(domainSuffix)/participant-utility |
+| simpl-fe-users-roles             | participant.fe.(namespaceTag).(domainSuffix)/users-roles         |
 | simpl-files            | files.(namespaceTag).(domainSuffix) |
 | simpl-ingress          | participant.be.(namespaceTag).(domainSuffix) |
 | tier2-gateway          | tls.participant.(namespaceTag).(domainSuffix) |
@@ -82,7 +84,7 @@ Before you proceed with the next steps related to accessing your OpenBao and cha
 
 ##### Secret for Infrastructure-be
 
-Edit the key for Infrastructure-be named "*dataprovider01*-infrastructure-be" where the first part reflects the namespace of your dataprovider. Only ionos smtp server is supported at the moment so you need to provide the password and username for it. Please contact IONOS to get the correct values. Currently the best way is to send an email requesting this data to Paulo Cabrita: <paulo.cabrita@ionos.com>
+Edit the key for Infrastructure-be named "*dataprovider01*-infrastructure-be" where the first part reflects the namespace of your dataprovider. 
 
 You can only request the token after the provider is deployed, so after you've changed the values in the secret, you need to restart the infrastructure-be pod. 
 To get the value for gitea.token, you can execute the following command. Replace the values in brackets with variables from your Dataprovider deployment.
@@ -108,23 +110,18 @@ In the secret, you need to modify or add:
 | Variable name                   |     Example                | Description                   |
 | ----------------------          |     :-----:                | ---------------               |
 | gitea.token                     | giteatoken                 | Token to access gitea         |
-| infrastructure.api.config.value | Bearer tok_uid-string      | Token from ionos for infra-be |
-| spring.mail.password            | smtppassword               | Password for smtp server      |
-| spring.mail.username            | <no-reply@simplservices.com> | Username for smtp server    |
 
 ##### Secret for simpl-edc
 
-Edit the key for Infrastructure-be named "*dataprovider01*-simpl-edc" where the first part reflects the namespace of your dataprovider. Please contact IONOS to get the correct values. Currently the best way is to send an email requesting this data to Paulo Cabrita: <paulo.cabrita@ionos.com>
+Edit the key for Infrastructure-be named "*dataprovider01*-simpl-edc" where the first part reflects the namespace of your dataprovider. You need to provide endpoint and keys to your Minio.
 
 You need to modify:
 
-| Variable name                    |     Example         | Description              |
-| ----------------------           |     :-----:         | ---------------          |
-| edc_ionos_access_key             | accesskeystring     | Access key for S3        |
-| edc_ionos_endpoint               | s3-eu-central-1.ionoscloud.com | S3 server url |
-| edc_ionos_endpoint_region        | de                  | Two letter country code  |
-| edc_ionos_secret_key             | secretkeystring     | Secret key for S3        |
-| edc_ionos_token                  | tokenstring         | Token for S3 access      |
+| Variable name                    |     Example              | Description              |
+| ----------------------           |     :-----:              | ---------------          |
+| fr_gxfs_s3_access_key            | minioacckey              | minio access key         |
+| fr_gxfs_s3_endpoint              | https://minio.address.eu | minio api address        |
+| fr_gxfs_s3_secret_key            | minioseckey              | minio secret key         |
 
 All the other necessary secrets are now created automatically with proper data.
 
@@ -142,17 +139,16 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: 'dataprovider01-deployer'           # name of the deploying app in argocd
-  namespace: argocd                         # namespace of your argocd
 spec:
   project: default
   source:
     repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
     path: '""'
-    targetRevision: 2.4.1                   # version of package
+    targetRevision: 3.0.0                   # version of package
     helm:
       values: |
         values:
-          branch: v2.4.1                    # branch of repo with values - for released version it should be the release branch
+          branch: v3.0.0                    # branch of repo with values - for released version it should be the release branch
         project: default
         namespaceTag:
           dataprovider: dataprovider01      # identifier of deployment and part of fqdn for this agent
@@ -198,7 +194,7 @@ There are a couple of variables you need to replace - described below. The rest 
 
 ```yaml
 values:
-  branch: v2.4.1                    # branch of repo with values - for released version it should be the release branch
+  branch: v3.0.0                    # branch of repo with values - for released version it should be the release branch
 project: default
 namespaceTag:
   dataprovider: dataprovider01      # identifier of deployment and part of fqdn for this agent
@@ -277,3 +273,14 @@ If you encounter issues during deployment, check the following:
 - Ensure that ArgoCD is properly set up and running.
 - Verify that the namespace exists in your Kubernetes cluster.
 - Check the ArgoCD application logs and Helm error messages for specific issues.
+
+## FAQ
+
+1. `How do I install the SuperAdmin certificate in my browser?`
+    1. Download the SuperAdmin certificate in PKCS#12 (*.p12) format.
+    2. Follow browser-specific steps to import the certificate: [Example for Firefox](https://docs.keyfactor.com/ejbca-cloud/latest/import-certificate-to-mozilla-firefox)
+    3. Restart the browser if the certificate is not immediately recognized.
+2. `What is the purpose of the ManagementCA certificate, and how can I obtain it?`
+    1. The ManagementCA certificate is used as the truststore for secure communications.
+    2. Download it from the Admin Dashboard under CA Structure & CRL.
+    3. Save the file in JKS format and securely store the password used during download.
