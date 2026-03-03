@@ -1,6 +1,6 @@
 values:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git
-  branch: v3.0.1
+  branch: v3.0.2
 
 project: ${PROJECT}
 domainSuffix: ${DOMAINSUFFIX}
@@ -324,7 +324,7 @@ simpl_catalogue_client:
 
 auth_provider_fe:
   projectID: "1308"
-  targetRevision: 2.8.0
+  targetRevision: 2.8.3
   chart_name: fe-authentication-provider
   resources:
     requests:
