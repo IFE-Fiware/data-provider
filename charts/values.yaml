@@ -1,6 +1,6 @@
 values:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git
-  branch: v3.0.2
+  branch: v3.0.3
 
 project: ${PROJECT}
 domainSuffix: ${DOMAINSUFFIX}
@@ -547,7 +547,7 @@ eso:
 
 dagster:
   projectID: "1304"
-  targetRevision: 0.1.0
+  targetRevision: 0.1.12
   chart_name: dagster
   nameOverride: dagster
   valueFiles:
