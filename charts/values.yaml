@@ -1,6 +1,6 @@
 values:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git
-  branch: v3.0.3
+  branch: v3.0.4
 
 project: ${PROJECT}
 domainSuffix: ${DOMAINSUFFIX}
@@ -394,7 +394,7 @@ stubs:
 files:
   enabled:  true
   projectID: "978"
-  targetRevision: 1.2.0
+  targetRevision: 1.2.3
   chart_name: simpl-files
   nameOverride: simpl-files
   resources:
