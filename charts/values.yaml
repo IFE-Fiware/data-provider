@@ -1,6 +1,6 @@
 values:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git
-  branch: v3.0.5
+  branch: v3.0.6
 
 project: ${PROJECT}
 domainSuffix: ${DOMAINSUFFIX}
@@ -233,7 +233,7 @@ infrastructure_be:
 
 infrastructure_fe:
   projectID: "895"
-  targetRevision: 1.2.1
+  targetRevision: 1.2.2
   chart_name: frontend
   fullnameOverride: infrastructure-fe
   resources:
