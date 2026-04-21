@@ -35,15 +35,7 @@ This repo contains:
 
 ### Tools
 
-| Pre-Requisites      |     Version     | Description  |
-|:-------------------:|:---------------:|:------------:|
-| DNS sub-domain name    |       N/A       | This domain will be used to address all services of the agent. <br/> example: `*.dataprovider01.example.com` |
-| external-dns    | 0.16.1 or newer | Used for DNS entries creation. <br/> Other version *might* work but tests were performed using 0.16.1-debian-12-r6 version. <br/> Image used: `docker.io/bitnamilegacy/external-dns:0.16.1-debian-12-r6` |  
-| Kubernetes Cluster  | 1.29.x or newer | Other version *might* work but tests were performed using 1.29.x version                                                                                                                     |
-| nginx-ingress       | 1.10.x or newer | Used as ingress controller. <br/> Other version *might* work but tests were performed using 1.10.x version. <br/> Image used: `registry.k8s.io/ingress-nginx/controller:v1.10.0`          |
-| cert-manager        | 1.15.x or newer | Used for automatic cert management. <br/> Other version *might* work but tests were performed using 1.15.x version. <br/> Image used: `quay.io/jetstack/cert-manager-controller:v1.15.3`    |
-| nfs-provisioner     | 4.0.x or newer  | Backend for *Read/Write many* volumes. <br/> Other version *might* work but tests were performed using 4.0.x version. <br/> Image used: `registry.k8s.io/sig-storage/nfs-provisioner:v4.0.8` |
-| argocd              | 2.11.x or newer | Used as GitOps tool . App of apps concept. <br/> Other version *might* work but tests were performed using 2.11.x version. <br/> Image used: `quay.io/argoproj/argocd:v2.11.3`            |
+The following versions of the elements will be used in the process: [Tools Requirements](<https://code.europa.eu/simpl/simpl-open/development/agents/common_components/-/blob/main/documents/deployment-guide/README.md?ref_type=heads#tools>)
 
 ### DNS entries
 
@@ -84,7 +76,7 @@ Before you proceed with the next steps related to accessing your OpenBao and cha
 
 ##### Secret for Infrastructure-be
 
-Edit the key for Infrastructure-be named "*dataprovider01*-infrastructure-be" where the first part reflects the namespace of your dataprovider. 
+Edit the key for Infrastructure-be named "*dataprovidernamespacetag*-infrastructure-be" where the first part reflects the namespace of your dataprovider. 
 
 You can only request the token after the provider is deployed, so after you've changed the values in the secret, you need to restart the infrastructure-be pod. 
 To get the value for gitea.token, you can execute the following command. Replace the values in brackets with variables from your Dataprovider deployment.
@@ -144,11 +136,11 @@ spec:
   source:
     repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
     path: '""'
-    targetRevision: 3.0.6                   # version of package
+    targetRevision: 3.0.7                   # version of package
     helm:
       values: |
         values:
-          branch: v3.0.6                    # branch of repo with values - for released version it should be the release branch
+          branch: v3.0.7                    # branch of repo with values - for released version it should be the release branch
         project: default
         namespaceTag:
           dataprovider: dataprovider01      # identifier of deployment and part of fqdn for this agent
@@ -194,7 +186,7 @@ There are a couple of variables you need to replace - described below. The rest 
 
 ```yaml
 values:
-  branch: v3.0.6                    # branch of repo with values - for released version it should be the release branch
+  branch: v3.0.7                    # branch of repo with values - for released version it should be the release branch
 project: default
 namespaceTag:
   dataprovider: dataprovider01      # identifier of deployment and part of fqdn for this agent
@@ -255,7 +247,7 @@ At the end, all pods should be created correctly:
 After the deployment process is complete, a manual onboarding process of the participant is required.
 
 The steps are described in the document:
-https://code.europa.eu/simpl/simpl-open/development/iaa/documentation/-/blob/main/versioned_docs/2.5.x/user-manual/ONBOARD.md
+https://code.europa.eu/simpl/simpl-open/development/iaa/documentation/-/blob/main/versioned_docs/2.9.x/user-manual/ONBOARD.md
 
 ### Tier2-proxy status
 
@@ -277,10 +269,10 @@ If you encounter issues during deployment, check the following:
 ## FAQ
 
 1. `How do I install the SuperAdmin certificate in my browser?`
-    1. Download the SuperAdmin certificate in PKCS#12 (*.p12) format.
-    2. Follow browser-specific steps to import the certificate: [Example for Firefox](https://docs.keyfactor.com/ejbca-cloud/latest/import-certificate-to-mozilla-firefox)
-    3. Restart the browser if the certificate is not immediately recognized.
+    - Download the SuperAdmin certificate in PKCS#12 (*.p12) format.
+    - Follow browser-specific steps to import the certificate: [Example for Firefox](https://docs.keyfactor.com/ejbca-cloud/latest/import-certificate-to-mozilla-firefox)
+    - Restart the browser if the certificate is not immediately recognized.
 2. `What is the purpose of the ManagementCA certificate, and how can I obtain it?`
-    1. The ManagementCA certificate is used as the truststore for secure communications.
-    2. Download it from the Admin Dashboard under CA Structure & CRL.
-    3. Save the file in JKS format and securely store the password used during download.
+    - The ManagementCA certificate is used as the truststore for secure communications.
+    - Download it from the Admin Dashboard under CA Structure & CRL.
+    - Save the file in JKS format and securely store the password used during download.
