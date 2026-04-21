@@ -1,6 +1,6 @@
 values:
   repo_URL: https://code.europa.eu/simpl/simpl-open/development/agents/data-provider.git
-  branch: v3.0.6
+  branch: v3.0.7
 
 project: ${PROJECT}
 domainSuffix: ${DOMAINSUFFIX}
