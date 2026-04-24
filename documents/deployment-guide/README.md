@@ -105,7 +105,7 @@ In the secret, you need to modify or add:
 
 ##### Secret for simpl-edc
 
-Edit the key for Infrastructure-be named "*dataprovider01*-simpl-edc" where the first part reflects the namespace of your dataprovider. You need to provide endpoint and keys to your Minio.
+Edit the key for Infrastructure-be named "dataprovidernamespacetag-simpl-edc" where the first part reflects the namespace of your dataprovider. You need to provide endpoint and keys to your Minio.
 
 You need to modify:
 
@@ -136,11 +136,11 @@ spec:
   source:
     repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
     path: '""'
-    targetRevision: 3.0.7                   # version of package
+    targetRevision: 3.0.8                   # version of package
     helm:
       values: |
         values:
-          branch: v3.0.7                    # branch of repo with values - for released version it should be the release branch
+          branch: v3.0.8                    # branch of repo with values - for released version it should be the release branch
         project: default
         namespaceTag:
           dataprovider: dataprovider01      # identifier of deployment and part of fqdn for this agent
@@ -186,7 +186,7 @@ There are a couple of variables you need to replace - described below. The rest 
 
 ```yaml
 values:
-  branch: v3.0.7                    # branch of repo with values - for released version it should be the release branch
+  branch: v3.0.8                    # branch of repo with values - for released version it should be the release branch
 project: default
 namespaceTag:
   dataprovider: dataprovider01      # identifier of deployment and part of fqdn for this agent
