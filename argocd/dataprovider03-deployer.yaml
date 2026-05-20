@@ -1,0 +1,52 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dataprovider03-deployer
+spec:
+  project: default
+  source:
+    repoURL: https://code.europa.eu/api/v4/projects/904/packages/helm/stable
+    path: '""'
+    targetRevision: 3.0.0-F-feature-splits.1497.1e177969
+    helm:
+      parameters:
+        - name: >-
+            dataprovider_gaia_x_edc.extraValues.simpl_catalogue_client.targetRevision
+          value: 2.1.0
+        - name: dataprovider_gaia_x_edc.extraValues.simpl_edc.targetRevision
+          value: 1.0.20
+        - name: dataprovider_gaia_x_edc.extraValues.signer.targetRevision
+          value: 0.0.7
+        - name: dataprovider_gaia_x_edc.extraValues.sd_ui.targetRevision
+          value: 1.5.0
+        - name: dataprovider_iaa.extraValues.tier1_gateway.targetRevision
+          value: 2.7.0
+      values: |
+        project: default
+        namespaceTag: 
+          authority: authority03
+          dataprovider: dataprovider03
+          common: common03
+        domainSuffix: int2.simpl-europe.eu
+        argocd:
+          appname: dataprovider03
+          namespace: argocd
+        cluster:
+          address: https://kubernetes.default.svc
+          namespace: dataprovider03
+          commonToolsNamespace: common03
+          issuer: dev-prod-http
+        secrets:
+          role: int2-role
+          secretEngine: int2
+        monitoring:
+          enabled: false
+        dataprovider_iaa:
+          extraValues:
+            tier2_gateway:
+              targetRevision: 2.7.0  
+        resourcePreset: low
+    chart: data-provider
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dataprovider03
