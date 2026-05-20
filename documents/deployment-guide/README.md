@@ -1,89 +1,146 @@
-# Dataprovider Agent
+# Data Provider Agent — Deployment Guide
+
+## Document Information
+
+| | |
+|---|---|
+| **Scope** | Overview, prerequisites, deployment options, post-deployment tasks, and troubleshooting for the SIMPL-Open Middleware Data Provider agent. |
+| **Audience** | Platform engineers and DevOps engineers responsible for deploying and operating the Data Provider agent on Kubernetes. |
+
+---
 
 <!-- TOC -->
-- [Dataprovider Agent](#dataprovider-agent)
-  - [Description](#description)
-  - [Prerequisites](#prerequisites)
-    - [Tools](#tools)
-    - [DNS entries](#dns-entries)
-  - [Deployment](#deployment)
-    - [Preliminary tasks](#preliminary-tasks)
-      - [OpenBao related tasks](#openbao-related-tasks)
-        - [Secret for Infrastructure-be](#secret-for-infrastructure-be)
-        - [Secret for simpl-edc](#secret-for-simpl-edc)
-    - [Deployment using ArgoCD](#deployment-using-argocd)
-    - [Manual deployment](#manual-deployment)
-      - [Files preparation](#files-preparation)
-      - [Deployment Command to execute](#deployment-command-to-execute)
-    - [Verification of deployment](#verification-of-deployment)
-  - [Additional steps and remarks](#additional-steps-and-remarks)
-    - [Onboarding](#onboarding)
-    - [Tier2-proxy status](#tier2-proxy-status)
-    - [Monitoring](#monitoring)
-  - [Troubleshooting](#troubleshooting)
-  - [FAQ](#faq)
+- [Description](#description)
+- [Component Chart Sources](#component-chart-sources)
+- [Prerequisites](#prerequisites)
+  - [Tools](#tools)
+  - [DNS Entries](#dns-entries)
+- [Preliminary Tasks](#preliminary-tasks)
+  - [OpenBao Related Tasks](#openbao-related-tasks)
+- [Deployment](#deployment)
+- [Additional Steps and Remarks](#additional-steps-and-remarks)
+  - [Secret for Infrastructure-be](#secret-for-infrastructure-be)
+  - [Secret for simpl-edc](#secret-for-simpl-edc)
+  - [Onboarding](#onboarding)
+  - [Tier2-proxy Status](#tier2-proxy-status)
+  - [Monitoring](#monitoring)
+- [Sanity check](#sanity-check)
+  - [ArgoCD statuses](#argocd-statuses)
+  - [Echo page](#echo-page)
+- [Troubleshooting](#troubleshooting)
+- [Glossary](#glossary)
 <!-- /TOC -->
 
 ## Description
 
-This repo contains:
+This repository contains the configuration files required for deploying the **Data Provider** agent using Helm charts in a Kubernetes environment.
 
-- a master helm chart allowing to deploy a *Dataprovider* agent using a single command.
-- templates of values.yaml files used inside *Integration* environment under `app-values` folder
+- The deployment is orchestrated by a master Helm chart that deploys the full Data Provider stack with a single command or ArgoCD Application resource.
+- Templates of `values.yaml` files used in the integration environment are provided under the `app-values` folder.
+
+## Component Chart Sources
+
+All sub-charts used by the Data Provider master chart are internal SIMPL-Open charts hosted in the GitLab package registry. Access requires appropriate GitLab credentials.
+
+| Name | Chart | Description | Helm Registry |
+|---|---|---|---|
+| provider-iaa | `provider-iaa` | Identity, Authentication, and Authorisation services for the Data Provider agent | [Helm stable registry](https://code.europa.eu/api/v4/projects/1403/packages/helm/stable) |
+| provider-gaia-x-edc | `provider-gaia-x-edc` | Gaia-X EDC connector for the Data Provider agent | [Helm stable registry](https://code.europa.eu/api/v4/projects/1400/packages/helm/stable) |
+| provider-data1 | `provider-data1` | Data services layer for the Data Provider agent | [Helm stable registry](https://code.europa.eu/api/v4/projects/1397/packages/helm/stable) |
+| provider-contract-billing | `provider-contract-billing` | Contract and billing management for the Data Provider agent | [Helm stable registry](https://code.europa.eu/api/v4/projects/1405/packages/helm/stable) |
+| provider-infrastructure | `provider-infrastructure` | Infrastructure management services for the Data Provider agent | [Helm stable registry](https://code.europa.eu/api/v4/projects/1407/packages/helm/stable) |
+| provider-monitoring | `provider-monitoring` | Monitoring configuration for the Data Provider agent | [Helm stable registry](https://code.europa.eu/api/v4/projects/1395/packages/helm/stable) |
+| provider-orchestration-platform | `provider-orchestration-platform` | Orchestration platform services for the Data Provider agent | [Helm stable registry](https://code.europa.eu/api/v4/projects/1410/packages/helm/stable) |
 
 ## Prerequisites
 
 ### Tools
 
-The following versions of the elements will be used in the process: [Tools Requirements](<https://code.europa.eu/simpl/simpl-open/development/agents/common_components/-/blob/main/documents/deployment-guide/README.md?ref_type=heads#tools>)
+| Pre-Requisite | Version  | Type | Description | External link |
+|---|:---:|---|---|---|
+| external-dns | 0.19.1 or newer  | Optional | Used for automated DNS entry/subdomain creation and deletion via OVH API. This domain will be used to address all services and ingresses of the agent. Example pattern: `*.{namespaceTag}.{domainSuffix}`. Image: `registry.k8s.io/external-dns/external-dns:0.19.1` | [Official external-dns documentation](https://kubernetes-sigs.github.io/external-dns/latest) |
+| Kubernetes Cluster | 1.33.x or newer | Mandatory | Kubernetes cluster provided via OVH. Other versions may work; tested with 1.33.x. | [Official kubernetes documentation](https://kubernetes.io/docs/concepts/overview) |
+| nginx-ingress | 1.13.x or newer | Mandatory  | ingress-nginx is used to control how external traffic gets into cluster and reaches applications and it integrates with OVH load balancers. Image: `registry.k8s.io/ingress-nginx/controller:v1.13.7` | [Official nginx documentation](https://docs.nginx.com/nginx-ingress-controller/install/helm/open-source) |
+| cert-manager | 1.19.x or newer | Mandatory | Tool that automates HTTPS certificates inside Kubernetes cluster. It keeps certificates renewed and it integrates directly with ingress-nginx. Image: `quay.io/jetstack/cert-manager-controller:v1.19.1` | [Official cert-manager documentation](https://cert-manager.io/docs) |
+| nfs-provisioner | 4.0.x or newer | Mandatory | Backend for ReadWriteMany volumes and shared storage. Image: `registry.k8s.io/sig-storage/nfs-provisioner:v4.0.8` | [Official nfs-provisioner documentation](https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner/tree/HEAD/charts/nfs-server-provisioner#nfs-server-provisioner) |
+| ArgoCD | 3.2.x or newer | Mandatory | GitOps continuous delivery (App-of-Apps pattern). Image: `quay.io/argoproj/argocd:v3.2.1` | [Official ArgoCD documentation](https://argo-cd.readthedocs.io/?_gl=1*1mlwt96*_ga*MTg1Mjk2OTUwMC4xNzc3NTUzMjg5*_ga_5Z1VTPDL73*czE3Nzc1NTMyODkkbzEkZzAkdDE3Nzc1NTMyOTQkajU1JGwwJGgw) |
+| S3 type storage of your choice | --- | Mandatory | Any type of S3 storage that you might already have. If not, you can deploy, for example, Minio or Garage S3. | [Minio documentation](https://docs.min.io/)<br>[Garage S3 documentation](https://garagehq.deuxfleurs.fr/documentation/) |
 
-### DNS entries
+### DNS Entries
 
-If you're not using external-dns, you will need to add the following dns entries manually.
+| Component | FQDN Pattern | Public IP |
+|---|---|---|
+| catalogue-ui | `catalogue-ui.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
+| gitea-http | `gitea.crossplane.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
+| infrastructure-argo-cd-server | `argoui.crossplane.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
+| infrastructure-argo-workflows-server | `argoworkflows.crossplane.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
+| infrastructure-be | `infrastructure-be.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
+| infrastructure-fe-frontend | `infrastructure-fe.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
+| redis-commander | `redis-commander.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
+| sd-ui | `sd-ui.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
+| simpl-fe-authentication-provider | `participant.fe.{namespaceTag}.{domainSuffix}/participant-utility` | Default Ingress Controller Public IP |
+| simpl-fe-users-roles | `participant.fe.{namespaceTag}.{domainSuffix}/users-roles` | Default Ingress Controller Public IP |
+| simpl-files | `files.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
+| simpl-ingress | `participant.be.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
+| tier2-gateway | `tls.participant.{namespaceTag}.{domainSuffix}` | Dedicated Load Balancer IP |
 
-| Entry Name | Entries |
-| ------------- | --------------------------------------------------------------------------------------------------- |
-| catalogue-ui           | catalogue-ui.(namespaceTag).(domainSuffix) |
-| gitea-http             | gitea.crossplane.(namespaceTag).(domainSuffix) |
-| infrastructure-argo-cd-server | argoui.crossplane.(namespaceTag).(domainSuffix) |
-| infrastructure-argo-workflows-server | argoworkflows.crossplane.(namespaceTag).(domainSuffix) |
-| infrastructure-be | infrastructure-be.(namespaceTag).(domainSuffix) |
-| infrastructure-fe-frontend | infrastructure-fe.(namespaceTag).(domainSuffix) |
-| redis-commander     | redis-commander.(namespaceTag).(domainSuffix) |
-| sd-ui                  | sd-ui.(namespaceTag).(domainSuffix) |
-| simpl-fe-authentication-provider | participant.fe.(namespaceTag).(domainSuffix)/participant-utility |
-| simpl-fe-users-roles             | participant.fe.(namespaceTag).(domainSuffix)/users-roles         |
-| simpl-files            | files.(namespaceTag).(domainSuffix) |
-| simpl-ingress          | participant.be.(namespaceTag).(domainSuffix) |
-| tier2-gateway          | tls.participant.(namespaceTag).(domainSuffix) |
+If your Ingress Controller is **nginx** and installed into namespace **ingress-nginx**, you can retrieve its public IP using:
+
+```bash
+kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+```
+
+In a similar way, if the Participant is deployed within namespace **{namespaceTag}**, you can retrieve the *tier2-gateway* public IP using:
+
+```bash
+kubectl get svc tier2-gateway -n {namespaceTag} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+```
+
+While we recommend strongly to use **external-dns** to manage your DNS entries using automation, one could achieve a manual DNS setup.
+
+Here is a proposed implementation of manual DNS configuration:
+
+- Create an `A` record using `{namespaceTag}.{domainSuffix}` pointing to the public IP of the Ingress Controller
+- For each entry but the *tier2-gateway* in the above table, create a `CNAME` record using value of *FQDN Pattern* column pointing to `{namespaceTag}.{domainSuffix}`
+- For *tier2-gateway* create an `A` record using `tls.participant.{namespaceTag}.{domainSuffix}` pointing to the public IP of the *tier2-gateway* kubernetes service within the namespace where the application is deployed (ie, `{namespaceTag}`)
+
+## Preliminary Tasks
+
+These tasks must be completed **before** proceeding with either deployment method.
+
+### OpenBao Related Tasks
+
+Access OpenBao at: `https://secrets.{common-namespaceTag}.{domainSuffix}`
+
+The root token can be found in the Common namespace, in the secret `secrets-root-token`, under the key `token`.
+
+The description of using OpenBao is in a separate document:
+<https://code.europa.eu/simpl/simpl-open/development/agents/common_components/-/blob/main/documents/user-manual/Using_OpenBao.md>
+
+Please read the document above before proceeding with the next steps related to accessing and modifying OpenBao contents.
 
 ## Deployment
 
-The deployment is based on master helm chart which, when applied on Kubernetes cluster, should deploy the Data Provider to it using ArgoCD.
+The Data Provider agent can be deployed using either of the following methods. Choose the guide that matches your workflow:
 
-### Preliminary tasks
+| Method | Guide | Description |
+|---|---|---|
+| **ArgoCD UI** | [ARGOCD_DEPLOYMENT.md](ARGOCD_DEPLOYMENT.md) | Deploy through the ArgoCD graphical interface by creating an Application resource. Recommended for teams using GitOps workflows. |
+| **Helm CLI** | [HELM_CLI_DEPLOYMENT.md](HELM_CLI_DEPLOYMENT.md) | Deploy from the command line using `helm install`. Suitable for scripted or CI/CD-driven deployments. |
 
-#### OpenBao related tasks
+## Additional Steps and Remarks
 
-You can access OpenBao on <https://secrets.**commonnamespacetag**.**domainSuffix**>
-Root token can be found in common namespace, secret secrets-root-token, in key token.
+### Secret for Infrastructure-be
 
-The description of using OpenBao is in a separate document:
+Edit the OpenBao key named `{dataprovider-namespace}-infrastructure-be` (where the first part reflects your Data Provider namespace).
 
-<https://code.europa.eu/simpl/simpl-open/development/agents/common_components/-/blob/main/documents/user-manual/Using_OpenBao.md>
+You can only request the Gitea token after the provider is deployed. After changing the values in the secret, restart the `infrastructure-be` pod.
 
-Before you proceed with the next steps related to accessing your OpenBao and changing its contents, please read the document above.<BR>
-
-##### Secret for Infrastructure-be
-
-Edit the key for Infrastructure-be named "*dataprovidernamespacetag*-infrastructure-be" where the first part reflects the namespace of your dataprovider. 
-
-You can only request the token after the provider is deployed, so after you've changed the values in the secret, you need to restart the infrastructure-be pod. 
-To get the value for gitea.token, you can execute the following command. Replace the values in brackets with variables from your Dataprovider deployment.
+To obtain the value for `gitea.token`, execute the following command (replace the values in brackets with variables from your deployment):
 
 ```bash
-curl -X POST "https://gitea.crossplane.(namespaceTag).(domainSuffix)/api/v1/users/(gitea.username)/tokens" \
-  -u (gitea.username):(gitea.password) \
+curl -X POST "https://gitea.crossplane.{namespaceTag}.{domainSuffix}/api/v1/users/{gitea.username}/tokens" \
+  -u {gitea.username}:{gitea.password} \
   -H "Content-Type: application/json" \
   -d '{
     "name": "token-name",
@@ -91,188 +148,114 @@ curl -X POST "https://gitea.crossplane.(namespaceTag).(domainSuffix)/api/v1/user
   }'
 ```
 
-After the command is processed you will get a result like this:
+The response will contain a `sha1` field:
+
 ```bash
-{"id":3,"name":"token-name","sha1":"(giteatoken)","token_last_eight":"example","scopes":null}
-```
-Put in the secret below the value of the "sha1" key. 
-
-In the secret, you need to modify or add:
-
-| Variable name                   |     Example                | Description                   |
-| ----------------------          |     :-----:                | ---------------               |
-| gitea.token                     | giteatoken                 | Token to access gitea         |
-
-##### Secret for simpl-edc
-
-Edit the key for Infrastructure-be named "dataprovidernamespacetag-simpl-edc" where the first part reflects the namespace of your dataprovider. You need to provide endpoint and keys to your Minio.
-
-You need to modify:
-
-| Variable name                    |     Example              | Description              |
-| ----------------------           |     :-----:              | ---------------          |
-| fr_gxfs_s3_access_key            | minioacckey              | minio access key         |
-| fr_gxfs_s3_endpoint              | https://minio.address.eu | minio api address        |
-| fr_gxfs_s3_secret_key            | minioseckey              | minio secret key         |
-
-All the other necessary secrets are now created automatically with proper data.
-
-### Deployment using ArgoCD
-
-You can easily deploy the agent using ArgoCD. All the values mentioned in the sections below you can input in ArgoCD deployment. The repoURL gets the package directly from code.europa.eu.
-targetRevision is the package version.
-
-In the example below, please replace the marked versions with the ones applicable to your environment.
-
-Please pay special attention to the namespace names and replace them with yours: common01, authority01, and dataprovider01, and also to replace the domain name example.com and the occurrence of the test-int value itself.
-
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: 'dataprovider01-deployer'           # name of the deploying app in argocd
-spec:
-  project: default
-  source:
-    repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
-    path: '""'
-    targetRevision: 3.0.8                   # version of package
-    helm:
-      values: |
-        values:
-          branch: v3.0.8                    # branch of repo with values - for released version it should be the release branch
-        project: default
-        namespaceTag:
-          dataprovider: dataprovider01      # identifier of deployment and part of fqdn for this agent
-          authority: authority01            # identifier of deployment and part of fqdn for authority
-          common: common01                  # identifier of deployment and part of fqdn for common components
-        domainSuffix: example.com           # last part of fqdn
-        resourcePreset: default             # set to "low" to disable requests of resources
-        argocd:
-          appname: dataprovider01           # name of generated argocd app 
-          namespace: argocd                 # namespace of your argocd
-        cluster:
-          address: https://kubernetes.default.svc
-          namespace: dataprovider01         # where the app will be deployed
-          commonToolsNamespace: common01    # namespace where main monitoring stack is deployed
-          issuer: dev-prod                  # issuer of certificates
-        secrets:
-          role: example-role                # role created in OpenBao for access
-          secretEngine: example             # secret engine name created in OpenBao
-        crossplane:
-          enabled: true                     # if infrastructure components should be deployed (there can be only one instance per cluster)
-          kafka:
-            username: user                  # name should be: namespace_infrabe e.g.: dataprovider01_infrabe
-            password: pass                  # take the password from common01-kafka-credentials OpenBao secret, key dataprovider01_infrabe
-          gitea:
-            username: gitops_test           # username of gitea
-            password: pass                  # password of gitea - the variable can take on any value (set it to your preference)
-        monitoring:
-          enabled: true                     # should monitoring be enabled
-    chart: data-provider
-  destination:
-    server: 'https://kubernetes.default.svc'
-    namespace: dataprovider01               # where the package will be deployed
+{"id":3,"name":"token-name","sha1":"<gitea-token>","token_last_eight":"example","scopes":null}
 ```
 
-### Manual deployment
+Place the value of the `sha1` key into the following secret variable:
 
-#### Files preparation
+| Variable Name | Example | Description |
+|---|:---:|---|
+| `gitea.token` | `<gitea-token>` | Token to access Gitea |
 
-Another way for deployment, is to unpack the released package to a folder on a host where you have kubectl and helm available and configured.
+### Secret for simpl-edc
 
-There is basically one file that you need to modify - values.yaml.
-There are a couple of variables you need to replace - described below. The rest you don't need to change.
+Edit the OpenBao key named `{dataprovider-namespace}-simpl-edc` (where the first part reflects your Data Provider namespace). You need to provide the endpoint and keys for your S3 storage.
 
-```yaml
-values:
-  branch: v3.0.8                    # branch of repo with values - for released version it should be the release branch
-project: default
-namespaceTag:
-  dataprovider: dataprovider01      # identifier of deployment and part of fqdn for this agent
-  authority: authority01            # identifier of deployment and part of fqdn for authority
-  common: common01                  # identifier of deployment and part of fqdn for common components
-domainSuffix: example.com           # last part of fqdn
-resourcePreset: default             # set to "low" to disable requests of resources
-argocd:
-  appname: dataprovider01           # name of generated argocd app 
-  namespace: argocd                 # namespace of your argocd
-cluster:
-  address: https://kubernetes.default.svc
-  namespace: dataprovider01         # where the app will be deployed
-  commonToolsNamespace: common01    # namespace where main monitoring stack is deployed
-  issuer: dev-prod                  # issuer of certificates
-secrets:
-  role: example-role                # role created in OpenBao for access
-  secretEngine: example             # secret engine name created in OpenBao
-crossplane:
-  enabled: true                     # if infrastructure components should be deployed (there can be only one instance per cluster)
-  kafka:
-    username: dataprovider01_infrabe # name should be: namespace_infrabe e.g.: dataprovider01_infrabe
-    password: pass                  # take the password from common01-kafka-credentials OpenBao secret, key dataprovider01_infrabe
-  gitea:
-    username: gitops_test           # username of gitea
-    password: pass                  # password of gitea - the variable can take on any value (set it to your preference)
-monitoring:
-  enabled: true                     # should monitoring be enabled
-```
+The following variables must be modified:
 
-#### Deployment Command to execute
+| Variable Name | Example | Description |
+|---|:---:|---|
+| `fr_gxfs_s3_access_key` | `minioacckey` | Access key for the S3 storage user |
+| `fr_gxfs_s3_endpoint` | `https://minio.address.eu` | S3 API address |
+| `fr_gxfs_s3_secret_key` | `minioseckey` | Secret key for the S3 storage user |
 
-After you have prepared the values file, you can start the deployment.
-Use the command prompt. Proceed to the folder where you have the Chart.yaml file and execute the following command. The dot at the end is crucial - it points to current folder to look for the chart.
-
-Now you can deploy the agent:
-
-`helm install data-provider .`
-
-After starting the deployment synchronization process, the expected applications in ArgoCD will be created.
-
-### Verification of deployment
-
-Initially, the status observed e.g. in ArgoCD will indicate the creation of new pods:
-
-<img src="images/dataprovider_ArgoCD01.png" alt="ArgoCD01" width="600"><BR>
-
-Be patient!... Depending on the configuration, this step can take up to 30 minutes!
-
-At the end, all pods should be created correctly:
-
-<img src="images/dataprovider_ArgoCD02.png" alt="ArgoCD02" width="600"><BR>
-
-## Additional steps and remarks
+All other necessary secrets are created automatically with the correct data.
 
 ### Onboarding
 
-After the deployment process is complete, a manual onboarding process of the participant is required.
+After the deployment process is complete, a manual onboarding process for the participant is required.
 
-The steps are described in the document:
-https://code.europa.eu/simpl/simpl-open/development/iaa/documentation/-/blob/main/versioned_docs/2.9.x/user-manual/ONBOARD.md
+The steps are described in the IAA documentation:
+<https://code.europa.eu/simpl/simpl-open/development/iaa/agent-iaa/authority-iaa/-/blob/v1.2.14/documents/user-manual/ONBOARD.md>
 
-### Tier2-proxy status
+### Tier2-proxy Status
 
-Please keep in mind that until the agent is properly initialized, the tier2-proxy component will not work properly.
+Until the agent is properly onboarded, the tier2-proxy component will **not** operate correctly. This is expected behaviour; proceed with the onboarding steps above before investigating tier2-proxy health.
 
 ### Monitoring
 
-Filebeat components for monitoring are included in this release.
-Their deployment can be disabled by switching the value monitoring.enabled to false.
+Filebeat components for log monitoring are included in this release. Their deployment can be disabled by setting `monitoring.enabled` to `false` in the Helm values.
+
+## Sanity check
+
+### ArgoCD statuses
+
+To make sure that everything is running correctly, you can check the statuses of apps in ArgoCD.<br><br>
+<img src="images/Sanity_check_1.png" alt="ArgoCD statuses" width="800">
+
+Normally, every app should have a healthy status, but at the moment there are exceptions:
+- dataprovider-iaa application can get a "Missing" status, because of authentication-provider-create-secret job which is removed after it's been processed. 
+<img src="images/Sanity_check_2.png" alt="authentication-provider-create-secret" width="400">
+<br><br>
+
+- dataprovider-infrastructure-deps application can get a "Degraded" status, because of statuses of resources listed below, it's an expected behaviour.
+<img src="images/Sanity_check_3.png" alt="oci and git repositories" width="400">
+
+This will be fixed in future releases.
+
+### Echo page
+
+The echo page helps you understand whether you can communicate with the authority in tier 2, allowing participants to obtain information about the connection and security and receive information about the organization they belong to (identifying who you are).
+You can access the page via the link. `<participant-frontend>/participant-utility/echo`.
+
+(i.e., a user with the **ONBOARDER_M** role, such as the preconfigured user `a.w`)
+
+The fields marked in red frame, should be exactly as on the screenshot:
+<img src="images/Sanity_check_4.png" alt="oci and git repositories" width="600">
 
 ## Troubleshooting
 
-If you encounter issues during deployment, check the following:
+If you encounter issues during deployment, verify the following:
 
-- Ensure that ArgoCD is properly set up and running.
-- Verify that the namespace exists in your Kubernetes cluster.
-- Check the ArgoCD application logs and Helm error messages for specific issues.
+- ArgoCD is properly set up and running.
+- The target namespace exists in your Kubernetes cluster.
+- Review the ArgoCD Application logs and Helm error messages for specific issues.
+- All [DNS entries](#dns-entries) resolve correctly to the ingress controller.
+- The [Preliminary Tasks](#preliminary-tasks) (OpenBao secrets, Minio, Gitea token) have been completed.
 
-## FAQ
+### Redis Commander
 
-1. `How do I install the SuperAdmin certificate in my browser?`
-    - Download the SuperAdmin certificate in PKCS#12 (*.p12) format.
-    - Follow browser-specific steps to import the certificate: [Example for Firefox](https://docs.keyfactor.com/ejbca-cloud/latest/import-certificate-to-mozilla-firefox)
-    - Restart the browser if the certificate is not immediately recognized.
-2. `What is the purpose of the ManagementCA certificate, and how can I obtain it?`
-    - The ManagementCA certificate is used as the truststore for secure communications.
-    - Download it from the Admin Dashboard under CA Structure & CRL.
-    - Save the file in JKS format and securely store the password used during download.
+Redis Commander is a web-based frontend for visualising data stored in `redis-master`. This tool is intended for middleware developers and is not required for end-user operation.
+
+![Redis Commander](images/RedisCommander.png)
+
+The password for Redis Commander is stored in OpenBao under the `{namespaceTag}-redis` secret.
+
+> **Note:** To log in, use `admin` as the username (not `rediscommander`) and the password from the `rediscommander` variable in the OpenBao secret.
+
+<img src="images/Redis01.png" alt="Redis Commander — login" width="400"><br>
+<img src="images/Redis02.png" alt="Redis Commander — dashboard" width="400"><br>
+
+## Glossary
+
+| Term | Definition |
+|---|---|
+| **ArgoCD** | A GitOps continuous delivery tool for Kubernetes that synchronises application state from a Git repository or Helm registry. |
+| **Helm** | The package manager for Kubernetes, using charts to define, install, and upgrade applications. |
+| **Master Helm Chart** | A top-level chart that orchestrates the deployment of multiple sub-charts as a single unit. |
+| **namespaceTag** | An identifier used in Kubernetes namespace names and DNS entries to distinguish deployments. |
+| **domainSuffix** | The base domain name appended to generated DNS entries (e.g. `example.com`). |
+| **FQDN** | Fully Qualified Domain Name — the complete DNS name for a service. |
+| **OpenBao** | An open-source secrets management tool (fork of HashiCorp Vault) used to store and access sensitive configuration. |
+| **KV Secret Engine** | A key-value secret storage backend in OpenBao / Vault. |
+| **cert-manager** | A Kubernetes add-on that automates the management and issuance of TLS certificates. |
+| **nginx-ingress** | An ingress controller that manages external access to services in a Kubernetes cluster. |
+| **tier2-proxy** | A gateway component in the SIMPL-Open architecture that handles inter-agent communication. |
+| **Data Provider** | A SIMPL-Open agent representing a data space participant that provides data and services. |
+| **EDC** | Eclipse Dataspace Connector — the component that handles data exchange between participants. |
+| **S3** | An S3-compatible object storage solution used for EDC data transfers. |
+| **Crossplane** | A Kubernetes add-on for provisioning and managing cloud infrastructure resources declaratively. |
+| **Gitea** | A self-hosted Git service used by the Data Provider's infrastructure components. |
