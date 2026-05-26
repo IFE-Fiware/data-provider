@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [3.1.1] - 2026-05-26
 
 ### changed (1 change)
-- dataprovider-iaa chart v1.2.15
+- dataprovider-iaa chart v1.2.16
 
 ## [3.1.0] - 2026-05-20
 
