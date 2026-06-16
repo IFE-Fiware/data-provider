@@ -218,6 +218,8 @@ After creating the Application in ArgoCD, verify the deployment:
    ```
 6. Proceed with the [Onboarding](README.md#onboarding) steps described in the main deployment guide.
 
+> **Note:** The tier2-gateway and tier2-proxy components will not become healthy until the post-deployment onboarding is complete.
+
 ## See Also
 
 - [Main Deployment Guide (README)](README.md) — prerequisites, preliminary tasks, troubleshooting, and onboarding procedures.

@@ -163,7 +163,7 @@ After the deployment has completed, verify that all resources are healthy:
 
 3. Proceed with the [Onboarding](README.md#onboarding) steps described in the main deployment guide.
 
-> **Note:** The tier2-proxy component will not become healthy until the post-deployment onboarding is complete.
+> **Note:** The tier2-gateway and tier2-proxy components will not become healthy until the post-deployment onboarding is complete.
 
 ## See Also
 
