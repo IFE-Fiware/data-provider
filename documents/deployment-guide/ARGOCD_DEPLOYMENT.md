@@ -136,8 +136,8 @@ spec:
           commonToolsNamespace: <common-namespace>     # namespace where main monitoring stack is deployed
           issuer: <your-issuer>                        # issuer of certificates
         secrets:
-          role: example-role                           # role created in OpenBao for access
-          secretEngine: example                        # secret engine name created in OpenBao
+          role: <role_name>                            # role created in OpenBao for access
+          secretEngine: <secret_engine_name>           # secret engine name created in OpenBao
         crossplane:
           kafka:
             password: pass                             # password of user {namespace}_infrabe from {common-namespace}-kafka-credentials OpenBao secret
