@@ -45,7 +45,7 @@ The primary file to modify is `values.yaml`. Replace the placeholder values list
 | `<common-namespace>` | `namespaceTag.common`, `cluster.commonToolsNamespace` | The namespace identifier of your Common Components deployment |
 | `<your-domain>` | `domainSuffix` | Your actual domain name |
 | `default` | `project` | The ArgoCD project to which this deployment belongs |
-| `v3.1.5` | `values.branch` | The Git branch corresponding to your release version |
+| `v3.1.6` | `values.branch` | The Git branch corresponding to your release version |
 | `example` | `secrets.secretEngine` | The name of the KV secret engine configured in your OpenBao |
 | `example-role` | `secrets.role` | The name of the role configured in your OpenBao |
 | `<your-issuer>` | `cluster.issuer` | Your certificate issuer name |
@@ -56,7 +56,7 @@ The primary file to modify is `values.yaml`. Replace the placeholder values list
 
 ```yaml
 values:
-  branch: v3.1.5                               # branch of repo with values - for released version it should be the release branch
+  branch: v3.1.6                               # branch of repo with values - for released version it should be the release branch
 project: default                               # project to which the namespace is attached
 namespaceTag:
   dataprovider: <dataprovider-namespace>       # identifier of deployment and part of fqdn for this agent
