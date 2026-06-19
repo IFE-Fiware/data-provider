@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.7] - 2026-06-19
+
+### fixed (2 changes)
+- fixed documentation bug SIMPL-28369 (authorityDomainSuffix missing from documentation)
+- fixed documentation bug SIMPL-28199 (explained the resourcePreset key)
+
+### changed (2 changes)
+- added documentation changes suggested by Marco Moschetti
+- dataprovider-data1 chart v1.1.6
+
 ## [3.1.6] - 2026-06-17
 
 ### changed (1 change)
