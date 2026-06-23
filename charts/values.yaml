@@ -39,9 +39,9 @@ dataprovider_iaa:
 dataprovider_gaia_x_edc:
   enabled: true
   projectID: "1400"
-  targetRevision: 1.1.0
+  targetRevision: 1.1.2
   chart_name: provider-gaia-x-edc
-  valuesBranch: v1.1.0
+  valuesBranch: v1.1.2
 
 dataprovider_data1:
   enabled: true
