@@ -44,6 +44,7 @@ The primary file to modify is `values.yaml`. Replace the placeholder values list
 | `<authority-namespace>` | `namespaceTag.authority` | The namespace identifier of your Governance Authority deployment |
 | `<common-namespace>` | `namespaceTag.common`, `cluster.commonToolsNamespace` | The namespace identifier of your Common Components deployment |
 | `<your-domain>` | `domainSuffix` | Your actual domain name |
+| `<your-authority-domain>` | `authorityDomainSuffix` | Your Authority's actual domain name |
 | `default` | `project` | The ArgoCD project to which this deployment belongs |
 | `v3.1.7` | `values.branch` | The Git branch corresponding to your release version |
 | `example` | `secrets.secretEngine` | The name of the KV secret engine configured in your OpenBao |

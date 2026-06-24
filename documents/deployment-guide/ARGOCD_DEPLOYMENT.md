@@ -93,6 +93,7 @@ The sections below provide the full list of values that must be replaced, follow
 | `<authority-namespace>` | `namespaceTag.authority` | The namespace identifier of your Governance Authority deployment |
 | `<common-namespace>` | `namespaceTag.common`, `cluster.commonToolsNamespace` | The namespace identifier of your Common Components deployment |
 | `<your-domain>` | `domainSuffix` | Your actual domain name |
+| `<your-authority-domain>` | `authorityDomainSuffix` | Your Authority's actual domain name |
 | `default` | `project` | The ArgoCD project to which this deployment belongs |
 | `3.1.7` / `v3.1.7` | `targetRevision`, `values.branch` | The Helm chart version and corresponding Git branch for your release |
 | `example` | `secrets.secretEngine` | The name of the KV secret engine configured in your OpenBao |
