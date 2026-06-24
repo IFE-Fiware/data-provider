@@ -30,25 +30,25 @@ Follow the steps below to deploy the Data Provider agent through the ArgoCD UI.
 
 Open the ArgoCD web interface in your browser and authenticate with your credentials. You must have permissions to create Application resources in the target project.
 
-<img src="images/ArgoCD_Login.png" alt="ArgoCD login page" width="600">
+<img src="../images/ArgoCD_Login.png" alt="ArgoCD login page" width="600">
 
 ### Step 2 — Create a new Application
 
 From the ArgoCD dashboard, click the **+ NEW APP** button in the top-left area of the interface.
 
-<img src="images/ArgoCD_NewApplication.png" alt="ArgoCD dashboard — New App button" width="600">
+<img src="../images/ArgoCD_NewApplication.png" alt="ArgoCD dashboard — New App button" width="600">
 
 ### Step 3 — Switch to the YAML editor
 
 In the new application creation form, click the **EDIT AS YAML** button (located in the upper-right area of the form). This opens the raw YAML editor where you can paste the full Application manifest.
 
-<img src="images/ArgoCD_EditAsYaml.png" alt="ArgoCD — Edit as YAML button" width="600">
+<img src="../images/ArgoCD_EditAsYaml.png" alt="ArgoCD — Edit as YAML button" width="600">
 
 ### Step 4 — Paste the Application manifest
 
 Copy the YAML manifest from the [Example ArgoCD Application Manifest](#example-argocd-application-manifest) section below (after replacing all placeholder values), paste it into the YAML editor, and click **SAVE**.
 
-<img src="images/ArgoCD_Save.png" alt="ArgoCD — Paste manifest and click Save" width="600">
+<img src="../images/ArgoCD_Save.png" alt="ArgoCD — Paste manifest and click Save" width="600">
 
 ### Step 5 — Verify the populated fields
 
@@ -66,13 +66,13 @@ After saving, ArgoCD switches back to the form view. Verify that the following f
 
 If any field is empty or incorrect, click **EDIT AS YAML** again, correct the manifest, and save.
 
-<img src="images/ArgoCD_CreateApp.png" alt="ArgoCD — Verify populated fields" width="600">
+<img src="../images/ArgoCD_CreateApp.png" alt="ArgoCD — Verify populated fields" width="600">
 
 ### Step 6 — Create and synchronise
 
 Click the **CREATE** button to create the Application. ArgoCD will begin synchronising the resources to your cluster. You can monitor progress in the Application detail view.
 
-<img src="images/ArgoCD_Verification.png" alt="ArgoCD — Application running and synchronised" width="600">
+<img src="../images/ArgoCD_Verification.png" alt="ArgoCD — Application running and synchronised" width="600">
 
 > **Note:** Depending on cluster resources and network conditions, full synchronisation may take up to 30 minutes.
 

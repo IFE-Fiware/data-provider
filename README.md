@@ -72,7 +72,6 @@ The requirements tools are listed here: [Tools requirements](https://code.europa
 | infrastructure-argo-workflows-server | `argoworkflows.crossplane.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
 | infrastructure-be | `infrastructure-be.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
 | infrastructure-fe-frontend | `infrastructure-fe.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
-| redis-commander | `redis-commander.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
 | sd-ui | `sd-ui.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
 | simpl-fe-authentication-provider | `participant.fe.{namespaceTag}.{domainSuffix}/participant-utility` | Default Ingress Controller Public IP |
 | simpl-fe-users-roles | `participant.fe.{namespaceTag}.{domainSuffix}/users-roles` | Default Ingress Controller Public IP |
@@ -190,15 +189,15 @@ Filebeat components for log monitoring are included in this release. Their deplo
 ### ArgoCD statuses
 
 To make sure that everything is running correctly, you can check the statuses of apps in ArgoCD.<br><br>
-<img src="images/Sanity_check_1.png" alt="ArgoCD statuses" width="800">
+<img src="documents/images/Sanity_check_1.png" alt="ArgoCD statuses" width="800">
 
 Normally, every app should have a healthy status, but at the moment there are exceptions:
 - dataprovider-iaa application can get a "Missing" status, because of authentication-provider-create-secret job which is removed after it's been processed. 
-<img src="images/Sanity_check_2.png" alt="authentication-provider-create-secret" width="400">
+<img src="documents/images/Sanity_check_2.png" alt="authentication-provider-create-secret" width="400">
 <br><br>
 
 - dataprovider-infrastructure-deps application can get a "Degraded" status, because of statuses of resources listed below, it's an expected behaviour.
-<img src="images/Sanity_check_3.png" alt="oci and git repositories" width="400">
+<img src="documents/images/Sanity_check_3.png" alt="oci and git repositories" width="400">
 
 This will be fixed in future releases.
 
@@ -210,7 +209,7 @@ You can access the page via the link. `<participant-frontend>/participant-utilit
 (i.e., a user with the **ONBOARDER_M** role, such as the preconfigured user `a.w`)
 
 The fields marked in red frame, should be exactly as on the screenshot:
-<img src="images/Sanity_check_4.png" alt="oci and git repositories" width="600">
+<img src="documents/images/Sanity_check_4.png" alt="oci and git repositories" width="600">
 
 ## Troubleshooting
 
@@ -221,19 +220,6 @@ If you encounter issues during deployment, verify the following:
 - Review the ArgoCD Application logs and Helm error messages for specific issues.
 - All [DNS entries](#dns-entries) resolve correctly to the ingress controller.
 - The [Preliminary Tasks](#preliminary-tasks) (OpenBao secrets, Minio, Gitea token) have been completed.
-
-### Redis Commander
-
-Redis Commander is a web-based frontend for visualising data stored in `redis-master`. This tool is intended for middleware developers and is not required for end-user operation.
-
-![Redis Commander](images/RedisCommander.png)
-
-The password for Redis Commander is stored in OpenBao under the `{namespaceTag}-redis` secret.
-
-> **Note:** To log in, use `admin` as the username (not `rediscommander`) and the password from the `rediscommander` variable in the OpenBao secret.
-
-<img src="images/Redis01.png" alt="Redis Commander — login" width="400"><br>
-<img src="images/Redis02.png" alt="Redis Commander — dashboard" width="400"><br>
 
 ## Glossary
 
