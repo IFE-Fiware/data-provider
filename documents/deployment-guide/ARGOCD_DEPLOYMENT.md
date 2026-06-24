@@ -60,7 +60,7 @@ After saving, ArgoCD switches back to the form view. Verify that the following f
 | **Project Name** | `default` (or your chosen project) | `spec.project` |
 | **Repository URL** | `https://code.europa.eu/api/v4/projects/904/packages/helm/stable` | `spec.source.repoURL` |
 | **Chart** | `data-provider` | `spec.source.chart` |
-| **Target Revision** | `3.1.7` (your chart version) | `spec.source.targetRevision` |
+| **Target Revision** | `3.1.8` (your chart version) | `spec.source.targetRevision` |
 | **Cluster URL** | `https://kubernetes.default.svc` | `spec.destination.server` |
 | **Namespace** | Your data provider agent namespace | `spec.destination.namespace` |
 
@@ -95,7 +95,7 @@ The sections below provide the full list of values that must be replaced, follow
 | `<your-domain>` | `domainSuffix` | Your actual domain name |
 | `<your-authority-domain>` | `authorityDomainSuffix` | Your Authority's actual domain name |
 | `default` | `project` | The ArgoCD project to which this deployment belongs |
-| `3.1.7` / `v3.1.7` | `targetRevision`, `values.branch` | The Helm chart version and corresponding Git branch for your release |
+| `3.1.8` / `v3.1.8` | `targetRevision`, `values.branch` | The Helm chart version and corresponding Git branch for your release |
 | `example` | `secrets.secretEngine` | The name of the KV secret engine configured in your OpenBao |
 | `example-role` | `secrets.role` | The name of the role configured in your OpenBao |
 | `<your-issuer>` | `cluster.issuer` | Your certificate issuer name |
@@ -119,11 +119,11 @@ spec:
   source:
     repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
     path: '""'
-    targetRevision: 3.1.7                              # version of package
+    targetRevision: 3.1.8                              # version of package
     helm:
       values: |
         values:
-          branch: v3.1.7                               # branch of repo with values - for released version it should be the release branch
+          branch: v3.1.8                               # branch of repo with values - for released version it should be the release branch
         project: default                               # project to which the namespace is attached
         namespaceTag:
           dataprovider: <dataprovider-namespace>       # identifier of deployment and part of fqdn for this agent
