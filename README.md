@@ -23,6 +23,7 @@
   - [Secret for simpl-edc](#secret-for-simpl-edc)
   - [Onboarding](#onboarding)
   - [Tier2-proxy Status](#tier2-proxy-status)
+  - [Retrieve Tier2 Gateway Public IP address](#retrieve-tier2-gateway-public-ip-address)
   - [Monitoring](#monitoring)
 - [Sanity check](#sanity-check)
   - [ArgoCD statuses](#argocd-statuses)
@@ -85,11 +86,7 @@ If your Ingress Controller is **nginx** and installed into namespace **ingress-n
 kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
 ```
 
-In a similar way, if the Participant is deployed within namespace **{namespaceTag}**, you can retrieve the *tier2-gateway* public IP using:
-
-```bash
-kubectl get svc tier2-gateway -n {namespaceTag} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
-```
+The Tier2 Gateway's Load Balancer public IP can be extracted only after the succesful deployment - instructions [below](#retrieve-tier2-gateway-public-ip-address)
 
 While we recommend strongly to use **external-dns** to manage your DNS entries using automation, one could achieve a manual DNS setup.
 
@@ -179,6 +176,14 @@ The steps are described in the IAA documentation:
 ### Tier2-proxy Status
 
 Until the agent is properly onboarded, the tier2-proxy component will **not** operate correctly. This is expected behaviour; proceed with the onboarding steps above before investigating tier2-proxy health.
+
+### Retrieve Tier2 Gateway Public IP address
+
+If the Authority agent is deployed within namespace **{namespaceTag}**, you can retrieve the *tier2-gateway* public IP using:
+
+```bash
+kubectl get svc tier2-gateway -n {namespaceTag} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+```
 
 ### Monitoring
 
