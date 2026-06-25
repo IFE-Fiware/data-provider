@@ -94,6 +94,7 @@ The sections below provide the full list of values that must be replaced, follow
 | `<common-namespace>` | `namespaceTag.common`, `cluster.commonToolsNamespace` | The namespace identifier of your Common Components deployment |
 | `<your-domain>` | `domainSuffix` | Your actual domain name |
 | `<your-authority-domain>` | `authorityDomainSuffix` | Your Authority's actual domain name |
+| `default` | `resourcePreset` | Setting this value to `low`, will limit the Kubernetes requests for CPU and memory in deployed resources, if possible. It will make the agent deployable on a smaller cluster. |
 | `default` | `project` | The ArgoCD project to which this deployment belongs |
 | `3.1.8` / `v3.1.8` | `targetRevision`, `values.branch` | The Helm chart version and corresponding Git branch for your release |
 | `example` | `secrets.secretEngine` | The name of the KV secret engine configured in your OpenBao |
@@ -103,9 +104,6 @@ The sections below provide the full list of values that must be replaced, follow
 | `pass` | `crossplane.gitea.password` | Your Gitea password (password can be any value of your choice), username is hardcoded to **gitops_test** |
 
 **Fields that typically do not need changing:** `repoURL` (unless you host your own mirror), `cluster.address` (unless deploying to a remote cluster).
-
-> There is also a resourcePreset key, which, if you set it the value to "low", will limit the Kubernetes requests for CPU and memory in deployed resources, if possible. 
-> It will make the agent deployable on a smaller cluster.
 
 ### Example ArgoCD Application Manifest
 

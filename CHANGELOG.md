@@ -6,9 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.1.8] - 2026-06-24
 
-### fixed (2 changes)
+### fixed (3 changes)
 - change README.md location (SIMPL-28359)
 - remove Redis Commander references (SIMPL-28365)
+- changed the information about resourcePreset key (SIMPL-28199)
 
 ## [3.1.7] - 2026-06-19
 
