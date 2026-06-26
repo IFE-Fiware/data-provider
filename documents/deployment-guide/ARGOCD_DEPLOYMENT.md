@@ -30,25 +30,25 @@ Follow the steps below to deploy the Data Provider agent through the ArgoCD UI.
 
 Open the ArgoCD web interface in your browser and authenticate with your credentials. You must have permissions to create Application resources in the target project.
 
-<img src="images/ArgoCD_Login.png" alt="ArgoCD login page" width="600">
+<img src="../images/ArgoCD_Login.png" alt="ArgoCD login page" width="600">
 
 ### Step 2 — Create a new Application
 
 From the ArgoCD dashboard, click the **+ NEW APP** button in the top-left area of the interface.
 
-<img src="images/ArgoCD_NewApplication.png" alt="ArgoCD dashboard — New App button" width="600">
+<img src="../images/ArgoCD_NewApplication.png" alt="ArgoCD dashboard — New App button" width="600">
 
 ### Step 3 — Switch to the YAML editor
 
 In the new application creation form, click the **EDIT AS YAML** button (located in the upper-right area of the form). This opens the raw YAML editor where you can paste the full Application manifest.
 
-<img src="images/ArgoCD_EditAsYaml.png" alt="ArgoCD — Edit as YAML button" width="600">
+<img src="../images/ArgoCD_EditAsYaml.png" alt="ArgoCD — Edit as YAML button" width="600">
 
 ### Step 4 — Paste the Application manifest
 
 Copy the YAML manifest from the [Example ArgoCD Application Manifest](#example-argocd-application-manifest) section below (after replacing all placeholder values), paste it into the YAML editor, and click **SAVE**.
 
-<img src="images/ArgoCD_Save.png" alt="ArgoCD — Paste manifest and click Save" width="600">
+<img src="../images/ArgoCD_Save.png" alt="ArgoCD — Paste manifest and click Save" width="600">
 
 ### Step 5 — Verify the populated fields
 
@@ -60,19 +60,19 @@ After saving, ArgoCD switches back to the form view. Verify that the following f
 | **Project Name** | `default` (or your chosen project) | `spec.project` |
 | **Repository URL** | `https://code.europa.eu/api/v4/projects/904/packages/helm/stable` | `spec.source.repoURL` |
 | **Chart** | `data-provider` | `spec.source.chart` |
-| **Target Revision** | `3.1.7` (your chart version) | `spec.source.targetRevision` |
+| **Target Revision** | `3.1.8` (your chart version) | `spec.source.targetRevision` |
 | **Cluster URL** | `https://kubernetes.default.svc` | `spec.destination.server` |
 | **Namespace** | Your data provider agent namespace | `spec.destination.namespace` |
 
 If any field is empty or incorrect, click **EDIT AS YAML** again, correct the manifest, and save.
 
-<img src="images/ArgoCD_CreateApp.png" alt="ArgoCD — Verify populated fields" width="600">
+<img src="../images/ArgoCD_CreateApp.png" alt="ArgoCD — Verify populated fields" width="600">
 
 ### Step 6 — Create and synchronise
 
 Click the **CREATE** button to create the Application. ArgoCD will begin synchronising the resources to your cluster. You can monitor progress in the Application detail view.
 
-<img src="images/ArgoCD_Verification.png" alt="ArgoCD — Application running and synchronised" width="600">
+<img src="../images/ArgoCD_Verification.png" alt="ArgoCD — Application running and synchronised" width="600">
 
 > **Note:** Depending on cluster resources and network conditions, full synchronisation may take up to 30 minutes.
 
@@ -93,8 +93,10 @@ The sections below provide the full list of values that must be replaced, follow
 | `<authority-namespace>` | `namespaceTag.authority` | The namespace identifier of your Governance Authority deployment |
 | `<common-namespace>` | `namespaceTag.common`, `cluster.commonToolsNamespace` | The namespace identifier of your Common Components deployment |
 | `<your-domain>` | `domainSuffix` | Your actual domain name |
+| `<your-authority-domain>` | `authorityDomainSuffix` | Your Authority's actual domain name |
+| `default` | `resourcePreset` | Setting this value to `low`, will limit the Kubernetes requests for CPU and memory in deployed resources, if possible. It will make the agent deployable on a smaller cluster. |
 | `default` | `project` | The ArgoCD project to which this deployment belongs |
-| `3.1.7` / `v3.1.7` | `targetRevision`, `values.branch` | The Helm chart version and corresponding Git branch for your release |
+| `3.1.8` / `v3.1.8` | `targetRevision`, `values.branch` | The Helm chart version and corresponding Git branch for your release |
 | `example` | `secrets.secretEngine` | The name of the KV secret engine configured in your OpenBao |
 | `example-role` | `secrets.role` | The name of the role configured in your OpenBao |
 | `<your-issuer>` | `cluster.issuer` | Your certificate issuer name |
@@ -102,9 +104,6 @@ The sections below provide the full list of values that must be replaced, follow
 | `pass` | `crossplane.gitea.password` | Your Gitea password (password can be any value of your choice), username is hardcoded to **gitops_test** |
 
 **Fields that typically do not need changing:** `repoURL` (unless you host your own mirror), `cluster.address` (unless deploying to a remote cluster).
-
-> There is also a resourcePreset key, which, if you set it the value to "low", will limit the Kubernetes requests for CPU and memory in deployed resources, if possible. 
-> It will make the agent deployable on a smaller cluster.
 
 ### Example ArgoCD Application Manifest
 
@@ -118,11 +117,11 @@ spec:
   source:
     repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
     path: '""'
-    targetRevision: 3.1.7                              # version of package
+    targetRevision: 3.1.8                              # version of package
     helm:
       values: |
         values:
-          branch: v3.1.7                               # branch of repo with values - for released version it should be the release branch
+          branch: v3.1.8                               # branch of repo with values - for released version it should be the release branch
         project: default                               # project to which the namespace is attached
         namespaceTag:
           dataprovider: <dataprovider-namespace>       # identifier of deployment and part of fqdn for this agent

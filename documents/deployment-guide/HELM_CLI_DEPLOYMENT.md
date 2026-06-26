@@ -44,22 +44,21 @@ The primary file to modify is `values.yaml`. Replace the placeholder values list
 | `<authority-namespace>` | `namespaceTag.authority` | The namespace identifier of your Governance Authority deployment |
 | `<common-namespace>` | `namespaceTag.common`, `cluster.commonToolsNamespace` | The namespace identifier of your Common Components deployment |
 | `<your-domain>` | `domainSuffix` | Your actual domain name |
+| `<your-authority-domain>` | `authorityDomainSuffix` | Your Authority's actual domain name |
+| `default` | `resourcePreset` | Setting this value to `low`, will limit the Kubernetes requests for CPU and memory in deployed resources, if possible. It will make the agent deployable on a smaller cluster. |
 | `default` | `project` | The ArgoCD project to which this deployment belongs |
-| `v3.1.7` | `values.branch` | The Git branch corresponding to your release version |
+| `v3.1.8` | `values.branch` | The Git branch corresponding to your release version |
 | `example` | `secrets.secretEngine` | The name of the KV secret engine configured in your OpenBao |
 | `example-role` | `secrets.role` | The name of the role configured in your OpenBao |
 | `<your-issuer>` | `cluster.issuer` | Your certificate issuer name |
 | `pass` | `crossplane.kafka.password` | Your Kafka password (username format: `{namespace}_infrabe`; password from `{common-namespace}-kafka-credentials` OpenBao secret) |
 | `pass` | `crossplane.gitea.password` | Your Gitea password (password can be any value of your choice), username is hardcoded to **gitops_test** |
 
-> There is also a resourcePreset key, which, if you set it the value to "low", will limit the Kubernetes requests for CPU and memory in deployed resources, if possible. 
-> It will make the agent deployable on a smaller cluster.
-
 ### Example values.yaml
 
 ```yaml
 values:
-  branch: v3.1.7                               # branch of repo with values - for released version it should be the release branch
+  branch: v3.1.8                               # branch of repo with values - for released version it should be the release branch
 project: default                               # project to which the namespace is attached
 namespaceTag:
   dataprovider: <dataprovider-namespace>       # identifier of deployment and part of fqdn for this agent
