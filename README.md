@@ -74,8 +74,7 @@ The requirements tools are listed here: [Tools requirements](https://code.europa
 | infrastructure-be | `infrastructure-be.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
 | infrastructure-fe-frontend | `infrastructure-fe.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
 | sd-ui | `sd-ui.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
-| simpl-fe-authentication-provider | `participant.fe.{namespaceTag}.{domainSuffix}/participant-utility` | Default Ingress Controller Public IP |
-| simpl-fe-users-roles | `participant.fe.{namespaceTag}.{domainSuffix}/users-roles` | Default Ingress Controller Public IP |
+| IAA frontends | `participant.fe.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
 | simpl-files | `files.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
 | simpl-ingress | `participant.be.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
 | tier2-gateway | `tls.participant.{namespaceTag}.{domainSuffix}` | Dedicated Load Balancer IP |
