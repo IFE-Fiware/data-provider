@@ -23,6 +23,7 @@
   - [Secret for simpl-edc](#secret-for-simpl-edc)
   - [Onboarding](#onboarding)
   - [Tier2-proxy Status](#tier2-proxy-status)
+  - [Retrieve Tier2 Gateway Public IP address](#retrieve-tier2-gateway-public-ip-address)
   - [Monitoring](#monitoring)
 - [Sanity check](#sanity-check)
   - [ArgoCD statuses](#argocd-statuses)
@@ -72,10 +73,8 @@ The requirements tools are listed here: [Tools requirements](https://code.europa
 | infrastructure-argo-workflows-server | `argoworkflows.crossplane.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
 | infrastructure-be | `infrastructure-be.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
 | infrastructure-fe-frontend | `infrastructure-fe.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
-| redis-commander | `redis-commander.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
 | sd-ui | `sd-ui.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
-| simpl-fe-authentication-provider | `participant.fe.{namespaceTag}.{domainSuffix}/participant-utility` | Default Ingress Controller Public IP |
-| simpl-fe-users-roles | `participant.fe.{namespaceTag}.{domainSuffix}/users-roles` | Default Ingress Controller Public IP |
+| IAA frontends | `participant.fe.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
 | simpl-files | `files.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
 | simpl-ingress | `participant.be.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
 | tier2-gateway | `tls.participant.{namespaceTag}.{domainSuffix}` | Dedicated Load Balancer IP |
@@ -86,11 +85,7 @@ If your Ingress Controller is **nginx** and installed into namespace **ingress-n
 kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
 ```
 
-In a similar way, if the Participant is deployed within namespace **{namespaceTag}**, you can retrieve the *tier2-gateway* public IP using:
-
-```bash
-kubectl get svc tier2-gateway -n {namespaceTag} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
-```
+The Tier2 Gateway's Load Balancer public IP can be extracted only after the succesful deployment - instructions [below](#retrieve-tier2-gateway-public-ip-address)
 
 While we recommend strongly to use **external-dns** to manage your DNS entries using automation, one could achieve a manual DNS setup.
 
@@ -181,6 +176,14 @@ The steps are described in the IAA documentation:
 
 Until the agent is properly onboarded, the tier2-proxy component will **not** operate correctly. This is expected behaviour; proceed with the onboarding steps above before investigating tier2-proxy health.
 
+### Retrieve Tier2 Gateway Public IP address
+
+If the Authority agent is deployed within namespace **{namespaceTag}**, you can retrieve the *tier2-gateway* public IP using:
+
+```bash
+kubectl get svc tier2-gateway -n {namespaceTag} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+```
+
 ### Monitoring
 
 Filebeat components for log monitoring are included in this release. Their deployment can be disabled by setting `monitoring.enabled` to `false` in the Helm values.
@@ -190,15 +193,15 @@ Filebeat components for log monitoring are included in this release. Their deplo
 ### ArgoCD statuses
 
 To make sure that everything is running correctly, you can check the statuses of apps in ArgoCD.<br><br>
-<img src="images/Sanity_check_1.png" alt="ArgoCD statuses" width="800">
+<img src="documents/images/Sanity_check_1.png" alt="ArgoCD statuses" width="800">
 
 Normally, every app should have a healthy status, but at the moment there are exceptions:
 - dataprovider-iaa application can get a "Missing" status, because of authentication-provider-create-secret job which is removed after it's been processed. 
-<img src="images/Sanity_check_2.png" alt="authentication-provider-create-secret" width="400">
+<img src="documents/images/Sanity_check_2.png" alt="authentication-provider-create-secret" width="400">
 <br><br>
 
 - dataprovider-infrastructure-deps application can get a "Degraded" status, because of statuses of resources listed below, it's an expected behaviour.
-<img src="images/Sanity_check_3.png" alt="oci and git repositories" width="400">
+<img src="documents/images/Sanity_check_3.png" alt="oci and git repositories" width="400">
 
 This will be fixed in future releases.
 
@@ -210,7 +213,7 @@ You can access the page via the link. `<participant-frontend>/participant-utilit
 (i.e., a user with the **ONBOARDER_M** role, such as the preconfigured user `a.w`)
 
 The fields marked in red frame, should be exactly as on the screenshot:
-<img src="images/Sanity_check_4.png" alt="oci and git repositories" width="600">
+<img src="documents/images/Sanity_check_4.png" alt="oci and git repositories" width="600">
 
 ## Troubleshooting
 
@@ -221,19 +224,6 @@ If you encounter issues during deployment, verify the following:
 - Review the ArgoCD Application logs and Helm error messages for specific issues.
 - All [DNS entries](#dns-entries) resolve correctly to the ingress controller.
 - The [Preliminary Tasks](#preliminary-tasks) (OpenBao secrets, Minio, Gitea token) have been completed.
-
-### Redis Commander
-
-Redis Commander is a web-based frontend for visualising data stored in `redis-master`. This tool is intended for middleware developers and is not required for end-user operation.
-
-![Redis Commander](images/RedisCommander.png)
-
-The password for Redis Commander is stored in OpenBao under the `{namespaceTag}-redis` secret.
-
-> **Note:** To log in, use `admin` as the username (not `rediscommander`) and the password from the `rediscommander` variable in the OpenBao secret.
-
-<img src="images/Redis01.png" alt="Redis Commander — login" width="400"><br>
-<img src="images/Redis02.png" alt="Redis Commander — dashboard" width="400"><br>
 
 ## Glossary
 
