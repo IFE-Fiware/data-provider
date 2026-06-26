@@ -46,9 +46,9 @@ dataprovider_gaia_x_edc:
 dataprovider_data1:
   enabled: true
   projectID: "1397"
-  targetRevision: 1.5.5
+  targetRevision: 1.5.7
   chart_name: provider-data1
-  valuesBranch: v1.5.5
+  valuesBranch: v1.5.7
 
 dataprovider_contract_billing:
   enabled: true
