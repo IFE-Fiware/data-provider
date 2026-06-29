@@ -52,7 +52,7 @@ Copy the YAML manifest from the [Example ArgoCD Application Manifest](#example-a
 
 ### Step 5 — Verify the populated fields
 
-After saving, ArgoCD switches back to the form view. Verify that the following fields have been correctly populated from the manifest:
+After saving, ArgoCD switches back to the form view. Verify that the following fields have been correctly populated from the manifest.
 
 If any field is empty or incorrect, click **EDIT AS YAML** again, correct the manifest, and save.
 
