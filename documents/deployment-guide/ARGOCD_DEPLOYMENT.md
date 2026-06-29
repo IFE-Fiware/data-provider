@@ -54,16 +54,6 @@ Copy the YAML manifest from the [Example ArgoCD Application Manifest](#example-a
 
 After saving, ArgoCD switches back to the form view. Verify that the following fields have been correctly populated from the manifest:
 
-| Field in ArgoCD UI | Expected value | Corresponds to manifest field |
-|---|---|---|
-| **Application Name** | `<dataprovider-namespace>-deployer` | `metadata.name` |
-| **Project Name** | `default` (or your chosen project) | `spec.project` |
-| **Repository URL** | `https://code.europa.eu/api/v4/projects/904/packages/helm/stable` | `spec.source.repoURL` |
-| **Chart** | `data-provider` | `spec.source.chart` |
-| **Target Revision** | `3.1.8` (your chart version) | `spec.source.targetRevision` |
-| **Cluster URL** | `https://kubernetes.default.svc` | `spec.destination.server` |
-| **Namespace** | Your data provider agent namespace | `spec.destination.namespace` |
-
 If any field is empty or incorrect, click **EDIT AS YAML** again, correct the manifest, and save.
 
 <img src="../images/ArgoCD_CreateApp.png" alt="ArgoCD — Verify populated fields" width="600">
@@ -102,7 +92,13 @@ The sections below provide the full list of values that must be replaced, follow
 | `<your-issuer>` | `cluster.issuer` | Your certificate issuer name |
 | `pass` | `crossplane.kafka.password` | Your Kafka password (username format: `{namespace}_infrabe`; password from `{common-namespace}-kafka-credentials` OpenBao secret) |
 | `pass` | `crossplane.gitea.password` | Your Gitea password (password can be any value of your choice), username is hardcoded to **gitops_test** |
-
+| `<dataprovider-namespace>-deployer` | `metadata.name` | Application name |
+| `default` (or your chosen project) | `spec.project` | Project name |
+| `https://code.europa.eu/api/v4/projects/904/packages/helm/stable` | `spec.source.repoURL` | Repository URL |
+| `data-provider` | `spec.source.chart` | Chart |
+| `3.1.8` (your chart version) | `spec.source.targetRevision` | Target revision |
+| `https://kubernetes.default.svc` | `spec.destination.server` | Cluster URL |
+| Your data provider agent namespace | `spec.destination.namespace` | Namespace |
 **Fields that typically do not need changing:** `repoURL` (unless you host your own mirror), `cluster.address` (unless deploying to a remote cluster).
 
 ### Example ArgoCD Application Manifest
