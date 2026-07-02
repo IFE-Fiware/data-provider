@@ -43,15 +43,17 @@ This repository contains the configuration files required for deploying the **Da
 
 All sub-charts used by the Data Provider master chart are internal SIMPL-Open charts hosted in the GitLab package registry. Access requires appropriate GitLab credentials.
 
-| Name | Chart | Description | Helm Registry |
-|---|---|---|---|
-| provider-iaa | `provider-iaa` | Identity, Authentication, and Authorisation services for the Data Provider agent | [Helm stable registry](https://code.europa.eu/api/v4/projects/1403/packages/helm/stable) |
-| provider-gaia-x-edc | `provider-gaia-x-edc` | Gaia-X EDC connector for the Data Provider agent | [Helm stable registry](https://code.europa.eu/api/v4/projects/1400/packages/helm/stable) |
-| provider-data1 | `provider-data1` | Data services layer for the Data Provider agent | [Helm stable registry](https://code.europa.eu/api/v4/projects/1397/packages/helm/stable) |
-| provider-contract-billing | `provider-contract-billing` | Contract and billing management for the Data Provider agent | [Helm stable registry](https://code.europa.eu/api/v4/projects/1405/packages/helm/stable) |
-| provider-infrastructure | `provider-infrastructure` | Infrastructure management services for the Data Provider agent | [Helm stable registry](https://code.europa.eu/api/v4/projects/1407/packages/helm/stable) |
-| provider-monitoring | `provider-monitoring` | Monitoring configuration for the Data Provider agent | [Helm stable registry](https://code.europa.eu/api/v4/projects/1395/packages/helm/stable) |
-| provider-orchestration-platform | `provider-orchestration-platform` | Orchestration platform services for the Data Provider agent | [Helm stable registry](https://code.europa.eu/api/v4/projects/1410/packages/helm/stable) |
+> **Note:** The **Helm Registry** value is a Helm repository endpoint consumed by Helm/ArgoCD — it is **not** a web page and cannot be opened in a browser. To browse the chart source, use the **Repository (Chart Directory)** link instead.
+
+| Name | Chart | Description | Helm Registry (Helm/ArgoCD only, not browsable) | Repository (Chart Directory) |
+|---|---|---|---|---|
+| provider-iaa | `provider-iaa` | Identity, Authentication, and Authorisation services for the Data Provider agent | `https://code.europa.eu/api/v4/projects/1403/packages/helm/stable` | [View chart source](https://code.europa.eu/simpl/simpl-open/development/iaa/agent-iaa/provider-iaa/-/tree/main/charts) |
+| provider-gaia-x-edc | `provider-gaia-x-edc` | Gaia-X EDC connector for the Data Provider agent | `https://code.europa.eu/api/v4/projects/1400/packages/helm/stable` | [View chart source](https://code.europa.eu/simpl/simpl-open/development/gaia-x-edc/provider-gaia-x-edc/-/tree/main/charts) |
+| provider-data1 | `provider-data1` | Data services layer for the Data Provider agent | `https://code.europa.eu/api/v4/projects/1397/packages/helm/stable` | [View chart source](https://code.europa.eu/simpl/simpl-open/development/data1/provider-data1/-/tree/main/charts) |
+| provider-contract-billing | `provider-contract-billing` | Contract and billing management for the Data Provider agent | `https://code.europa.eu/api/v4/projects/1405/packages/helm/stable` | [View chart source](https://code.europa.eu/simpl/simpl-open/development/contract-billing/provider-contract-billing/-/tree/main/charts) |
+| provider-infrastructure | `provider-infrastructure` | Infrastructure management services for the Data Provider agent | `https://code.europa.eu/api/v4/projects/1407/packages/helm/stable` | [View chart source](https://code.europa.eu/simpl/simpl-open/development/infrastructure/provider-infrastructure/-/tree/main/charts) |
+| provider-monitoring | `provider-monitoring` | Monitoring configuration for the Data Provider agent | `https://code.europa.eu/api/v4/projects/1395/packages/helm/stable` | [View chart source](https://code.europa.eu/simpl/simpl-open/development/monitoring/provider-monitoring/-/tree/main/charts) |
+| provider-orchestration-platform | `provider-orchestration-platform` | Orchestration platform services for the Data Provider agent | `https://code.europa.eu/api/v4/projects/1410/packages/helm/stable` | [View chart source](https://code.europa.eu/simpl/simpl-open/development/orchestration-platform/provider-orchestration-platform/-/tree/main/charts) |
 
 ## Prerequisites
 
