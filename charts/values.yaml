@@ -74,6 +74,6 @@ dataprovider_monitoring:
 dataprovider_orchestration_platform:
   enabled: true
   projectID: "1410"
-  targetRevision: 0.2.7
+  targetRevision: 0.2.8
   chart_name: provider-orchestration-platform
-  valuesBranch: v0.2.7
+  valuesBranch: v0.2.8
