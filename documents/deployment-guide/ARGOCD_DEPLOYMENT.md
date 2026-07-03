@@ -52,17 +52,7 @@ Copy the YAML manifest from the [Example ArgoCD Application Manifest](#example-a
 
 ### Step 5 — Verify the populated fields
 
-After saving, ArgoCD switches back to the form view. Verify that the following fields have been correctly populated from the manifest:
-
-| Field in ArgoCD UI | Expected value | Corresponds to manifest field |
-|---|---|---|
-| **Application Name** | `<dataprovider-namespace>-deployer` | `metadata.name` |
-| **Project Name** | `default` (or your chosen project) | `spec.project` |
-| **Repository URL** | `https://code.europa.eu/api/v4/projects/904/packages/helm/stable` | `spec.source.repoURL` |
-| **Chart** | `data-provider` | `spec.source.chart` |
-| **Target Revision** | `3.1.8` (your chart version) | `spec.source.targetRevision` |
-| **Cluster URL** | `https://kubernetes.default.svc` | `spec.destination.server` |
-| **Namespace** | Your data provider agent namespace | `spec.destination.namespace` |
+After saving, ArgoCD switches back to the form view. Verify that the following fields have been correctly populated from the manifest.
 
 If any field is empty or incorrect, click **EDIT AS YAML** again, correct the manifest, and save.
 
@@ -96,13 +86,19 @@ The sections below provide the full list of values that must be replaced, follow
 | `<your-authority-domain>` | `authorityDomainSuffix` | Your Authority's actual domain name |
 | `default` | `resourcePreset` | Setting this value to `low`, will limit the Kubernetes requests for CPU and memory in deployed resources, if possible. It will make the agent deployable on a smaller cluster. |
 | `default` | `project` | The ArgoCD project to which this deployment belongs |
-| `3.1.8` / `v3.1.8` | `targetRevision`, `values.branch` | The Helm chart version and corresponding Git branch for your release |
+| `3.1.9` / `v3.1.9` | `targetRevision`, `values.branch` | The Helm chart version and corresponding Git branch for your release |
 | `example` | `secrets.secretEngine` | The name of the KV secret engine configured in your OpenBao |
 | `example-role` | `secrets.role` | The name of the role configured in your OpenBao |
 | `<your-issuer>` | `cluster.issuer` | Your certificate issuer name |
 | `pass` | `crossplane.kafka.password` | Your Kafka password (username format: `{namespace}_infrabe`; password from `{common-namespace}-kafka-credentials` OpenBao secret) |
 | `pass` | `crossplane.gitea.password` | Your Gitea password (password can be any value of your choice), username is hardcoded to **gitops_test** |
-
+| `<dataprovider-namespace>-deployer` | `metadata.name` | Application name |
+| `default` (or your chosen project) | `spec.project` | Project name |
+| `https://code.europa.eu/api/v4/projects/904/packages/helm/stable` | `spec.source.repoURL` | Repository URL |
+| `data-provider` | `spec.source.chart` | Chart |
+| `3.1.9` (your chart version) | `spec.source.targetRevision` | Target revision |
+| `https://kubernetes.default.svc` | `spec.destination.server` | Cluster URL |
+| Your data provider agent namespace | `spec.destination.namespace` | Namespace |
 **Fields that typically do not need changing:** `repoURL` (unless you host your own mirror), `cluster.address` (unless deploying to a remote cluster).
 
 ### Example ArgoCD Application Manifest
@@ -117,11 +113,11 @@ spec:
   source:
     repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
     path: '""'
-    targetRevision: 3.1.8                              # version of package
+    targetRevision: 3.1.9                              # version of package
     helm:
       values: |
         values:
-          branch: v3.1.8                               # branch of repo with values - for released version it should be the release branch
+          branch: v3.1.9                               # branch of repo with values - for released version it should be the release branch
         project: default                               # project to which the namespace is attached
         namespaceTag:
           dataprovider: <dataprovider-namespace>       # identifier of deployment and part of fqdn for this agent
