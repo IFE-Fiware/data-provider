@@ -32,23 +32,23 @@ crossplane:
 dataprovider_iaa:
   enabled: true
   projectID: "1403"
-  targetRevision: 1.5.6
+  targetRevision: 1.5.9
   chart_name: provider-iaa
-  valuesBranch: v1.5.6
+  valuesBranch: v1.5.9
 
 dataprovider_gaia_x_edc:
   enabled: true
   projectID: "1400"
-  targetRevision: 1.1.2
+  targetRevision: 1.1.3
   chart_name: provider-gaia-x-edc
-  valuesBranch: v1.1.2
+  valuesBranch: v1.1.3
 
 dataprovider_data1:
   enabled: true
   projectID: "1397"
-  targetRevision: 1.5.8
+  targetRevision: 1.5.10
   chart_name: provider-data1
-  valuesBranch: v1.5.8
+  valuesBranch: v1.5.10
 
 dataprovider_contract_billing:
   enabled: true
@@ -74,6 +74,6 @@ dataprovider_monitoring:
 dataprovider_orchestration_platform:
   enabled: true
   projectID: "1410"
-  targetRevision: 0.2.6
+  targetRevision: 0.2.7
   chart_name: provider-orchestration-platform
-  valuesBranch: v0.2.6
+  valuesBranch: v0.2.7
