@@ -60,9 +60,9 @@ dataprovider_contract_billing:
 dataprovider_infrastructure:
   enabled: true
   projectID: "1407"
-  targetRevision: 1.0.6
+  targetRevision: 1.0.7
   chart_name: provider-infrastructure
-  valuesBranch: v1.0.6
+  valuesBranch: v1.0.7
 
 dataprovider_monitoring:
   enabled: true
