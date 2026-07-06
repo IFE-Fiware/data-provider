@@ -32,9 +32,9 @@ crossplane:
 dataprovider_iaa:
   enabled: true
   projectID: "1403"
-  targetRevision: 1.5.9
+  targetRevision: 1.5.10
   chart_name: provider-iaa
-  valuesBranch: v1.5.9
+  valuesBranch: v1.5.10
 
 dataprovider_gaia_x_edc:
   enabled: true
