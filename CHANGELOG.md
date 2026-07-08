@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0] - 2026-05-20
+
+### changed (7 changes)
+- dataprovider-iaa chart v1.5.10
+- dataprovider-gaia-x-edc chart v1.1.6
+- dataprovider-data1 chart v1.5.11
+- dataprovider-contract-billing chart v0.3.1
+- dataprovider-infrastructure chart v1.0.7
+- dataprovider-orchestration-platform chart v0.2.8
+- dataprovider-monitoring chart v0.3.0
+
 ## [3.1.9] - 2026-07-03
 
 ### fixed (3 changes)

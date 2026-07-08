@@ -47,7 +47,7 @@ The primary file to modify is `values.yaml`. Replace the placeholder values list
 | `<your-authority-domain>` | `authorityDomainSuffix` | Your Authority's actual domain name |
 | `default` | `resourcePreset` | Setting this value to `low`, will limit the Kubernetes requests for CPU and memory in deployed resources, if possible. It will make the agent deployable on a smaller cluster. |
 | `default` | `project` | The ArgoCD project to which this deployment belongs |
-| `v3.1.9` | `values.branch` | The Git branch corresponding to your release version |
+| `v4.0.0` | `values.branch` | The Git branch corresponding to your release version |
 | `example` | `secrets.secretEngine` | The name of the KV secret engine configured in your OpenBao |
 | `example-role` | `secrets.role` | The name of the role configured in your OpenBao |
 | `<your-issuer>` | `cluster.issuer` | Your certificate issuer name |
@@ -58,7 +58,7 @@ The primary file to modify is `values.yaml`. Replace the placeholder values list
 
 ```yaml
 values:
-  branch: v3.1.9                               # branch of repo with values - for released version it should be the release branch
+  branch: v4.0.0                               # branch of repo with values - for released version it should be the release branch
 project: default                               # project to which the namespace is attached
 namespaceTag:
   dataprovider: <dataprovider-namespace>       # identifier of deployment and part of fqdn for this agent
