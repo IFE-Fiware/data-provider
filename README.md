@@ -114,12 +114,7 @@ Please read the document above before proceeding with the next steps related to 
 
 ## Deployment
 
-The Data Provider agent can be deployed using either of the following methods. Choose the guide that matches your workflow:
-
-| Method | Guide | Description |
-|---|---|---|
-| **ArgoCD UI** | [ARGOCD_DEPLOYMENT.md](documents/deployment-guide/ARGOCD_DEPLOYMENT.md) | Deploy through the ArgoCD graphical interface by creating an Application resource. Recommended for teams using GitOps workflows. |
-| **Helm CLI** | [HELM_CLI_DEPLOYMENT.md](documents/deployment-guide/HELM_CLI_DEPLOYMENT.md) | Deploy from the command line using `helm install`. Suitable for scripted or CI/CD-driven deployments. |
+The Data Provider agent can be deployed using by adding the deployer Application resource in the ArgoCD graphical interface. It's described in [ARGOCD_DEPLOYMENT.md](documents/deployment-guide/ARGOCD_DEPLOYMENT.md) file.
 
 ## Additional Steps and Remarks
 

@@ -19,8 +19,8 @@ Before proceeding, ensure the following requirements are met:
 - You have sufficient permissions to create ArgoCD Application resources in the target project.
 - The **Common Components** have been deployed and are healthy.
 - The **Governance Authority** agent has been deployed and is operational.
-- All [preliminary tasks](README.md#preliminary-tasks) (OpenBao secrets, Minio configuration) have been completed.
-- The required DNS entries listed in the [main deployment guide](README.md#dns-entries) have been provisioned.
+- All [preliminary tasks](../../README.md#preliminary-tasks) (OpenBao secrets, Minio configuration) have been completed.
+- The required DNS entries listed in the [main deployment guide](../../README.md#dns-entries) have been provisioned.
 
 ## Deployment Procedure
 
@@ -79,14 +79,14 @@ The sections below provide the full list of values that must be replaced, follow
 
 | Value in example | Field(s) | What to set |
 |---|---|---|
-| `<dataprovider-namespace>` | `namespaceTag.dataprovider`, `argocd.appname`, `cluster.namespace`, `destination.namespace`, `metadata.name` | Your chosen namespace identifier for this data provider agent |
+| `<dataprovider-namespace>` | `namespaceTag.dataprovider`, `argocd.appname`, `cluster.namespace`, `destination.namespace`, `metadata.name` | Your chosen namespace identifier for this data provider agent. It can't be longer than 23 characters. |
 | `<authority-namespace>` | `namespaceTag.authority` | The namespace identifier of your Governance Authority deployment |
 | `<common-namespace>` | `namespaceTag.common`, `cluster.commonToolsNamespace` | The namespace identifier of your Common Components deployment |
 | `<your-domain>` | `domainSuffix` | Your actual domain name |
 | `<your-authority-domain>` | `authorityDomainSuffix` | Your Authority's actual domain name |
 | `default` | `resourcePreset` | Setting this value to `low`, will limit the Kubernetes requests for CPU and memory in deployed resources, if possible. It will make the agent deployable on a smaller cluster. |
 | `default` | `project` | The ArgoCD project to which this deployment belongs |
-| `4.0.0` / `v4.0.0` | `targetRevision`, `values.branch` | The Helm chart version and corresponding Git branch for your release |
+| `4.0.1` / `v4.0.1` | `targetRevision`, `values.branch` | The Helm chart version and corresponding Git branch for your release |
 | `example` | `secrets.secretEngine` | The name of the KV secret engine configured in your OpenBao |
 | `example-role` | `secrets.role` | The name of the role configured in your OpenBao |
 | `<your-issuer>` | `cluster.issuer` | Your certificate issuer name |
@@ -96,7 +96,7 @@ The sections below provide the full list of values that must be replaced, follow
 | `default` (or your chosen project) | `spec.project` | Project name |
 | `https://code.europa.eu/api/v4/projects/904/packages/helm/stable` | `spec.source.repoURL` | Repository URL |
 | `data-provider` | `spec.source.chart` | Chart |
-| `4.0.0` (your chart version) | `spec.source.targetRevision` | Target revision |
+| `4.0.1` (your chart version) | `spec.source.targetRevision` | Target revision |
 | `https://kubernetes.default.svc` | `spec.destination.server` | Cluster URL |
 | Your data provider agent namespace | `spec.destination.namespace` | Namespace |
 **Fields that typically do not need changing:** `repoURL` (unless you host your own mirror), `cluster.address` (unless deploying to a remote cluster).
@@ -113,11 +113,11 @@ spec:
   source:
     repoURL: 'https://code.europa.eu/api/v4/projects/904/packages/helm/stable'
     path: '""'
-    targetRevision: 4.0.0                              # version of package
+    targetRevision: 4.0.1                              # version of package
     helm:
       values: |
         values:
-          branch: v4.0.0                               # branch of repo with values - for released version it should be the release branch
+          branch: v4.0.1                               # branch of repo with values - for released version it should be the release branch
         project: default                               # project to which the namespace is attached
         namespaceTag:
           dataprovider: <dataprovider-namespace>       # identifier of deployment and part of fqdn for this agent
@@ -215,11 +215,10 @@ After creating the Application in ArgoCD, verify the deployment:
    ```bash
    kubectl get ingress -n <dataprovider-namespace>
    ```
-6. Proceed with the [Onboarding](README.md#onboarding) steps described in the main deployment guide.
+6. Proceed with the [Onboarding](../../README.md#onboarding) steps described in the main deployment guide.
 
 > **Note:** The tier2-gateway and tier2-proxy components will not become healthy until the post-deployment onboarding is complete.
 
 ## See Also
 
-- [Main Deployment Guide (README)](README.md) — prerequisites, preliminary tasks, troubleshooting, and onboarding procedures.
-- [Helm CLI Deployment Guide](HELM_CLI_DEPLOYMENT.md) — alternative deployment method using the command line.
+- [Main Deployment Guide (README)](../../README.md) — prerequisites, preliminary tasks, troubleshooting, and onboarding procedures.

@@ -156,7 +156,7 @@ spec:
           common: {{ .Values.namespaceTag.common }}
         domainSuffix: {{ .Values.domainSuffix }}
         argocd:
-          appname: {{ .Values.namespaceTag.dataprovider }}-dataprovider-infrastructure
+          appname: {{ .Values.namespaceTag.dataprovider }}-dataprovider-infra
           namespace: {{ .Values.argocd.namespace }}
         cluster:
           address: {{ .Values.cluster.address }}
@@ -223,7 +223,7 @@ spec:
           common: {{ .Values.namespaceTag.common }}
         domainSuffix: {{ .Values.domainSuffix }}
         argocd:
-          appname: {{ .Values.namespaceTag.dataprovider }}-dataprovider-orchestration-platform
+          appname: {{ .Values.namespaceTag.dataprovider }}-dataprovider-data2
           namespace: {{ .Values.argocd.namespace }}
         cluster:
           address: {{ .Values.cluster.address }}

@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.1] - 2026-07-21
+
+### changed (1 change)
+- dataprovider-iaa chart v1.5.12
+
+### fixed (1 change)
+- removed HELM deployment instructions (SIMPL-28266)
+
 ## [4.0.0] - 2026-05-20
 
 ### changed (7 changes)
