@@ -79,6 +79,11 @@ The requirements tools are listed here: [Tools requirements](https://code.europa
 | IAA frontends | `participant.fe.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
 | simpl-files | `files.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
 | simpl-ingress | `participant.be.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
+| dagster-ingress | `dagster-internal.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
+| gateway-oauth2-client-ingress | `participant-oauth-client.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
+| orchestration-platform-gitea | `gitea.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
+| superset | `superset.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
+| landing-page-dataprovider-ingress | `simpl.{namespaceTag}.{domainSuffix}` | Default Ingress Controller Public IP |
 | tier2-gateway | `tls.participant.{namespaceTag}.{domainSuffix}` | Dedicated Load Balancer IP |
 
 If your Ingress Controller is **nginx** and installed into namespace **ingress-nginx**, you can retrieve its public IP using:

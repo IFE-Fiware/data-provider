@@ -24,6 +24,8 @@ Before proceeding, ensure the following requirements are met:
 
 ## Deployment Procedure
 
+> **Note:** If the namespace identifier is too long, the application names in ArgoCD will be truncated.
+
 Follow the steps below to deploy the Data Provider agent through the ArgoCD UI.
 
 ### Step 1 — Log in to ArgoCD
@@ -79,7 +81,7 @@ The sections below provide the full list of values that must be replaced, follow
 
 | Value in example | Field(s) | What to set |
 |---|---|---|
-| `<dataprovider-namespace>` | `namespaceTag.dataprovider`, `argocd.appname`, `cluster.namespace`, `destination.namespace`, `metadata.name` | Your chosen namespace identifier for this data provider agent. It can't be longer than 17 characters. |
+| `<dataprovider-namespace>` | `namespaceTag.dataprovider`, `argocd.appname`, `cluster.namespace`, `destination.namespace`, `metadata.name` | Your chosen namespace identifier for this data provider agent. |
 | `<authority-namespace>` | `namespaceTag.authority` | The namespace identifier of your Governance Authority deployment |
 | `<common-namespace>` | `namespaceTag.common`, `cluster.commonToolsNamespace` | The namespace identifier of your Common Components deployment |
 | `<your-domain>` | `domainSuffix` | Your actual domain name |

@@ -34,7 +34,7 @@ spec:
         domainSuffix: {{ .Values.domainSuffix }}
         authorityDomainSuffix: {{ .Values.authorityDomainSuffix }}
         argocd:
-          appname: {{ .Values.namespaceTag.dataprovider }}-dataprovider-iaa
+          appname: {{ printf "%s-dataprovider-iaa" .Values.namespaceTag.dataprovider | trunc 53 }}
           namespace: {{ .Values.argocd.namespace }}
         cluster:
           address: {{ .Values.cluster.address }}
@@ -65,7 +65,7 @@ spec:
         domainSuffix: {{ .Values.domainSuffix }}
         authorityDomainSuffix: {{ .Values.authorityDomainSuffix }}
         argocd:
-          appname: {{ .Values.namespaceTag.dataprovider }}-dataprovider-gaia-x-edc
+          appname: {{ printf "%s-dataprovider-gaia-x-edc" .Values.namespaceTag.dataprovider | trunc 53 }}
           namespace: {{ .Values.argocd.namespace }}
         cluster:
           address: {{ .Values.cluster.address }}
@@ -96,7 +96,7 @@ spec:
         domainSuffix: {{ .Values.domainSuffix }}
         authorityDomainSuffix: {{ .Values.authorityDomainSuffix }}
         argocd:
-          appname: {{ .Values.namespaceTag.dataprovider }}-dataprovider-data1
+          appname: {{ printf "%s-dataprovider-data1" .Values.namespaceTag.dataprovider | trunc 53 }}
           namespace: {{ .Values.argocd.namespace }}
         cluster:
           address: {{ .Values.cluster.address }}
@@ -126,7 +126,7 @@ spec:
           common: {{ .Values.namespaceTag.common }}
         domainSuffix: {{ .Values.domainSuffix }}
         argocd:
-          appname: {{ .Values.namespaceTag.dataprovider }}-dataprovider-contract-billing
+          appname: {{ printf "%s-dataprovider-contract-billing" .Values.namespaceTag.dataprovider | trunc 53 }}
           namespace: {{ .Values.argocd.namespace }}
         cluster:
           address: {{ .Values.cluster.address }}
@@ -156,7 +156,7 @@ spec:
           common: {{ .Values.namespaceTag.common }}
         domainSuffix: {{ .Values.domainSuffix }}
         argocd:
-          appname: {{ .Values.namespaceTag.dataprovider }}-dataprovider-infrastructure
+          appname: {{ printf "%s-dataprovider-infrastructure" .Values.namespaceTag.dataprovider | trunc 48 }}
           namespace: {{ .Values.argocd.namespace }}
         cluster:
           address: {{ .Values.cluster.address }}
@@ -193,7 +193,7 @@ spec:
           common: {{ .Values.namespaceTag.common }}
         domainSuffix: {{ .Values.domainSuffix }}
         argocd:
-          appname: {{ .Values.namespaceTag.dataprovider }}-dataprovider-monitoring
+          appname: {{ printf "%s-dataprovider-monitoring" .Values.namespaceTag.dataprovider | trunc 53 }}
           namespace: {{ .Values.argocd.namespace }}
         cluster:
           address: {{ .Values.cluster.address }}
@@ -223,7 +223,7 @@ spec:
           common: {{ .Values.namespaceTag.common }}
         domainSuffix: {{ .Values.domainSuffix }}
         argocd:
-          appname: {{ .Values.namespaceTag.dataprovider }}-dataprovider-orchestration-platform
+          appname: {{ printf "%s-dataprovider-orchestration-platform" .Values.namespaceTag.dataprovider | trunc 53 }}
           namespace: {{ .Values.argocd.namespace }}
         cluster:
           address: {{ .Values.cluster.address }}
