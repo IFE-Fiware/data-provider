@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.1] - 2026-07-22
+
+### changed (1 change)
+- dataprovider-iaa chart v1.5.13
+
+### fixed (1 change)
+- removed HELM deployment instructions (SIMPL-28266)
+- added missing DNS entries (SIMPL-30260)
+- added truncating ArgoCD app names (SIMPL-30261)
+
 ## [4.0.0] - 2026-05-20
 
 ### changed (7 changes)
