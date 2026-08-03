@@ -41,7 +41,7 @@ This repository contains the configuration files required for deploying the **Da
 
 ## Component Chart Sources
 
-All sub-charts used by the Data Provider master chart are internal SIMPL-Open charts hosted in the GitLab package registry. Access requires appropriate GitLab credentials.
+All sub-charts used by the Data Provider master chart are internal SIMPL-Open charts hosted in the GitLab package registry.
 
 > **Note:** The **Helm Registry** value is a Helm repository endpoint consumed by Helm/ArgoCD — it is **not** a web page and cannot be opened in a browser. To browse the chart source, use the **Repository (Chart Directory)** link instead.
 
