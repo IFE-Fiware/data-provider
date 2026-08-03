@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - dataprovider-iaa chart v1.5.15
 - dataprovider-gaia-x-edc chart v1.1.7
 - dataprovider-monitoring chart v0.3.1
-
+ 
 ## [4.0.1] - 2026-07-22
 
 ### changed (1 change)
