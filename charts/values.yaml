@@ -39,9 +39,9 @@ dataprovider_iaa:
 dataprovider_gaia_x_edc:
   enabled: true
   projectID: "1400"
-  targetRevision: 1.1.7
+  targetRevision: 1.1.8
   chart_name: provider-gaia-x-edc
-  valuesBranch: v1.1.7
+  valuesBranch: v1.1.8
 
 dataprovider_data1:
   enabled: true
@@ -73,7 +73,7 @@ dataprovider_monitoring:
 
 dataprovider_orchestration_platform:
   enabled: true
-  projectID: "1410"
-  targetRevision: 0.2.8
+  projectID: "2075"
+  targetRevision: 0.2.9
   chart_name: provider-orchestration-platform
-  valuesBranch: v0.2.8
+  valuesBranch: v0.2.9
