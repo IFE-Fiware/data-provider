@@ -46,6 +46,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - dataprovider-orchestration-platform chart v0.2.8
 - dataprovider-monitoring chart v0.3.0
 
+## [3.1.10] - 2026-08-21
+
+### changed (1 change)
+- dataprovider-iaa chart v1.2.26
+
 ## [3.1.9] - 2026-07-03
 
 ### fixed (3 changes)
